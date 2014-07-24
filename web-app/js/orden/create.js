@@ -12,11 +12,37 @@ Ext.onReady(function(){
         ]
     });
 
-    http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
+    //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
+  Ext.define('ganaderia.model.combo.RazaStore',{
+      extend:'Ext.data.Store',
+      root:'rows',
+      proxy:{
+          type:'ajax',
+          url: razaUrl,
+          root: 'rows',
+          idProperty:'id'
+      },
+      fields:['id','nombre']
+  });
+
   Ext.define('ganaderia.model.combo.EspecieStore',{
       extend:'Ext.data.Store',
+      root:'rows',
+      proxy: {
+          type:'ajax',
+          url:especiesUrl,
+          reader:{
+             type: 'json',
+             root:'rows',
+             idProperty:'id'
+          }
+      },
+
+      fields:['id','nombre']
 
   });
+  var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
+  var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1
@@ -24,8 +50,8 @@ Ext.onReady(function(){
 
   function onAddClick(){
       var rec = new ganaderia.model.grid.DetalleOrden({
-          ganadoid: 0,
-          descripcionganado: '',
+          especie: 0,
+          raza: 0,
           cantidad: 0,
           peso:0,
           precio:0
@@ -43,7 +69,7 @@ Ext.onReady(function(){
       itemId:'wizardId',
       renderTo:'formpanelId',
       layout:'card',
-      width:500,
+      width:600,
       style: "margin: auto auto auto auto;",
       defaults:{
           border:false
@@ -87,6 +113,7 @@ Ext.onReady(function(){
                      xtype:'grid',
                      id:'griddetalleId',
                      height:350,
+                     width:600,
                      frame:true,
                       plugins:[plugin],
                      store: new Ext.data.Store({
@@ -96,33 +123,51 @@ Ext.onReady(function(){
                          }
                      }),
                       tbar: [{
-                          text: 'Add Plant',
+                          text: 'Agregar Línea',
                           scope: this,
                           handler: onAddClick
                       }],
                      columns:[
                          {
                              header: 'Especie',
-                             dataIndex: 'descripcionganado',
+                             dataIndex: 'especie',
                              editor: new Ext.form.field.ComboBox({
+                                 queryMode:'remote',
+                                 emptyText:'',
                                  typeAhead: true,
                                  triggerAction:'all',
-                                 selectOnTab: true
+                                 valueField:'id',
+                                 displayField:'nombre',
+                                 selectOnTab: true ,
+                                 store: storeEspecie
 
                              }),
                              renderer: function(value) {
-                                 var rec = comboStore.getById(value);
+                                 var rec = storeEspecie.getById(value);
 
                                  if (rec)
                                  {
-                                     return rec.get('label');
+                                     return rec.data.nombre;
                                  }
 
-                                 return '&mdash;';
+                                 return '';
                              }
                          },{
                              header: 'Raza',
-                             dataIndex: 'raza'
+                             dataIndex: 'raza',
+                             editor: Ext.create('ganaderia.model.combo.RazaStore',{
+                                 queryMode:'remote',
+                                 emptyText:'',
+                                 typeAhead: true,
+                                 triggerAction:'all',
+                                 valueField:'id',
+                                 displayField:'nombre',
+                                 selectOnTab: true,
+                                 store: storeRaza
+                             }),
+                             render: function(value){
+
+                             }
                          },{
                              header: 'Cantidad',
                              dataIndex:'cantidad'

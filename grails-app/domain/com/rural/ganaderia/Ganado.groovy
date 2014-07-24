@@ -4,6 +4,9 @@ class Ganado {
     String descripcion
     ClasificacionGanado clasificacion
 
+
+
     static constraints = {
+
     }
 }

@@ -1,0 +1,17 @@
+package com.rural.ganaderia
+
+
+
+import grails.test.mixin.*
+import org.junit.*
+
+/**
+ * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
+ */
+@TestFor(Raza)
+class RazaTests {
+
+    void testSomething() {
+        fail "Implement me"
+    }
+}
