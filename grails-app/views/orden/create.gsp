@@ -8,7 +8,7 @@
         <script type="text/javascript" src="${resource(dir:'js/orden',file:'create.js')}"></script>
         <script type="text/javascript">
             var especiesUrl = '<%out << createLink(controller:'especie',action:'listjson')%>';
-            var especiesUrl = '<%out << createLink(controller:'raza',action:'')%>';
+            var razaUrl = '<%out << createLink(controller:'raza',action:'listjson')%>';
         </script>
 
 	</head>

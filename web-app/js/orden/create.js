@@ -19,8 +19,11 @@ Ext.onReady(function(){
       proxy:{
           type:'ajax',
           url: razaUrl,
-          root: 'rows',
-          idProperty:'id'
+          render:{
+            type:'json',
+            root: 'rows',
+            idProperty:'id'
+          }
       },
       fields:['id','nombre']
   });
@@ -139,7 +142,14 @@ Ext.onReady(function(){
                                  valueField:'id',
                                  displayField:'nombre',
                                  selectOnTab: true ,
-                                 store: storeEspecie
+                                 store: storeEspecie,
+                                 listeners:{
+                                     'select':function(combo,records,options){
+                                           //storeRaza.load({
+                                           //    params:{especieId:records[0].data.id}
+                                           //});
+                                     }
+                                 }
 
                              }),
                              renderer: function(value) {
@@ -155,7 +165,7 @@ Ext.onReady(function(){
                          },{
                              header: 'Raza',
                              dataIndex: 'raza',
-                             editor: Ext.create('ganaderia.model.combo.RazaStore',{
+                             editor: new Ext.form.field.ComboBox({
                                  queryMode:'remote',
                                  emptyText:'',
                                  typeAhead: true,
@@ -165,8 +175,15 @@ Ext.onReady(function(){
                                  selectOnTab: true,
                                  store: storeRaza
                              }),
-                             render: function(value){
+                             renderer: function(value) {
+                                 var rec = storeRaza.getById(value);
 
+                                 if (rec)
+                                 {
+                                     return rec.data.nombre;
+                                 }
+
+                                 return '';
                              }
                          },{
                              header: 'Cantidad',
