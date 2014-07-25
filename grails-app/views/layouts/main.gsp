@@ -22,6 +22,7 @@
             Ext.onReady(function(){
                 Ext.widget({
                     xtype:'panel',
+                    margin: '0 0 30 0',
                     renderTo:'grailsLogo',
                     //title: 'Mix and match icon sizes to create a huge unusable toolbar',
                     items: [
@@ -67,8 +68,8 @@
             });
         </script>
 	</head>
-	<body style="margin: 2em 1em 1.25em 13em">
-		<div id="grailsLogo" role="banner"><a href="http://www.srt.org.ar"><img src="${resource(dir: 'images', file: 'headersrt.png')}" alt="Grails"/></a></div>
+	<body style="margin: 2em 13em 1.25em 13em">
+		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir: 'images', file: 'headersrt.png')}" alt="Grails"/></a></div>
         <g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/>

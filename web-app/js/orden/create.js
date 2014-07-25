@@ -1,4 +1,5 @@
 Ext.onReady(function(){
+    var flagLoadEspecies = false
     Ext.define('ganaderia.model.grid.DetalleOrden', {
         extend: 'Ext.data.Model',
         fields: [
@@ -13,23 +14,55 @@ Ext.onReady(function(){
     });
 
     //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
-  Ext.define('ganaderia.model.combo.RazaStore',{
-      extend:'Ext.data.Store',
-      root:'rows',
-      proxy:{
-          type:'ajax',
-          url: razaUrl,
-          render:{
-            type:'json',
-            root: 'rows',
-            idProperty:'id'
-          }
-      },
-      fields:['id','nombre']
-  });
+    Ext.define('ganaderia.model.combo.RazaStore',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:razaUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','nombre'],
+        listeners:{
+            'beforeload':function(){
+                var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+                var rowSel = selModel.getLastSelected();
+                storeRaza.baseParams = {
+                    especieId : rowSel.data.especie
+                }
+
+            }
+
+            /*'load':function(){
+                if(flagLoadEspecies==true){
+                    var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+                    var rowSel = selModel.getLastSelected();
+                    var firstRaza = storeRaza.first();
+                    rowSel.data.raza = firstRaza.data.id;
+                    rowSel.commit();
+                    flagLoadEspecies = false;
+                }
+            } */
+        }
+    });
+
+    /*storeRaza.on("beforeload",function(){
+        var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+        var rowSel = selModel.getLastSelected();
+        storeRaza.baseParams = {
+            especieId : rowSel.data.especie
+        }
+    }); */
+
 
   Ext.define('ganaderia.model.combo.EspecieStore',{
       extend:'Ext.data.Store',
+      autoLoad:false,
       root:'rows',
       proxy: {
           type:'ajax',
@@ -44,6 +77,14 @@ Ext.onReady(function(){
       fields:['id','nombre']
 
   });
+
+  var storeGridDetalle = new Ext.data.Store({
+      model: ganaderia.model.grid.DetalleOrden,
+      proxy:{
+          type:'memory'
+      }
+  });
+
   var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
 
@@ -72,7 +113,7 @@ Ext.onReady(function(){
       itemId:'wizardId',
       renderTo:'formpanelId',
       layout:'card',
-      width:600,
+      width:700,
       style: "margin: auto auto auto auto;",
       defaults:{
           border:false
@@ -116,15 +157,10 @@ Ext.onReady(function(){
                      xtype:'grid',
                      id:'griddetalleId',
                      height:350,
-                     width:600,
+                     width:700,
                      frame:true,
                       plugins:[plugin],
-                     store: new Ext.data.Store({
-                         model: ganaderia.model.grid.DetalleOrden,
-                         proxy:{
-                             type:'memory'
-                         }
-                     }),
+                     store: storeGridDetalle,
                       tbar: [{
                           text: 'Agregar Línea',
                           scope: this,
@@ -145,9 +181,9 @@ Ext.onReady(function(){
                                  store: storeEspecie,
                                  listeners:{
                                      'select':function(combo,records,options){
-                                           //storeRaza.load({
-                                           //    params:{especieId:records[0].data.id}
-                                           //});
+                                           flagLoadEspecies = true;
+                                           storeRaza.load();
+
                                      }
                                  }
 
