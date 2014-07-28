@@ -1,5 +1,16 @@
 Ext.onReady(function(){
-    var flagLoadEspecies = false
+
+    function confirmarorden(){
+        var detalleArr=[];
+        storeRaza.data.each(function(row){
+             detalleArr.push(row.data);
+        });
+        var detalleJson = Ext.encode(detalleArr);
+        alert('Json generado '+detalleJson);
+        storeGridDetalle.removeAll();
+    }
+
+
     Ext.define('ganaderia.model.grid.DetalleOrden', {
         extend: 'Ext.data.Model',
         fields: [
@@ -16,7 +27,7 @@ Ext.onReady(function(){
     //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
     Ext.define('ganaderia.model.combo.RazaStore',{
         extend:'Ext.data.Store',
-        autoLoad:false,
+        autoLoad:true,
         root:'rows',
         proxy: {
             type:'ajax',
@@ -29,14 +40,14 @@ Ext.onReady(function(){
         },
         fields:['id','nombre'],
         listeners:{
-            'beforeload':function(){
+            /*'beforeload':function(){
                 var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
                 var rowSel = selModel.getLastSelected();
                 storeRaza.baseParams = {
                     especieId : rowSel.data.especie
                 }
 
-            }
+            } */
 
             /*'load':function(){
                 if(flagLoadEspecies==true){
@@ -89,8 +100,26 @@ Ext.onReady(function(){
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
 
   var plugin = new Ext.grid.plugin.CellEditing({
-        clicksToEdit: 1
+        clicksToEdit: 1,
+        listeners:{
+            'edit':function( editor, e){
+                var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+                var rowSel = selModel.getLastSelected();
+
+                //storeRaza.load({params:{especieId:records[0].data.id}});
+                storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
+
+                storeRaza.load();
+                e.record.commit();
+            }
+
+        }
     });
+
+
+
+
+
 
   function onAddClick(){
       var rec = new ganaderia.model.grid.DetalleOrden({
@@ -158,6 +187,7 @@ Ext.onReady(function(){
                      id:'griddetalleId',
                      height:350,
                      width:700,
+                     selType: 'cellmodel',
                      frame:true,
                       plugins:[plugin],
                      store: storeGridDetalle,
@@ -180,11 +210,10 @@ Ext.onReady(function(){
                                  selectOnTab: true ,
                                  store: storeEspecie,
                                  listeners:{
-                                     'select':function(combo,records,options){
-                                           flagLoadEspecies = true;
-                                           storeRaza.load();
+                                     //'select':function(combo,records,options){
+                                     //    storeRaza.load();
 
-                                     }
+                                     //}
                                  }
 
                              }),
@@ -209,7 +238,14 @@ Ext.onReady(function(){
                                  valueField:'id',
                                  displayField:'nombre',
                                  selectOnTab: true,
-                                 store: storeRaza
+                                 store: storeRaza,
+                                 listeners:{
+                                     'beforerender':function(combo,opts){
+                                         //var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+                                         //var rowSel = selModel.getLastSelected();
+                                         //storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
+                                     }
+                                 }
                              }),
                              renderer: function(value) {
                                  var rec = storeRaza.getById(value);
@@ -223,29 +259,56 @@ Ext.onReady(function(){
                              }
                          },{
                              header: 'Cantidad',
-                             dataIndex:'cantidad'
+                             dataIndex:'cantidad',
+                             align:'right',
+                             editor:{
+                                 xtype: 'numberfield',
+                                 allowBlank:false,
+                                 minValue:1
+                             }
                          },{
                              header: 'Precio x Unidad',
-                             dataIndex:'float'
+                             dataIndex:'float',
+                             align:'right',
+                             editor:{
+                                 xtype:'numberfield',
+                                 allowBlank:false,
+                                 minValue:1
+
+                             }
                          },{
                              header: 'Peso',
-                             dataIndex:'peso'
+                             dataIndex:'peso',
+                             editor:{
+                                 xtype:'numberfield',
+                                 allowBlank:false,
+                                 minValue:1
+
+                             }
+
                          }
                      ]
 
                   }
               ],
-              buttons:[{
+              buttons:[
+                {
                   text:'Anterior',
                   handler: function(){
                         var wizard = this.up('#wizardId');
                         wizard.getLayout().setActiveItem('stepFormGanaderoId');
                   }
-              }]
+                },{
+                  text:'Confirmar',
+                  handler: function(){
+                         confirmarorden();
+                  }
+                }
+              ]
           }
       ]
   });
-
+  storeRaza.load();
 
 
 
