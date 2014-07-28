@@ -151,19 +151,51 @@ Ext.onReady(function(){
           {
               itemId:'stepFormGanaderoId',
               xtype:'form',
+              margin: '10 10 10 10',
               title:'Paso 1 - Registro de datos del Cliente',
               layout:'anchor',
               defaultType: 'textfield',
+              defaults:{
+                    autoScroll : true,
+                    msgTarget:'under'
+              },
               items:[
                   {
                       fieldLabel:'C.U.I.T',
-                      name:'cuit'
+                      name:'cuit',
+                      vtype:'cuit',
+                      alloBlank:false
                   },{
                       fieldLabel:'Razon Social',
-                      name:'razonSocial'
+                      name:'razonSocial',
+                      alloBlank:false
                   },{
-                      fieldLabel:'Nombre Fantasía',
+                      fieldLabel:'Nombre de',
                       name:'nombreFantasia'
+                  },{
+                      fieldLabel:'Teléfono 1',
+                      name:'telefono1'
+                  },{
+                      fieldLabel:'Teléfono 2',
+                      name:'telefono2'
+                  },{
+                      fieldLabel:'E-mail',
+                      name:'name'
+                  },{
+                      fieldLabel:'sitioWeb',
+                      name:'sitioWeb'
+                  },{
+                      fieldLabel:'Provincia',
+                      name:'provincia',
+                      allowBlank:false
+                  },{
+                      fieldLabel:'Localidad',
+                      name:'localidad',
+                      allowBlank:false
+                  },{
+                      fieldLabel:'Direccion',
+                      name:'direccion',
+                      allowBlank:false
                   }
               ],
               buttons: [{
@@ -174,11 +206,14 @@ Ext.onReady(function(){
                         wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
                   }
               }]
+          },{
+              itemId:''
 
           },{
               itemId:'stepFormDetalleOrdenId',
               title:'Confección de Detalle de la Orden',
               xtype:'form',
+              margin:'10 10 10 10',
               itemId:'stepFormDetalleOrdenId',
               title:'Paso 2 - Confección del Detalle',
               items:[
@@ -200,6 +235,7 @@ Ext.onReady(function(){
                          {
                              header: 'Especie',
                              dataIndex: 'especie',
+                             width: 150,
                              editor: new Ext.form.field.ComboBox({
                                  queryMode:'remote',
                                  emptyText:'',
@@ -230,6 +266,7 @@ Ext.onReady(function(){
                          },{
                              header: 'Raza',
                              dataIndex: 'raza',
+                             width: 200,
                              editor: new Ext.form.field.ComboBox({
                                  queryMode:'remote',
                                  emptyText:'',

@@ -16,7 +16,10 @@
         <!--link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css"-->
         <link rel="stylesheet" href="${resource(dir:'css/extjs',file:'ext-theme-neptune-all.css')}">
         <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-all-rtl-debug-w-comments.js')}"></script>
-    <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-lang-es.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-lang-es.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js/ConstraintsDefinitions.js')}"></script>
+
+
 		<g:layoutHead/>
 		<r:layoutResources />
         <script type="text/javascript">
