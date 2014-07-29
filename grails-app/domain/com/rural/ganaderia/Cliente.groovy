@@ -28,6 +28,7 @@ class Cliente {
 
     static constraints = {
         nombreRepresentante(nullable:false, blank: false,maxSize: 60)
+        apellidoRepresentante(nullable: false,blank: false,maxSize: 60)
         direccion(maxSize: 60)
         email(email: true,nullable: false,blank: false,maxSize: 50)
         telefono1(nullable: false,maxSize: 20,blank: false)

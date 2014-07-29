@@ -168,22 +168,23 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Razon Social',
                       name:'razonSocial',
-                      allowBlank:false
-                  },{
-                      fieldLabel:'Nombre de',
-                      name:'nombreFantasia',
+                      maxLengthText:60,
                       allowBlank:false
                   },{
                       fieldLabel:'Teléfono 1',
+                      maxLengthText:20,
                       name:'telefono1'
                   },{
                       fieldLabel:'Teléfono 2',
+                      maxLengthText:20,
                       name:'telefono2'
                   },{
                       fieldLabel:'E-mail',
+                      maxLengthText:20,
                       name:'name'
                   },{
                       fieldLabel:'sitioWeb',
+                      maxLengthText:60,
                       name:'sitioWeb'
                   },{
                       fieldLabel:'Provincia',
@@ -196,6 +197,7 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Direccion',
                       name:'direccion',
+                      maxLengthText:60,
                       allowBlank:false
                   }
               ],
@@ -204,14 +206,14 @@ Ext.onReady(function(){
                   handler: function() {
                       var wizard = this.up('#wizardId');
                       if(this.up('form').getForm().isValid())
-                        wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                        wizard.getLayout().setActiveItem('stepFormRepresentanteId');
                   }
               }]
           },{
-              itemId:'stepFormContactoId',
+              itemId:'stepFormRepresentanteId',
               xtype:'form',
               margin:'10 10 10 10',
-              title:'Paso 2 - Registro de datos del Contacto',
+              title:'Paso 2 - Registro de datos del Representante',
               layout:'anchor',
               defaultType:'textfield',
               defaults:{
@@ -221,18 +223,26 @@ Ext.onReady(function(){
               items:[
                   {
                       fieldLabel:'Nombre del Representante',
-                      name:'nombreRepresentante'
+                      name:'nombreRepresentante',
+                      maxLengthText:60,
+                      allowBlank:false
                   },{
                       fieldLabel:'Apellido Representante',
-                      name:'apellidoNombre'
+                      name:'apellidoNombre',
+                      maxLengthText:60,
+                      allowBlank:false
                   },{
                       fieldLabel:'Teléfono 1 Representante',
-                      name:'telefonoRepresentante1'
+                      name:'telefonoRepresentante1',
+                      maxLengthText:20,
+                      allowBlank:false
                   },{
                       fieldLabel:'Teléfono 2 Representante',
+                      maxLengthText:20,
                       name:'telefonoRepresentante2'
                   },{
                       fieldLabel:'Teléfono 3 Representante',
+                      maxLengthText:20,
                       name:'telefonoRepresentante3'
                   }
               ],
@@ -240,24 +250,89 @@ Ext.onReady(function(){
                   {
                      text:'Anteriror',
                      handler:function(){
-
+                         var wizard = this.up('#wizardId');
+                         wizard.getLayout().setActiveItem('stepFormGanaderoId');
                      }
                   },{
                      text:'Siguiente',
                      handler:function(){
+                         var wizard = this.up('#wizardId');
+                         if(this.up('form').getForm().isValid())
+                             wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                     }
                   }
-              }]
+              ]
 
 
           },{
               itemId:'stepFormDetalleOrdenId',
               title:'Confección de Detalle de la Orden',
-              xtype:'form',
+              xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormDetalleOrdenId',
               title:'Paso 2 - Confección del Detalle',
               items:[
                   {
+                      xtype:'form',
+                      defaults:{
+                            msgTarget:'under'
+                      },
+                      items:[
+                          {
+                              xtype:'combo',
+                              name:'especie',
+                              fieldLabel:'Especie',
+                              allowBlank:false,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true ,
+                              store: storeEspecie,
+                              listeners:{
+                                  'select':function(combo,records,options){
+                                      storeRaza.proxy.extraParams={especieId:records[0].data.id};
+                                      storeRaza.load();
+
+                                  }
+                              }
+
+                          },{
+                              xtype:'combo',
+                              name:'raza',
+                              fieldLabel:'Raza',
+                              allowBlank:false ,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true,
+                              store: storeRaza
+                          },{
+                              xtype:'numberfield',
+                              name:'cantidad',
+                              fieldLabel:'Cantidad'
+                          },{
+                              xtype:'numberfield',
+                              name:'peso',
+                              fieldLabel:'Peso'
+                          },{
+                              xtype:'numberfield',
+                              name:'preciounitario',
+                              fieldLabel:'Precio Unitario'
+                          }
+                      ],
+                      buttons:[
+                          {
+                              text:'Agregar Línea',
+                              handler: onAddClick
+                          }
+                      ]
+                  },{
                      xtype:'grid',
                      id:'griddetalleId',
                      height:350,
@@ -266,11 +341,6 @@ Ext.onReady(function(){
                      frame:true,
                       plugins:[plugin],
                      store: storeGridDetalle,
-                      tbar: [{
-                          text: 'Agregar Línea',
-                          scope: this,
-                          handler: onAddClick
-                      }],
                      columns:[
                          {
                              header: 'Especie',
@@ -362,7 +432,21 @@ Ext.onReady(function(){
                                  minValue:1
 
                              }
+                         },{
 
+                             xtype:'actioncolumn',
+                             width:30,
+                             sortable:false,
+                             menuDisabled:true,
+                             items:[
+                                 {
+                                     icon:deleteImg,
+                                     tooltip:'Eliminar Línea',
+                                     handler: function(grid,rowIndex){
+                                         Ext.getCmp('griddetalleId').getStore().removeAt(rowIndex);
+                                     }
+                                 }
+                             ]
                          }
                      ]
 
@@ -373,7 +457,7 @@ Ext.onReady(function(){
                   text:'Anterior',
                   handler: function(){
                         var wizard = this.up('#wizardId');
-                        wizard.getLayout().setActiveItem('stepFormGanaderoId');
+                        wizard.getLayout().setActiveItem('stepFormRepresentanteId');
                   }
                 },{
                   text:'Confirmar',

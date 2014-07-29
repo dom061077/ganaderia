@@ -9,6 +9,7 @@
         <script type="text/javascript">
             var especiesUrl = '<%out << createLink(controller:'especie',action:'listjson')%>';
             var razaUrl = '<%out << createLink(controller:'raza',action:'listjson')%>';
+            var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
         </script>
 
 	</head>
