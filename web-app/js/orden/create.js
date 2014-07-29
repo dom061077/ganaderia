@@ -164,14 +164,15 @@ Ext.onReady(function(){
                       fieldLabel:'C.U.I.T',
                       name:'cuit',
                       vtype:'cuit',
-                      alloBlank:false
+                      allowBlank:false
                   },{
                       fieldLabel:'Razon Social',
                       name:'razonSocial',
-                      alloBlank:false
+                      allowBlank:false
                   },{
                       fieldLabel:'Nombre de',
-                      name:'nombreFantasia'
+                      name:'nombreFantasia',
+                      allowBlank:false
                   },{
                       fieldLabel:'Teléfono 1',
                       name:'telefono1'
@@ -207,7 +208,46 @@ Ext.onReady(function(){
                   }
               }]
           },{
-              itemId:''
+              itemId:'stepFormContactoId',
+              xtype:'form',
+              margin:'10 10 10 10',
+              title:'Paso 2 - Registro de datos del Contacto',
+              layout:'anchor',
+              defaultType:'textfield',
+              defaults:{
+                  autoScroll :  true,
+                  msgTarget:'under'
+              },
+              items:[
+                  {
+                      fieldLabel:'Nombre del Representante',
+                      name:'nombreRepresentante'
+                  },{
+                      fieldLabel:'Apellido Representante',
+                      name:'apellidoNombre'
+                  },{
+                      fieldLabel:'Teléfono 1 Representante',
+                      name:'telefonoRepresentante1'
+                  },{
+                      fieldLabel:'Teléfono 2 Representante',
+                      name:'telefonoRepresentante2'
+                  },{
+                      fieldLabel:'Teléfono 3 Representante',
+                      name:'telefonoRepresentante3'
+                  }
+              ],
+              buttons:[
+                  {
+                     text:'Anteriror',
+                     handler:function(){
+
+                     }
+                  },{
+                     text:'Siguiente',
+                     handler:function(){
+                  }
+              }]
+
 
           },{
               itemId:'stepFormDetalleOrdenId',
