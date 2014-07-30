@@ -20,7 +20,7 @@ Ext.onReady(function(){
             {name: 'raza', type: 'int'},
             {name: 'cantidad',type:'int'},
             {name: 'peso',type:'int'},
-            {name: 'precio', type: 'float'}
+            {name: 'preciounitario', type: 'float'}
         ]
     });
 
@@ -131,7 +131,7 @@ Ext.onReady(function(){
              raza: fieldValues.raza,
              cantidad: fieldValues.cantidad,
              peso: fieldValues.peso,
-             precio: fieldValues.precio
+             preciounitario: fieldValues.preciounitario
           });
           form.reset();
           storeGridDetalle.add(rec);
@@ -143,7 +143,7 @@ Ext.onReady(function(){
       itemId:'wizardId',
       renderTo:'formpanelId',
       layout:'card',
-      width:700,
+      width:750,
       style: "margin: auto auto auto auto;",
       defaults:{
           border:false
@@ -337,7 +337,7 @@ Ext.onReady(function(){
                      xtype:'grid',
                      id:'griddetalleId',
                      height:250,
-                     width:700,
+                     width:750,
                      selType: 'cellmodel',
                      frame:true,
                       plugins:[plugin],
@@ -347,7 +347,7 @@ Ext.onReady(function(){
                              header: 'Especie',
                              dataIndex: 'especie',
                              width: 150,
-                             editor: new Ext.form.field.ComboBox({
+                             /*editor: new Ext.form.field.ComboBox({
                                  queryMode:'remote',
                                  emptyText:'',
                                  typeAhead: true,
@@ -363,7 +363,7 @@ Ext.onReady(function(){
                                      //}
                                  }
 
-                             }),
+                             }),*/
                              renderer: function(value) {
                                  var rec = storeEspecie.getById(value);
 
@@ -378,7 +378,7 @@ Ext.onReady(function(){
                              header: 'Raza',
                              dataIndex: 'raza',
                              width: 200,
-                             editor: new Ext.form.field.ComboBox({
+                             /*editor: new Ext.form.field.ComboBox({
                                  queryMode:'remote',
                                  emptyText:'',
                                  typeAhead: true,
@@ -394,7 +394,7 @@ Ext.onReady(function(){
                                          //storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
                                      }
                                  }
-                             }),
+                             }),*/
                              renderer: function(value) {
                                  var rec = storeRaza.getById(value);
 
@@ -408,31 +408,14 @@ Ext.onReady(function(){
                          },{
                              header: 'Cantidad',
                              dataIndex:'cantidad',
-                             align:'right',
-                             editor:{
-                                 xtype: 'numberfield',
-                                 allowBlank:false,
-                                 minValue:1
-                             }
+                             align:'right'
                          },{
                              header: 'Precio x Unidad',
-                             dataIndex:'float',
-                             align:'right',
-                             editor:{
-                                 xtype:'numberfield',
-                                 allowBlank:false,
-                                 minValue:1
-
-                             }
+                             dataIndex:'preciounitario',
+                             align:'right'
                          },{
                              header: 'Peso',
-                             dataIndex:'peso',
-                             editor:{
-                                 xtype:'numberfield',
-                                 allowBlank:false,
-                                 minValue:1
-
-                             }
+                             dataIndex:'peso'
                          },{
 
                              xtype:'actioncolumn',
