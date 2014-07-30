@@ -2,7 +2,7 @@ Ext.onReady(function(){
 
     function confirmarorden(){
         var detalleArr=[];
-        storeRaza.data.each(function(row){
+        storeGridDetalle.data.each(function(row){
              detalleArr.push(row.data);
         });
         var detalleJson = Ext.encode(detalleArr);
@@ -122,19 +122,20 @@ Ext.onReady(function(){
 
 
   function onAddClick(){
-      var rec = new ganaderia.model.grid.DetalleOrden({
-          especie: 0,
-          raza: 0,
-          cantidad: 0,
-          peso:0,
-          precio:0
-      });
+      if(this.up('form').getForm().isValid()){
+          var form=this.up('form').getForm();
+          var fieldValues=form.getFieldValues();
 
-      Ext.getCmp('griddetalleId').getStore().insert(0, rec);
-      plugin.startEditByPosition({
-          row: 0,
-          column: 0
-      });
+          var rec = new ganaderia.model.grid.DetalleOrden({
+             especie: fieldValues.especie,
+             raza: fieldValues.raza,
+             cantidad: fieldValues.cantidad,
+             peso: fieldValues.peso,
+             precio: fieldValues.precio
+          });
+          form.reset();
+          storeGridDetalle.add(rec);
+      }
   }
 
   Ext.widget('panel',{
@@ -248,7 +249,7 @@ Ext.onReady(function(){
               ],
               buttons:[
                   {
-                     text:'Anteriror',
+                     text:'Anterior',
                      handler:function(){
                          var wizard = this.up('#wizardId');
                          wizard.getLayout().setActiveItem('stepFormGanaderoId');
@@ -335,7 +336,7 @@ Ext.onReady(function(){
                   },{
                      xtype:'grid',
                      id:'griddetalleId',
-                     height:350,
+                     height:250,
                      width:700,
                      selType: 'cellmodel',
                      frame:true,
