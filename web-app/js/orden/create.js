@@ -158,18 +158,20 @@ Ext.onReady(function(){
               defaultType: 'textfield',
               defaults:{
                     autoScroll : true,
-                    msgTarget:'under'
+                    msgTarget:'under',
+                    labelWidth:200
               },
               items:[
                   {
-                      fieldLabel:'C.U.I.T',
+                      fieldLabel:'C.U.I.T o D.N.I',
                       name:'cuit',
-                      vtype:'cuit',
+                      //vtype:'cuit',
                       allowBlank:false
                   },{
-                      fieldLabel:'Razon Social',
+                      fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
                       maxLengthText:60,
+                      width:250,
                       allowBlank:false
                   },{
                       fieldLabel:'Teléfono 1',
