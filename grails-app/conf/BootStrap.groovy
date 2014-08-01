@@ -2,6 +2,8 @@ import com.rural.ganaderia.Especie
 import com.rural.ganaderia.Raza
 import grails.util.Environment
 import org.codehaus.groovy.grails.commons.ApplicationHolder
+import com.rural.ganaderia.localizacion.Provincia
+import com.rural.ganaderia.localizacion.Localidad
 
 class BootStrap {
 
@@ -40,6 +42,12 @@ class BootStrap {
                 especie.addToRazas(new Raza(nombre: "RAZA VACUNO 2"))
                 especie.addToRazas(new Raza(nombre: "RAZA VACUNO 3"))
                 especie.save(failOnError: true)
+                def provincia = new Provincia(nombre:"TUCUMAN").save(failOnError: true)
+                new Localidad(nombre: 'S.M DE TUCUMAN',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre:'LEALES',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'TAFI VIEJO',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'TAFI DEL VALLE',provincia: provincia).save(failOnError: true)
+                //  provincia = new Provincia(nombre:"")
 
 
             }

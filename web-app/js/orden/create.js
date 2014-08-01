@@ -40,35 +40,33 @@ Ext.onReady(function(){
         },
         fields:['id','nombre'],
         listeners:{
-            /*'beforeload':function(){
-                var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
-                var rowSel = selModel.getLastSelected();
-                storeRaza.baseParams = {
-                    especieId : rowSel.data.especie
-                }
-
-            } */
-
-            /*'load':function(){
-                if(flagLoadEspecies==true){
-                    var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
-                    var rowSel = selModel.getLastSelected();
-                    var firstRaza = storeRaza.first();
-                    rowSel.data.raza = firstRaza.data.id;
-                    rowSel.commit();
-                    flagLoadEspecies = false;
-                }
-            } */
         }
     });
 
-    /*storeRaza.on("beforeload",function(){
-        var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
-        var rowSel = selModel.getLastSelected();
-        storeRaza.baseParams = {
-            especieId : rowSel.data.especie
-        }
-    }); */
+    Ext.define('ganaderia.model.combo.ProvinciaStore',{
+        extend:'Ext.data.Store',
+        autoLoad:true,
+        proxy:{
+            type: 'ajax',
+            url: provinciaUrl,
+            root: 'rows',
+            idProperty:'id'
+        },
+        fields:['id','nombre']
+    });
+
+    Ext.define('ganaderia.model.combo.LocalidadStore',{
+        extend: 'Ext.data.Store',
+        root: 'rows',
+        proxy:{
+            type:'ajax',
+            url: localidadUrl,
+            root: 'rows',
+            idProperty:'id'
+        },
+        fields:['id','nombre']
+
+    });
 
 
   Ext.define('ganaderia.model.combo.EspecieStore',{
@@ -98,6 +96,8 @@ Ext.onReady(function(){
 
   var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
+  var storeProvincia = Ext.create('ganaderia.model.combo.ProvinciaStore');
+  var storeLocalidad = Ext.create('ganaderia.model.combo.LocalidadStore');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,
@@ -171,7 +171,6 @@ Ext.onReady(function(){
                       fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
                       maxLengthText:60,
-                      width:250,
                       allowBlank:false
                   },{
                       fieldLabel:'Teléfono 1',
@@ -191,10 +190,29 @@ Ext.onReady(function(){
                       name:'sitioWeb'
                   },{
                       fieldLabel:'Provincia',
+                      xtype:'combo',
+                      store:storeEspecie,
                       name:'provincia',
-                      allowBlank:false
+                      allowBlank:false,
+                      queryMode:'remote',
+                      emptyText:'',
+                      typeAhead: true,
+                      triggerAction:'all',
+                      valueField:'id',
+                      displayField:'nombre',
+                      selectOnTab:true
                   },{
                       fieldLabel:'Localidad',
+                      xtype:'combo',
+                      allowBlank:false,
+                      store:storeLocalidad,
+                      queryMode:'remote',
+                      emptyText:'',
+                      typeAhead: true,
+                      triggerAction:'all',
+                      valueField:'id',
+                      displayField:'nombre',
+                      selectOnTab: true,
                       name:'localidad',
                       allowBlank:false
                   },{

@@ -1,6 +1,7 @@
 package com.rural.ganaderia.localizacion
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class LocalidadController {
 
@@ -99,4 +100,19 @@ class LocalidadController {
             redirect(action: "show", id: id)
         }
     }
+    //--------------------
+    def listjson(){
+        def hashJson = [:]
+        def listRows = []
+        def provincias = Provincia.createCriteria().list{
+            order("nombre","asc")
+        }
+        provincias.each{
+            listRows <<[id:it.id,nombre:it.nombre]
+        }
+        hashJson.success  = true
+        hashJson.rows = listRows
+        render hashJson as JSON
+    }
+
 }
