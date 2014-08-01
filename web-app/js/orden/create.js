@@ -18,6 +18,7 @@ Ext.onReady(function(){
             // which is mapped to the tag 'availability'
             {name: 'especie', type: 'int'},
             {name: 'raza', type: 'int'},
+            {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
             {name: 'peso',type:'int'},
             {name: 'preciounitario', type: 'float'}
@@ -46,28 +47,67 @@ Ext.onReady(function(){
     Ext.define('ganaderia.model.combo.ProvinciaStore',{
         extend:'Ext.data.Store',
         autoLoad:true,
-        proxy:{
-            type: 'ajax',
-            url: provinciaUrl,
-            root: 'rows',
-            idProperty:'id'
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:provinciaUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
         },
         fields:['id','nombre']
+
     });
 
     Ext.define('ganaderia.model.combo.LocalidadStore',{
         extend: 'Ext.data.Store',
-        root: 'rows',
-        proxy:{
+        autoLoad:true,
+        root:'rows',
+        proxy: {
             type:'ajax',
-            url: localidadUrl,
-            root: 'rows',
-            idProperty:'id'
+            url:localidadUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
         },
         fields:['id','nombre']
-
     });
 
+    Ext.define('ganaderia.model.combo.ExposicionStore',{
+        extend: 'Ext.data.Store',
+        autoLoad:true,
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:exposicionUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','nombre']
+    });
+
+    Ext.define('ganaderia.model.combo.AnioExposicionStore',{
+        extend: 'Ext.data.Store',
+        autoLoad:true,
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:anioExposicionUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','anio']
+    });
 
   Ext.define('ganaderia.model.combo.EspecieStore',{
       extend:'Ext.data.Store',
@@ -98,6 +138,8 @@ Ext.onReady(function(){
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
   var storeProvincia = Ext.create('ganaderia.model.combo.ProvinciaStore');
   var storeLocalidad = Ext.create('ganaderia.model.combo.LocalidadStore');
+  var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
+  var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,
@@ -129,6 +171,7 @@ Ext.onReady(function(){
           var rec = new ganaderia.model.grid.DetalleOrden({
              especie: fieldValues.especie,
              raza: fieldValues.raza,
+             corral: fieldValues.corral,
              cantidad: fieldValues.cantidad,
              peso: fieldValues.peso,
              preciounitario: fieldValues.preciounitario
@@ -143,7 +186,7 @@ Ext.onReady(function(){
       itemId:'wizardId',
       renderTo:'formpanelId',
       layout:'card',
-      width:750,
+      width:800,
       style: "margin: auto auto auto auto;",
       defaults:{
           border:false
@@ -191,7 +234,7 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Provincia',
                       xtype:'combo',
-                      store:storeEspecie,
+                      store:storeProvincia,
                       name:'provincia',
                       allowBlank:false,
                       queryMode:'remote',
@@ -200,10 +243,18 @@ Ext.onReady(function(){
                       triggerAction:'all',
                       valueField:'id',
                       displayField:'nombre',
-                      selectOnTab:true
+                      selectOnTab:true,
+                      listeners:{
+                          'select':function(combo,records,options){
+                                storeLocalidad.proxy.extraParams={provinciaId:records[0].data.id};
+                                storeLocalidad.load();
+                                Ext.getCmp('localidadId').clearValue();
+                          }
+                      }
                   },{
                       fieldLabel:'Localidad',
                       xtype:'combo',
+                      id:'localidadId',
                       allowBlank:false,
                       store:storeLocalidad,
                       queryMode:'remote',
@@ -279,15 +330,72 @@ Ext.onReady(function(){
                      handler:function(){
                          var wizard = this.up('#wizardId');
                          if(this.up('form').getForm().isValid())
-                             wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                             wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
                      }
                   }
               ]
 
+          },{
+              itemId:'stepFormDatosExposicionId',
+              title:'Datos de Exposición',
+              xtype:'panel',
+              margin:'10 10 10 10',
+              items:[
+                  {
+                      xtype:'form',
+                      defults:{
+                          msgTarget:'under'
+                      },
+                      items:[
+                          {
+                              xtype:'combo',
+                              fieldLabel:'Exposición',
+                              name:'exposicion',
+                              width:300,
+                              allowBlank:false,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true,
+                              store:storeExposicion
+                          },{
+                              xtype:'combo',
+                              fieldLabel:'Año de Exposición',
+                              name:'anioExposicion',
+                              allowBlank:false,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'anio',
+                              selectOnTab: true,
+                              store:storeAnioExposicion
+                          }
+                      ],
+                      buttons:[
+                          {
+                            text:'Anterior',
+                            handler:function(){
+                                var wizard = this.up('#wizardId');
+                                wizard.getLayout().setActiveItem('stepFormRepresentanteId');
+                            }
+                          },{
+                            text:'Siguiente',
+                            handler:function(){
+                                var wizard = this.up('#wizardId');
+                                if(this.up('form').getForm().isValid())
+                                    wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                            }
+                          }
+                      ]
+                  }
+              ]
 
           },{
-              itemId:'stepFormDetalleOrdenId',
-              title:'Confección de Detalle de la Orden',
               xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormDetalleOrdenId',
@@ -304,6 +412,7 @@ Ext.onReady(function(){
                               name:'especie',
                               fieldLabel:'Especie',
                               allowBlank:false,
+                              width:300,
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
@@ -325,6 +434,7 @@ Ext.onReady(function(){
                               name:'raza',
                               fieldLabel:'Raza',
                               allowBlank:false ,
+                              width:300,
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
@@ -334,16 +444,25 @@ Ext.onReady(function(){
                               selectOnTab: true,
                               store: storeRaza
                           },{
+                              xtype:'textfield',
+                              fieldLabel:'Datos del Corral',
+                              name:'corral',
+                              allowBlank:false,
+                              width:300
+                          },{
                               xtype:'numberfield',
                               name:'cantidad',
+                              allowBlank:false,
                               fieldLabel:'Cantidad'
                           },{
                               xtype:'numberfield',
                               name:'peso',
+                              allowBlank:false,
                               fieldLabel:'Peso'
                           },{
                               xtype:'numberfield',
                               name:'preciounitario',
+                              allowBlank:false,
                               fieldLabel:'Precio Unitario'
                           }
                       ],
@@ -357,7 +476,7 @@ Ext.onReady(function(){
                      xtype:'grid',
                      id:'griddetalleId',
                      height:250,
-                     width:750,
+                     width:800,
                      selType: 'cellmodel',
                      frame:true,
                       plugins:[plugin],
@@ -367,23 +486,6 @@ Ext.onReady(function(){
                              header: 'Especie',
                              dataIndex: 'especie',
                              width: 150,
-                             /*editor: new Ext.form.field.ComboBox({
-                                 queryMode:'remote',
-                                 emptyText:'',
-                                 typeAhead: true,
-                                 triggerAction:'all',
-                                 valueField:'id',
-                                 displayField:'nombre',
-                                 selectOnTab: true ,
-                                 store: storeEspecie,
-                                 listeners:{
-                                     //'select':function(combo,records,options){
-                                     //    storeRaza.load();
-
-                                     //}
-                                 }
-
-                             }),*/
                              renderer: function(value) {
                                  var rec = storeEspecie.getById(value);
 
@@ -398,23 +500,6 @@ Ext.onReady(function(){
                              header: 'Raza',
                              dataIndex: 'raza',
                              width: 200,
-                             /*editor: new Ext.form.field.ComboBox({
-                                 queryMode:'remote',
-                                 emptyText:'',
-                                 typeAhead: true,
-                                 triggerAction:'all',
-                                 valueField:'id',
-                                 displayField:'nombre',
-                                 selectOnTab: true,
-                                 store: storeRaza,
-                                 listeners:{
-                                     'beforerender':function(combo,opts){
-                                         //var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
-                                         //var rowSel = selModel.getLastSelected();
-                                         //storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
-                                     }
-                                 }
-                             }),*/
                              renderer: function(value) {
                                  var rec = storeRaza.getById(value);
 
@@ -425,6 +510,9 @@ Ext.onReady(function(){
 
                                  return '';
                              }
+                         },{
+                             header: 'Corral',
+                             dataIndex:'corral'
                          },{
                              header: 'Cantidad',
                              dataIndex:'cantidad',
@@ -461,7 +549,7 @@ Ext.onReady(function(){
                   text:'Anterior',
                   handler: function(){
                         var wizard = this.up('#wizardId');
-                        wizard.getLayout().setActiveItem('stepFormRepresentanteId');
+                        wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
                   }
                 },{
                   text:'Confirmar',

@@ -101,13 +101,16 @@ class LocalidadController {
         }
     }
     //--------------------
-    def listjson(){
+    def listjson(long provinciaId){
         def hashJson = [:]
         def listRows = []
-        def provincias = Provincia.createCriteria().list{
+        def localidades = Localidad.createCriteria().list{
+            provincia{
+                eq("id",provinciaId)
+            }
             order("nombre","asc")
         }
-        provincias.each{
+        localidades.each{
             listRows <<[id:it.id,nombre:it.nombre]
         }
         hashJson.success  = true

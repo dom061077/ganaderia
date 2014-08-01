@@ -4,6 +4,8 @@ import grails.util.Environment
 import org.codehaus.groovy.grails.commons.ApplicationHolder
 import com.rural.ganaderia.localizacion.Provincia
 import com.rural.ganaderia.localizacion.Localidad
+import com.rural.ganaderia.Exposicion
+import com.rural.ganaderia.AnioExposicion
 
 class BootStrap {
 
@@ -42,12 +44,29 @@ class BootStrap {
                 especie.addToRazas(new Raza(nombre: "RAZA VACUNO 2"))
                 especie.addToRazas(new Raza(nombre: "RAZA VACUNO 3"))
                 especie.save(failOnError: true)
+
                 def provincia = new Provincia(nombre:"TUCUMAN").save(failOnError: true)
                 new Localidad(nombre: 'S.M DE TUCUMAN',provincia: provincia).save(failOnError: true)
                 new Localidad(nombre:'LEALES',provincia: provincia).save(failOnError: true)
                 new Localidad(nombre: 'TAFI VIEJO',provincia: provincia).save(failOnError: true)
                 new Localidad(nombre: 'TAFI DEL VALLE',provincia: provincia).save(failOnError: true)
-                //  provincia = new Provincia(nombre:"")
+                provincia = new Provincia(nombre:"SANTIAGO DEL ESTERO").save(failOnError: true)
+                new Localidad(nombre: 'SANTIAGO CAPITAL',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'SANTIAGGO LA BANDA',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'RAPELLI',provincia: provincia).save(failOnError: true)
+                provincia = new Provincia(nombre: 'SALTA',provincia:provincia).save(failOnError: true)
+                new Localidad(nombre: 'SALTA CAPITAL',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'ORAN',provincia: provincia).save(failOnError: true)
+                new Localidad(nombre: 'TARTAGAL',provincia: provincia).save(failOnError: true)
+                
+                //-----------------------
+                new Exposicion(nombre: "EXPO TUCUMAN").save(failOnError: true)
+                new Exposicion(nombre: "EXPO LACTEA").save(failOnError: true)
+                new Exposicion(nombre: "EXPO CONSTRUCCION").save(failOnError: true)
+                new AnioExposicion(anio: 2013).save(failOnError: true)
+                new AnioExposicion(anio: 2012).save(failOnError: true)
+                new AnioExposicion(anio: 2014).save(failOnError: true)
+
 
 
             }
