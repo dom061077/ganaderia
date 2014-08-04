@@ -6,8 +6,29 @@ Ext.onReady(function(){
              detalleArr.push(row.data);
         });
         var detalleJson = Ext.encode(detalleArr);
-        alert('Json generado '+detalleJson);
+        var wizard = Ext.getCmp('wizardId');
+        var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
+        var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
+        var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
+        var fieldValuesFormDetalleOrden = wizard.getComponent('stepFormDetalleOrdenId').getForm().getFieldValues();
+        Ext.Ajax.request({
+            url:saveOrdenUrl,
+            params:{
+                formGanadero:fieldValuesFormGanadero
+            },
+            success: function(xhr){
+                console.log(xhr.reponseText);
+            },
+            failure: function(xhr){
+                console.log("Error: "+xhr.statusText);
+            }
+        });
+        //----limpiar datos-----
         storeGridDetalle.removeAll();
+        Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
+        Ext.getCmp('wizardId').getComponent('stepFormRepresentanteId').getForm().reset();
+        Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
+        Ext.getCmp('wizardId').getComponent('stepFormDetalleOrdenId').getForm().reset();
     }
 
 
@@ -21,7 +42,8 @@ Ext.onReady(function(){
             {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
             {name: 'peso',type:'int'},
-            {name: 'preciounitario', type: 'float'}
+            {name: 'preciounitario', type: 'float'},
+            {name: 'subtotal', type: 'float'}
         ]
     });
 
@@ -174,7 +196,8 @@ Ext.onReady(function(){
              corral: fieldValues.corral,
              cantidad: fieldValues.cantidad,
              peso: fieldValues.peso,
-             preciounitario: fieldValues.preciounitario
+             preciounitario: fieldValues.preciounitario,
+             subtotal:fieldValues.cantidad * fieldValues.preciounitario
           });
           form.reset();
           storeGridDetalle.add(rec);
@@ -184,9 +207,10 @@ Ext.onReady(function(){
   Ext.widget('panel',{
       title:'Registro de Orden de Compra',
       itemId:'wizardId',
+      id:'wizardId',
       renderTo:'formpanelId',
       layout:'card',
-      width:800,
+      width:900,
       style: "margin: auto auto auto auto;",
       defaults:{
           border:false
@@ -195,6 +219,7 @@ Ext.onReady(function(){
           {
               itemId:'stepFormGanaderoId',
               xtype:'form',
+              width:700,
               margin: '10 10 10 10',
               title:'Paso 1 - Registro de datos del Cliente',
               layout:'anchor',
@@ -237,6 +262,7 @@ Ext.onReady(function(){
                       store:storeProvincia,
                       name:'provincia',
                       allowBlank:false,
+                      anyMatch:true,
                       queryMode:'remote',
                       emptyText:'',
                       typeAhead: true,
@@ -258,6 +284,7 @@ Ext.onReady(function(){
                       allowBlank:false,
                       store:storeLocalidad,
                       queryMode:'remote',
+                      anyMatch:true,
                       emptyText:'',
                       typeAhead: true,
                       triggerAction:'all',
@@ -335,15 +362,12 @@ Ext.onReady(function(){
                   }
               ]
 
-          },{
-              itemId:'stepFormDatosExposicionId',
-              title:'Datos de Exposición',
-              xtype:'panel',
-              margin:'10 10 10 10',
-              items:[
+          },
                   {
                       xtype:'form',
-                      defults:{
+                      title:'Paso 3 - Datos de Exposición',
+                      height:300,
+                      defaults : {
                           msgTarget:'under'
                       },
                       items:[
@@ -351,6 +375,7 @@ Ext.onReady(function(){
                               xtype:'combo',
                               fieldLabel:'Exposición',
                               name:'exposicion',
+                              editable:false,
                               width:300,
                               allowBlank:false,
                               queryMode:'remote',
@@ -366,6 +391,7 @@ Ext.onReady(function(){
                               fieldLabel:'Año de Exposición',
                               name:'anioExposicion',
                               allowBlank:false,
+                              editable:false,
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
@@ -393,13 +419,12 @@ Ext.onReady(function(){
                           }
                       ]
                   }
-              ]
 
-          },{
+          ,{
               xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormDetalleOrdenId',
-              title:'Paso 2 - Confección del Detalle',
+              title:'Paso 4 - Confección del Detalle',
               items:[
                   {
                       xtype:'form',
@@ -472,13 +497,14 @@ Ext.onReady(function(){
                               handler: onAddClick
                           }
                       ]
-                  },{
+                  },
+                  {
                      xtype:'grid',
                      id:'griddetalleId',
                      height:250,
-                     width:800,
+                     width:900,
                      selType: 'cellmodel',
-                     frame:true,
+                     frame:false,
                       plugins:[plugin],
                      store: storeGridDetalle,
                      columns:[
@@ -516,14 +542,20 @@ Ext.onReady(function(){
                          },{
                              header: 'Cantidad',
                              dataIndex:'cantidad',
+                             width:80,
                              align:'right'
                          },{
-                             header: 'Precio x Unidad',
+                             header: '$ x Unidad',
                              dataIndex:'preciounitario',
                              align:'right'
                          },{
                              header: 'Peso',
+                             width:80,
                              dataIndex:'peso'
+                         },{
+                             header: 'Subtotal',
+                             align:'right',
+                             dataIndex:'subtotal'
                          },{
 
                              xtype:'actioncolumn',

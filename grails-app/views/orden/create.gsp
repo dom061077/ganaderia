@@ -13,6 +13,7 @@
             var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
             var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
             var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
+            var saveOrdenUrl = '${createLink(controller:'orden',action:'savejson')}';
             var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
         </script>
 

@@ -14,8 +14,8 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
 		<!--link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css"-->
         <!--link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css"-->
-        <link rel="stylesheet" href="${resource(dir:'css/extjs',file:'ext-theme-neptune-all.css')}">
-        <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-all-rtl-debug-w-comments.js')}"></script>
+        <link rel="stylesheet" href="${resource(dir:'css/extjs',file: 'ext-theme-neptune-all.css')}">
+        <script type="text/javascript" src="${resource(dir:'js/extjs',file: 'ext-all-rtl-debug-w.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-lang-es.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/ConstraintsDefinitions.js')}"></script>
 

@@ -99,4 +99,8 @@ class OrdenController {
             redirect(action: "show", id: id)
         }
     }
+    //----------------------------------------
+    def savejson(){
+        log.debug("Parametros: $params")
+    }
 }
