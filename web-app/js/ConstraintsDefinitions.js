@@ -53,3 +53,6 @@ Ext.apply(Ext.form.VTypes,{
         return esCuit;
     }
 });
+
+
+

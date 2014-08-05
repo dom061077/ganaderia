@@ -1,3 +1,55 @@
+Ext.apply(Ext.form.VTypes,{
+    //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
+
+    numdocexistsText:'Número de documento ya existe',
+    numdocexists :		function CPcuitValido(numdoc) {
+
+        var vec= new Array(10);
+
+        Ext.Ajax.request(
+            {
+                url: getDatosClientesUrl,
+                method: 'POST',
+                async:false,
+                params : {
+                    numdoc: numdoc
+                },  // end-params
+
+                success: function(response, opts) {
+                    var jsonData = Ext.decode(response.responseText);
+                    var objJson = jsonData.respuesta;
+                    if (objJson.id != null) {
+                        var rec = new ganaderia.model.ClienteGanadero({
+
+                        });
+                    } else {
+                    } // end-if
+                }, // end-function
+
+                failure: function (response, options) {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg:'Se produjo un error de comunicación',
+                        icon:Ext.MessageBox.ERROR,
+                        buttons:Ext.MessageBox.OK,
+                        fn:function(btn){
+                            //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                            console.log("Error al traer datos del cliente ganadero");
+                        }
+                    });
+                }
+
+            } // end-ajax
+
+        );
+
+
+
+        return true;
+        // return true;//true determina que la validacion pase false indica error en la validacion
+    }
+});
+
 Ext.onReady(function(){
 
     function confirmarorden(){
@@ -22,19 +74,57 @@ Ext.onReady(function(){
             },
             success: function(xhr){
                 console.log(xhr.reponseText);
+                //----limpiar datos-----
+                storeGridDetalle.removeAll();
+                Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
+                Ext.getCmp('wizardId').getComponent('stepFormRepresentanteId').getForm().reset();
+                Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
+                Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
+                var t = new Ext.ToolTip({
+                    anchor: 'bottom',
+                    anchorToTarget: false,
+                    targetXY: [ Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getWidth()-200,
+                        Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getHeight()+200],
+                    title: 'Mensaje',
+                    html: 'La orden se Genero correctamente',
+                    hideDelay: 15000,
+                    closable: true
+                });
+                t.show();
+
             },
             failure: function(xhr){
                 console.log("Error: "+xhr.statusText);
             }
         });
-        //----limpiar datos-----
-        storeGridDetalle.removeAll();
-        Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
-        Ext.getCmp('wizardId').getComponent('stepFormRepresentanteId').getForm().reset();
-        Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
-        Ext.getCmp('wizardId').getComponent('stepFormDetalleOrdenId').getForm().reset();
+
     }
 
+    Ext.define('ganaderia.model.ClienteGanadero',{
+            extend:'Ext.data.Model',
+            fields: [
+                    //-------form cliente-----------
+                    {name:'cuit',type:'string'},
+                    {name:'razonSocial',type:'string'},
+                    {name:'telefono1',type:'string'},
+                    {name:'telefono2',type:'string'},
+                    {name:'email',type:'string'},
+                    {name:'provincia',type:'int'},
+                    {name:'localidad',type:'int'},
+                    {name:'direccion',type:'string'},
+                    //--------form representante-----
+                    {name:'nombreRepresentante',type:'string'},
+                    {name:'apellidoRepresentante',type:'string'},
+                    {name:'telefonoRepresentante1',type:'string'},
+                    {name:'telefonoRepresentante12',type:'string'},
+                    {name:'telefonoRepresentante3',type:'string'},
+                    //-------form datos exposicion-----------
+                    {name:'exposicion',type:'int'},
+                    {name:'anioExposicion',type:'int'}
+            ]
+
+
+    });
 
     Ext.define('ganaderia.model.grid.DetalleOrden', {
         extend: 'Ext.data.Model',
@@ -238,6 +328,7 @@ Ext.onReady(function(){
                       fieldLabel:'C.U.I.T o D.N.I',
                       name:'cuit',
                       //vtype:'cuit',
+                      vtype:'numdocexists',
                       allowBlank:false
                   },{
                       fieldLabel:'Razon Social/Apellido y Nombre',
@@ -260,6 +351,7 @@ Ext.onReady(function(){
                       fieldLabel:'Provincia',
                       xtype:'combo',
                       store:storeProvincia,
+                      forceSelection : true,
                       name:'provincia',
                       allowBlank:false,
                       anyMatch:true,
@@ -283,6 +375,7 @@ Ext.onReady(function(){
                       id:'localidadId',
                       allowBlank:false,
                       store:storeLocalidad,
+                      forceSelection:true,
                       queryMode:'remote',
                       anyMatch:true,
                       emptyText:'',
@@ -324,17 +417,17 @@ Ext.onReady(function(){
                       fieldLabel:'Nombre del Representante',
                       name:'nombreRepresentante',
                       maxLengthText:60,
-                      allowBlank:false
+                      allowBlank:true
                   },{
                       fieldLabel:'Apellido Representante',
-                      name:'apellidoNombre',
+                      name:'apellidoRepresentante',
                       maxLengthText:60,
-                      allowBlank:false
+                      allowBlank:true
                   },{
                       fieldLabel:'Teléfono 1 Representante',
                       name:'telefonoRepresentante1',
                       maxLengthText:20,
-                      allowBlank:false
+                      allowBlank:true
                   },{
                       fieldLabel:'Teléfono 2 Representante',
                       maxLengthText:20,
@@ -375,6 +468,7 @@ Ext.onReady(function(){
                           {
                               xtype:'combo',
                               fieldLabel:'Exposición',
+                              forceSelection:true,
                               name:'exposicion',
                               editable:false,
                               width:300,
@@ -390,6 +484,7 @@ Ext.onReady(function(){
                           },{
                               xtype:'combo',
                               fieldLabel:'Año de Exposición',
+                              forceSelection: true,
                               name:'anioExposicion',
                               allowBlank:false,
                               editable:false,

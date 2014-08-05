@@ -2,7 +2,7 @@ package com.rural.ganaderia
 
 class Orden {
     Cliente cliente
-    java.sql.Date fechaAlta
+    java.sql.Date fechaAlta = new java.sql.Date(new java.util.Date().getTime())
     Exposicion exposicion
     AnioExposicion anioExposicion
 
@@ -11,5 +11,6 @@ class Orden {
     static constraints = {
         exposicion(nullable: false,blank:false)
         cliente(nullable: false,blank:false)
+        anioExposicion(nullable: false,false:false)
     }
 }
