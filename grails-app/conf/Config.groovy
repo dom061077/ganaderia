@@ -88,4 +88,11 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+    debug  'grails.app.controllers'
+    root {
+        error 'stdout'/*, 'smtp'*/
+        // additivity = true
+        //debug 'stdout'
+    }
+
 }

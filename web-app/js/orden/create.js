@@ -10,11 +10,15 @@ Ext.onReady(function(){
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
-        var fieldValuesFormDetalleOrden = wizard.getComponent('stepFormDetalleOrdenId').getForm().getFieldValues();
         Ext.Ajax.request({
             url:saveOrdenUrl,
             params:{
-                formGanadero:fieldValuesFormGanadero
+                'cliente.cuit':fieldValuesFormGanadero.cuit,
+                'cliente.razonSocial':fieldValuesFormGanadero.razonSocial,
+                'cliente.telefono1':fieldValuesFormGanadero.telefono1,
+                'cliente.telefono2':fieldValuesFormGanadero.telefono2,
+                'cliente.email':fieldValuesFormGanadero.email,
+                'cliente.localidad.id':fieldValuesFormGanadero.localidad
             },
             success: function(xhr){
                 console.log(xhr.reponseText);
@@ -251,11 +255,7 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'E-mail',
                       maxLengthText:20,
-                      name:'name'
-                  },{
-                      fieldLabel:'sitioWeb',
-                      maxLengthText:60,
-                      name:'sitioWeb'
+                      name:'email'
                   },{
                       fieldLabel:'Provincia',
                       xtype:'combo',
@@ -365,6 +365,7 @@ Ext.onReady(function(){
           },
                   {
                       xtype:'form',
+                      itemId:'stepFormDatosExposicionId',
                       title:'Paso 3 - Datos de Exposición',
                       height:300,
                       defaults : {

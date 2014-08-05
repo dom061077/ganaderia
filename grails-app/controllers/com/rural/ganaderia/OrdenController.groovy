@@ -102,5 +102,10 @@ class OrdenController {
     //----------------------------------------
     def savejson(){
         log.debug("Parametros: $params")
+        def orden = new Orden(params)
+        orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
+        if (!orden.save())
+            log.debug (orden.errors)
+        render ""
     }
 }

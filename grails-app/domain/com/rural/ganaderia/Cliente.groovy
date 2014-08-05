@@ -11,7 +11,6 @@ class Cliente {
     String telefono2
     String cargoRep//cargo representante
     String dniRep
-    String sitioWeb
 
 
     //datos fiscales para la facturaci�n
@@ -35,7 +34,6 @@ class Cliente {
         telefono2(maxSize: 20)
         cargoRep(maxSize: 60)//cargo representante
         dniRep(maxSize: 8)
-        sitioWeb(maxSize: 60)
         //datos fiscales para la facturaci�n          23-26138236-9
         cuit(lenght:13 )
         razonSocial(maxSize: 60) //apellido y nombre del expositor o raz�n social
