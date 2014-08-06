@@ -6,6 +6,7 @@ import com.rural.ganaderia.localizacion.Provincia
 import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.Exposicion
 import com.rural.ganaderia.AnioExposicion
+import com.rural.ganaderia.Cliente
 
 class BootStrap {
 
@@ -67,6 +68,12 @@ class BootStrap {
                 new AnioExposicion(anio: 2012).save(failOnError: true)
                 new AnioExposicion(anio: 2014).save(failOnError: true)
 
+                //--------------------------
+                new Cliente(cuit: '23-26138236-9',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
+                          ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
+                          ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
+                        ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'
+                        ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3').save(failOnError: true)
 
 
             }

@@ -1,9 +1,12 @@
 package com.rural.ganaderia
 
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.context.i18n.LocaleContextHolder
+import grails.converters.JSON
+import org.springframework.context.MessageSource
 
 class OrdenController {
-
+    MessageSource  messageSource
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -103,9 +106,24 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
+        def errorList = []
+        def objJson = [:]
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
-        if (!orden.save())
+        if (!orden.save()){
             log.debug (orden.errors)
-        render ""
+            orden.errors.allErrors.each{
+                it.getCodes().each{
+                    log.debug "Código error: "+it
+                }
+                errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
+                objJson.idOrden = null
+                objJson.errors = errorList
+            }
+
+        }else{
+                objJson.idOrden = orden.id
+                objJson.errors = null
+        }
+        render objJson as JSON
     }
 }

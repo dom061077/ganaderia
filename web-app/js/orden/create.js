@@ -1,58 +1,85 @@
-Ext.apply(Ext.form.VTypes,{
-    //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
 
-    numdocexistsText:'Número de documento ya existe',
-    numdocexists :		function CPcuitValido(numdoc) {
-
-        var vec= new Array(10);
-
-        Ext.Ajax.request(
-            {
-                url: getDatosClientesUrl,
-                method: 'POST',
-                async:false,
-                params : {
-                    numdoc: numdoc
-                },  // end-params
-
-                success: function(response, opts) {
-                    var jsonData = Ext.decode(response.responseText);
-                    var objJson = jsonData.respuesta;
-                    if (objJson.id != null) {
-                        var rec = new ganaderia.model.ClienteGanadero({
-
-                        });
-                    } else {
-                    } // end-if
-                }, // end-function
-
-                failure: function (response, options) {
-                    Ext.Msg.show({
-                        title:'Error',
-                        msg:'Se produjo un error de comunicación',
-                        icon:Ext.MessageBox.ERROR,
-                        buttons:Ext.MessageBox.OK,
-                        fn:function(btn){
-                            //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
-                            console.log("Error al traer datos del cliente ganadero");
-                        }
-                    });
-                }
-
-            } // end-ajax
-
-        );
-
-
-
-        return true;
-        // return true;//true determina que la validacion pase false indica error en la validacion
-    }
-});
 
 Ext.onReady(function(){
+    var tempCuit;
 
+    Ext.apply(Ext.form.VTypes,{
+        //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
+
+        numdocexistsText:'Número de documento ya existe',
+        numdocexists :		function CPcuitValido(numdoc) {
+
+            var vec= new Array(10);
+            if( tempCuit!=numdoc ){
+                    Ext.Ajax.request(
+                        {
+                            url: getDatosClientesUrl,
+                            method: 'POST',
+                            async:false,
+                            params : {
+                                cuitDni: numdoc
+                            },  // end-params
+
+                            success: function(response, opts) {
+                                var objJson = Ext.decode(response.responseText);
+                                if (objJson.id != null) {
+                                    tempCuit = objJson.cuit;
+                                    storeProvincia.load();
+                                    storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
+                                    var rec = new ganaderia.model.ClienteGanadero({
+                                        cuit : objJson.cuit,
+                                        razonSocial: objJson.razonSocial,
+                                        telefono1 : objJson.telefono1,
+                                        telefono2 : objJson.telefono2,
+                                        email : objJson.email,
+                                        provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
+                                        localidad :(objJson.localidad!=null?objJson.localidad.id:null),
+                                        direccion : objJson.direccion,
+                                        nombreRepresentante : objJson.nombreRepresentante,
+                                        apellidoRepresentate : objJson.apellidoRepresentate,
+                                        telefonoRepresentante1 : objJson.telefonoRepresentante1,
+                                        telefonoRepresentante2 : objJson.telefonoRepresentante2,
+                                        telefonoRepresentante3 : objJson.telefonoRepresentante3
+
+                                    });
+                                    var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+                                }
+
+                            }, // end-function
+
+                            failure: function (response, options) {
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg:'Se produjo un error de comunicación',
+                                    icon:Ext.MessageBox.ERROR,
+                                    buttons:Ext.MessageBox.OK,
+                                    fn:function(btn){
+                                        //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                                        console.log("Error al traer datos del cliente ganadero");
+                                    }
+                                });
+                            }
+
+                        } // end-ajax
+
+                    );
+            }
+
+
+            return true;
+            // return true;//true determina que la validacion pase false indica error en la validacion
+        }
+    });
     function confirmarorden(){
+        if (storeGridDetalle.count()==0){
+            Ext.Msg.show({
+                title:'Error',
+                msg:'Agregue al menos una línea de detalle',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+            return;
+        }
         var detalleArr=[];
         storeGridDetalle.data.each(function(row){
              detalleArr.push(row.data);
@@ -116,7 +143,7 @@ Ext.onReady(function(){
                     {name:'nombreRepresentante',type:'string'},
                     {name:'apellidoRepresentante',type:'string'},
                     {name:'telefonoRepresentante1',type:'string'},
-                    {name:'telefonoRepresentante12',type:'string'},
+                    {name:'telefonoRepresentante2',type:'string'},
                     {name:'telefonoRepresentante3',type:'string'},
                     //-------form datos exposicion-----------
                     {name:'exposicion',type:'int'},

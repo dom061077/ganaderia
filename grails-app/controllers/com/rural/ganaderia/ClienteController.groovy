@@ -106,9 +106,11 @@ class ClienteController {
     def getdatosjson(String cuitDni){
         log.info("Parrametros: "+cuitDni)
        
-        Cliente clienteInstance  = new Cliente() 
+        Cliente clienteInstance  
         if (cuitDni)
             clienteInstance =  Cliente.findByCuit(cuitDni);
+        if(!clienteInstance)
+            clienteInstance = new Cliente()
             
         render clienteInstance as JSON
     }
