@@ -5,7 +5,7 @@ class DetalleOrden {
     
     Ganado ganado
     
-    String descripcionGanado
+    String datosCorral
     
     BigDecimal precio
     Integer cantidad

@@ -106,6 +106,13 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
+        def detalleJson = JSON.parse(params.detalle)
+
+        detalleJson.each{
+            orden.addToDetalle(new DetalleOrden(ganado: Ganado.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
+
+        }
+
         def errorList = []
         def objJson = [:]
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())

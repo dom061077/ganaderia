@@ -97,7 +97,11 @@ Ext.onReady(function(){
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
                 'cliente.telefono2':fieldValuesFormGanadero.telefono2,
                 'cliente.email':fieldValuesFormGanadero.email,
-                'cliente.localidad.id':fieldValuesFormGanadero.localidad
+                'cliente.localidad.id':fieldValuesFormGanadero.localidad,
+                'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
+                'anioExposicion.id':fieldValueFormDatosExposicion.anioExposicion,
+                'detalle': detalleJson
+
             },
             success: function(xhr){
                 console.log(xhr.reponseText);
