@@ -13,4 +13,9 @@ class Orden {
         cliente(nullable: false,blank:false)
         anioExposicion(nullable: false,false:false)
     }
+
+    static mapping = {
+        cliente(cascade: 'save-update')
+    }
+
 }

@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.context.i18n.LocaleContextHolder
 import grails.converters.JSON
 import org.springframework.context.MessageSource
+import org.springframework.transaction.TransactionStatus
 
 class OrdenController {
     MessageSource  messageSource
@@ -106,7 +107,7 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
-        def detalleJson = JSON.parse(params.detalle)
+        def detalleJson = JSON.parse(params.detalleJson)
 
         detalleJson.each{
             orden.addToDetalle(new DetalleOrden(ganado: Ganado.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
@@ -116,20 +117,24 @@ class OrdenController {
         def errorList = []
         def objJson = [:]
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
-        if (!orden.save()){
-            log.debug (orden.errors)
-            orden.errors.allErrors.each{
-                it.getCodes().each{
-                    log.debug "Código error: "+it
-                }
-                errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
-                objJson.idOrden = null
-                objJson.errors = errorList
-            }
+        Orden.withTransaction{TransactionStatus status->
+                if (!orden.save()){
+                    log.debug (orden.errors)
+                    status.setRollbackOnly()
+                    orden.errors.allErrors.each{
+                        it.getCodes().each{
+                            log.debug "Código error: "+it
+                        }
+                        errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
+                        objJson.idOrden = null
+                        objJson.errors = errorList
+                    }
 
-        }else{
-                objJson.idOrden = orden.id
-                objJson.errors = null
+                }else{
+
+                        objJson.idOrden = orden.id
+                        objJson.errors = null
+                }
         }
         render objJson as JSON
     }

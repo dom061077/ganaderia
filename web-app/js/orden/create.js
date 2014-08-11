@@ -27,6 +27,7 @@ Ext.onReady(function(){
                                     storeProvincia.load();
                                     storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
                                     var rec = new ganaderia.model.ClienteGanadero({
+                                        id : objJson.id,
                                         cuit : objJson.cuit,
                                         razonSocial: objJson.razonSocial,
                                         telefono1 : objJson.telefono1,
@@ -92,15 +93,16 @@ Ext.onReady(function(){
         Ext.Ajax.request({
             url:saveOrdenUrl,
             params:{
-                'cliente.cuit':fieldValuesFormGanadero.cuit,
+                'cliente.id' : fieldValuesFormGanadero.id,
+                'cliente.cuit' :fieldValuesFormGanadero.cuit,
                 'cliente.razonSocial':fieldValuesFormGanadero.razonSocial,
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
                 'cliente.telefono2':fieldValuesFormGanadero.telefono2,
                 'cliente.email':fieldValuesFormGanadero.email,
                 'cliente.localidad.id':fieldValuesFormGanadero.localidad,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
-                'anioExposicion.id':fieldValueFormDatosExposicion.anioExposicion,
-                'detalle': detalleJson
+                'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
+                'detalleJson': detalleJson
 
             },
             success: function(xhr){
@@ -135,6 +137,7 @@ Ext.onReady(function(){
             extend:'Ext.data.Model',
             fields: [
                     //-------form cliente-----------
+                    {name:'clienteId',type:'int'},
                     {name:'cuit',type:'string'},
                     {name:'razonSocial',type:'string'},
                     {name:'telefono1',type:'string'},
@@ -356,6 +359,9 @@ Ext.onReady(function(){
               },
               items:[
                   {
+                      name:'id'//,
+                      //xtype:'hidden'
+                  },{
                       fieldLabel:'C.U.I.T o D.N.I',
                       name:'cuit',
                       //vtype:'cuit',
