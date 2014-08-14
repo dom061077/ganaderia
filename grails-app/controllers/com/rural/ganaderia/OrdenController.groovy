@@ -118,6 +118,19 @@ class OrdenController {
         def objJson = [:]
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
         Orden.withTransaction{TransactionStatus status->
+            if (!orden.cliente.id){
+               if(!orden.cliente.save()){
+                  status.setRollbackOnly()
+                  orden.cliente.errors.allErrors.each{
+                      it.getCodes().each{
+                          log.debug("Código de error de cliente: "+it)
+                      }
+                      errorList << [msg:messageSource.getMessage(it,LocaleContextHolder.locale)]
+                      objJson.idOrden = null
+                      objJson.errors = errorList
+                  }
+               }
+            }else{
                 if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
@@ -135,6 +148,7 @@ class OrdenController {
                         objJson.idOrden = orden.id
                         objJson.errors = null
                 }
+            }
         }
         render objJson as JSON
     }

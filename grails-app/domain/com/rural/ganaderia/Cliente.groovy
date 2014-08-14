@@ -18,7 +18,7 @@ class Cliente {
     String razonSocial //apellido y nombre del expositor o raz�n social
     String codigoPostal
 
-    java.sql.Date fechaAlta
+    java.sql.Date fechaAlta =  new java.sql.Date(new java.util.Date().getTime())
     Localidad localidad
     String telefonoRepresentante1;
     String telefonoRepresentante2;

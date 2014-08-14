@@ -90,6 +90,7 @@ Ext.onReady(function(){
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
+        var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         Ext.Ajax.request({
             url:saveOrdenUrl,
             params:{
@@ -106,7 +107,23 @@ Ext.onReady(function(){
 
             },
             success: function(xhr){
-                console.log(xhr.reponseText);
+                loadMask.hide();
+                var jsonObj = Ext.decode(xhr.responseText);
+                console.log(xhr);
+                if(jsonObj.idOrden==null){
+                    console.log('Error al generar la orden: '+jsonObj.responseText);
+                    var msgError='Error de carga: <br>';
+                    for(var i=0;i<jsonObj.errors.length;i++){
+                        msgError = msgError+'-'+jsonObj.errors[i].msg+'<br>';
+                    }
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg:msgError,
+                        icon:Ext.MessageBox.ERROR,
+                        buttons:Ext.MessageBox.OK
+                    });
+                    return;
+                }
                 //----limpiar datos-----
                 storeGridDetalle.removeAll();
                 Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
