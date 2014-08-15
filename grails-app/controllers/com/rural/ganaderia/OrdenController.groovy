@@ -110,7 +110,7 @@ class OrdenController {
         def detalleJson = JSON.parse(params.detalleJson)
 
         detalleJson.each{
-            orden.addToDetalle(new DetalleOrden(ganado: Ganado.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
+            orden.addToDetalle(new DetalleOrden(raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
 
         }
 
@@ -129,9 +129,13 @@ class OrdenController {
                       objJson.idOrden = null
                       objJson.errors = errorList
                   }
+                  render objJson as JSON
+                  return
                }
             }else{
-                if (!orden.save()){
+
+            }
+            if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
                     orden.errors.allErrors.each{
@@ -143,12 +147,11 @@ class OrdenController {
                         objJson.errors = errorList
                     }
 
-                }else{
-
-                        objJson.idOrden = orden.id
-                        objJson.errors = null
-                }
+            }else{
+                    objJson.idOrden = orden.id
+                    objJson.errors = null
             }
+
         }
         render objJson as JSON
     }

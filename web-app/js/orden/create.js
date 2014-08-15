@@ -91,6 +91,7 @@ Ext.onReady(function(){
         var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
+        loadMask.show();
         Ext.Ajax.request({
             url:saveOrdenUrl,
             params:{
@@ -100,7 +101,13 @@ Ext.onReady(function(){
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
                 'cliente.telefono2':fieldValuesFormGanadero.telefono2,
                 'cliente.email':fieldValuesFormGanadero.email,
+                'cliente.direccion':fieldValuesFormGanadero.direccion,
                 'cliente.localidad.id':fieldValuesFormGanadero.localidad,
+                'cliente.nombreRepresentante':fieldValuesFormRepresentante.nombreRepresentante,
+                'cliente.apellidoRepresentante':fieldValuesFormRepresentante.apellidoRepresentante,
+                'cliente.telefonoRepresentante1':fieldValuesFormRepresentante.telefonoRepresentante1,
+                'cliente.telefonoRepresentante2':fieldValuesFormRepresentante.telefonoRepresentante2,
+                'cliente.telefonoRepresentante3':fieldValuesFormRepresentante.telefonoRepresentante3,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
                 'detalleJson': detalleJson
@@ -376,8 +383,8 @@ Ext.onReady(function(){
               },
               items:[
                   {
-                      name:'id'//,
-                      //xtype:'hidden'
+                      name:'id',
+                      xtype:'hidden'
                   },{
                       fieldLabel:'C.U.I.T o D.N.I',
                       name:'cuit',

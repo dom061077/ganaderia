@@ -3,7 +3,7 @@ package com.rural.ganaderia
 class DetalleOrden {
     Orden orden
     
-    Ganado ganado
+    Raza raza
     
     String datosCorral
     
