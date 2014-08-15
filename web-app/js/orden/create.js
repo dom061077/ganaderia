@@ -557,6 +557,20 @@ Ext.onReady(function(){
                               displayField:'anio',
                               selectOnTab: true,
                               store:storeAnioExposicion
+                          },{
+                              xtype:'combo',
+                              fieldLabel:'Situación IVA',
+                              forceSelection: true,
+                              name:'situacionIVA',
+                              allowBlank:false,
+                              editable:false,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction: 'all',
+                              valueField:'id',
+                              displayField:'descripcion',
+                              store: storeSituacionIVA
                           }
                       ],
                       buttons:[
