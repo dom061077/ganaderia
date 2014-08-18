@@ -296,10 +296,25 @@ Ext.onReady(function(){
              idProperty:'id'
           }
       },
-
       fields:['id','nombre']
-
   });
+
+  Ext.define('ganaderia.model.combo.SituacionIVAStore',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+      root:'rows',
+        proxy:{
+            type:'ajax',
+            url:situacionIVAUrl,
+            reader:{
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion']
+    });
+
 
   var storeGridDetalle = new Ext.data.Store({
       model: ganaderia.model.grid.DetalleOrden,
@@ -314,6 +329,7 @@ Ext.onReady(function(){
   var storeLocalidad = Ext.create('ganaderia.model.combo.LocalidadStore');
   var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
   var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
+  var storeSituacionIVA = Ext.create('ganaderia.model.combo.SituacionIVAStore');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,

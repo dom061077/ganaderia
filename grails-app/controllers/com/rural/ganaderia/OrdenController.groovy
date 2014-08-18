@@ -5,6 +5,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import grails.converters.JSON
 import org.springframework.context.MessageSource
 import org.springframework.transaction.TransactionStatus
+import com.rural.ganaderia.enums.SituacionIVA
 
 class OrdenController {
     MessageSource  messageSource
@@ -154,5 +155,18 @@ class OrdenController {
 
         }
         render objJson as JSON
+    }
+
+    def situacionIVAjson(){
+        def hashJson = [:]
+        def listRows =[]
+        def situaciones = SituacionIVA.list()
+        situaciones.each{
+            log.debug("CODIGO DE ENUM: "+it)
+            listRows << [id: it.name(),descripcion:it.name]
+        }
+        hashJson.success = true
+        hashJson.rows = listRows
+        render hashJson as JSON
     }
 }
