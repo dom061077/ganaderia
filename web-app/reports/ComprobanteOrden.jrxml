@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d555633-b473-41b6-af4b-6f8eb92b31b3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="cliente.cuit" class="java.lang.String"/>
+	<field name="cliente.razonSocial" class="java.lang.String"/>
+	<field name="cliente.apellidoRepresentante" class="java.lang.String"/>
+	<field name="cliente.nombreRepresentante" class="java.lang.String"/>
+	<field name="cliente.direccion" class="java.lang.String"/>
+	<field name="cliente.email" class="java.lang.String"/>
+	<field name="cliente.telefono1" class="java.lang.String"/>
+	<field name="cliente.telefono2" class="java.lang.String"/>
+	<field name="cliente.localidad.nombre" class="java.lang.String"/>
+	<field name="cliente.localidad.provincia.nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+</jasperReport>
