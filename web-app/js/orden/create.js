@@ -314,6 +314,36 @@ Ext.onReady(function(){
         },
         fields:['id','descripcion']
     });
+    Ext.define('ganaderia.model.combo.CondicionOperacion',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy:{
+            type:'ajax',
+            url:condicionOperacionUrl,
+            reader:{
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion']
+    });
+    Ext.define('ganaderia.model.combo.Operacion',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy:{
+            type:'ajax',
+            url:operacionUrl,
+            reader:{
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion']
+    });
 
 
   var storeGridDetalle = new Ext.data.Store({
@@ -587,6 +617,40 @@ Ext.onReady(function(){
                               valueField:'id',
                               displayField:'descripcion',
                               store: storeSituacionIVA
+                          },{
+                              xtype:'combo',
+                              fieldLabel:'Condición de Operación',
+                              forceSelection:true,
+                              name:'condicionOperacion',
+                              allowBlank:false,
+                              editable:false,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction: 'all',
+                              valueField:'id',
+                              displayField:'descripcion',
+                              store: storeCondicionOperacion
+                          },{
+                              xtype:'combo',
+                              fieldLabel:'Operación',
+                              forceSelection:true,
+                              name:'operacion',
+                              allowBlank:false,
+                              editable:false,
+                              queryMode:'remote',
+                              emtpytext:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'descripcion',
+                              store:sotreOperacion
+                          },{
+                              name:'guias',
+                              fieldLabel:'Guías'
+                          },{
+                              name:'destino',
+                              fieldLabel:'Destino'
                           }
                       ],
                       buttons:[

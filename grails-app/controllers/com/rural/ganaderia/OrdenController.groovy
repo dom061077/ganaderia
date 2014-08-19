@@ -169,4 +169,22 @@ class OrdenController {
         hashJson.rows = listRows
         render hashJson as JSON
     }
+    
+    def condicionOperacionjson(){
+        def hashJson = [:]
+        def listRows = []
+        def condiciones = CondicionOperacion.list(sort: "nomber",order: "desc")
+        condiciones.each{
+            listRows << [id: it.id, descripcion: it.nombre]
+        }
+        hashJson.success = true
+        hashJson.rows = listRows
+        render hashJson as JSON
+    }
+
+    def operacionjson(){
+        def hasJson = [:]
+        def listRows = []
+        //def operaciones = Operacion.list()
+    }
 }

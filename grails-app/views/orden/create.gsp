@@ -17,6 +17,8 @@
             var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
             var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
+            var condicionOperacionUrl = '<% out << createLink(controller:'orden',action:'condicionOperacionjson')%>';
+            var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
         </script>
 
 	</head>
