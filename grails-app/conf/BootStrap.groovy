@@ -7,6 +7,7 @@ import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.Exposicion
 import com.rural.ganaderia.AnioExposicion
 import com.rural.ganaderia.Cliente
+import com.rural.ganaderia.CondicionOperacion
 
 class BootStrap {
 
@@ -67,6 +68,10 @@ class BootStrap {
                 new AnioExposicion(anio: 2013).save(failOnError: true)
                 new AnioExposicion(anio: 2012).save(failOnError: true)
                 new AnioExposicion(anio: 2014).save(failOnError: true)
+                
+                new CondicionOperacion(nombre: "A Plazos").save(failOnError: true)
+                new CondicionOperacion(nombre: "Sin Plazo").save(failOnError: true)
+                new CondicionOperacion(nombre: "Condición").save(failOnError: true)
 
                 //--------------------------
                 new Cliente(cuit: '23-26138236-9',fechaAlta: new java.sql.Date(new java.util.Date().getTime())

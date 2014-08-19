@@ -1,6 +1,7 @@
 package com.rural.ganaderia
 
 import com.rural.ganaderia.enums.SituacionIVA
+import ganaderia.Operacion
 
 class Orden {
     Cliente cliente
@@ -8,6 +9,8 @@ class Orden {
     Exposicion exposicion
     AnioExposicion anioExposicion
     SituacionIVA situacionIVA = SituacionIVA.IVA
+    CondicionOperacion condicionOperacion
+    Operacion operacion
 
     static hasMany = [detalle:DetalleOrden]
 
