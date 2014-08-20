@@ -1,9 +1,11 @@
 package com.rural.ganaderia
 
 import com.rural.ganaderia.enums.SituacionIVA
-import ganaderia.Operacion
+import com.rural.ganaderia.enums.TipoOrden
 
 class Orden {
+    long numero
+    TipoOrden tipoOrden
     Cliente cliente
     java.sql.Date fechaAlta = new java.sql.Date(new java.util.Date().getTime())
     Exposicion exposicion
@@ -11,6 +13,7 @@ class Orden {
     SituacionIVA situacionIVA = SituacionIVA.IVA
     CondicionOperacion condicionOperacion
     Operacion operacion
+    String guias
 
     static hasMany = [detalle:DetalleOrden]
 

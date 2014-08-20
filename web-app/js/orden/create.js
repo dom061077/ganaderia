@@ -110,6 +110,10 @@ Ext.onReady(function(){
                 'cliente.telefonoRepresentante3':fieldValuesFormRepresentante.telefonoRepresentante3,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
+                'condicionOperacion.id': fieldValuesFormDatosExposicion.condicionOperacion,
+                'operacion.id':fieldValuesFormDatosExposicion.operacion,
+                'guias':fieldValuesFormDatosExposicion.guias,
+                'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'detalleJson': detalleJson
 
             },
@@ -360,6 +364,8 @@ Ext.onReady(function(){
   var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
   var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
   var storeSituacionIVA = Ext.create('ganaderia.model.combo.SituacionIVAStore');
+  var storeCondicionOperacion = Ext.create('ganaderia.model.combo.CondicionOperacion');
+  var storeOperacion = Ext.create('ganaderia.model.combo.Operacion');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,
@@ -429,6 +435,10 @@ Ext.onReady(function(){
               },
               items:[
                   {
+                      name:'tipoOrden',
+                      xtype:'hidden',
+                      value:'COMPRA'
+                  },{
                       name:'id',
                       xtype:'hidden'
                   },{
@@ -569,7 +579,8 @@ Ext.onReady(function(){
                       title:'Paso 3 - Datos de Exposición',
                       height:300,
                       defaults : {
-                          msgTarget:'under'
+                          msgTarget:'under',
+                          xtype:'textfield'
                       },
                       items:[
                           {
@@ -644,7 +655,7 @@ Ext.onReady(function(){
                               triggerAction:'all',
                               valueField:'id',
                               displayField:'descripcion',
-                              store:sotreOperacion
+                              store:storeOperacion
                           },{
                               name:'guias',
                               fieldLabel:'Guías'

@@ -8,6 +8,9 @@ import com.rural.ganaderia.Exposicion
 import com.rural.ganaderia.AnioExposicion
 import com.rural.ganaderia.Cliente
 import com.rural.ganaderia.CondicionOperacion
+import com.rural.ganaderia.Operacion
+import com.rural.ganaderia.Numerador
+import com.rural.ganaderia.enums.TipoNumerador
 
 class BootStrap {
 
@@ -22,6 +25,18 @@ class BootStrap {
         }
     }
     def destroy = {
+    }
+    
+    void inicioNumerador(){
+        def numerador = Numerador.findByTipoNumerador(TipoNumerador.ORDEN_COMPRA)
+        if(!numerador){
+            new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA,maximoNumero: 1).save(failOnError: true)
+        }
+        numerador = Numerador.findByTipoNumerador(TipoNumerador.ORDEN_VENTA)
+        if(!numerador){
+            new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA,maximoNumero: 1).save(failOnError: true)
+        }
+
     }
 
     void datosprueba(){
@@ -72,6 +87,10 @@ class BootStrap {
                 new CondicionOperacion(nombre: "A Plazos").save(failOnError: true)
                 new CondicionOperacion(nombre: "Sin Plazo").save(failOnError: true)
                 new CondicionOperacion(nombre: "Condición").save(failOnError: true)
+                
+                new Operacion(nombre: "Remate").save(failOnError: true)
+                new Operacion(nombre: "Hacienda").save(failOnError: true)
+                new Operacion(nombre: "Reventa").save(failOnError: true)
 
                 //--------------------------
                 new Cliente(cuit: '23-26138236-9',fechaAlta: new java.sql.Date(new java.util.Date().getTime())

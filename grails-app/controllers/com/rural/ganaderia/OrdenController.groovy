@@ -6,6 +6,7 @@ import grails.converters.JSON
 import org.springframework.context.MessageSource
 import org.springframework.transaction.TransactionStatus
 import com.rural.ganaderia.enums.SituacionIVA
+import com.rural.ganaderia.enums.TipoNumerador
 
 class OrdenController {
     MessageSource  messageSource
@@ -136,6 +137,16 @@ class OrdenController {
             }else{
 
             }
+            try{
+                orden.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
+            }catch(Exception e){
+                status.setRollbackOnly()
+                errorList << [msg: e.getMessage()]
+                objJson.idOrden = null
+                objJson.errors = errorList
+                render objJson as JSON
+                return
+            }
             if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
@@ -173,7 +184,7 @@ class OrdenController {
     def condicionOperacionjson(){
         def hashJson = [:]
         def listRows = []
-        def condiciones = CondicionOperacion.list(sort: "nomber",order: "desc")
+        def condiciones = CondicionOperacion.list(sort: "nombre",order: "desc")
         condiciones.each{
             listRows << [id: it.id, descripcion: it.nombre]
         }
@@ -183,8 +194,35 @@ class OrdenController {
     }
 
     def operacionjson(){
-        def hasJson = [:]
+        def hashJson = [:]
         def listRows = []
-        //def operaciones = Operacion.list()
+        def operaciones = Operacion.list(sort: "nombre",order: "desc")
+        operaciones.each{
+            listRows << [id:  it.id,descripcion: it.nombre]
+        }
+        hashJson.success = true
+        hashJson.rows = listRows
+        render hashJson as JSON
+    }
+
+    def listcomprajson(){
+        def returnMap = [:]
+        def recordList = []
+        def pagingConfig = [max: params.limit as Integer ?:10, offset: params.start as Integer ?:0]
+
+        def ordenes = Orden.createCriteria().list(pagingConfig){
+            
+        }
+        ordenes.each {
+            recordList << [id: it.id,numero:it.numero,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre,anio:it.anioExposicion,fechacarga:it.fechaAlta,total:0]
+        }
+        
+        def totalOrdenes = Orden.createCriteria().count(){
+                
+        }
+        returnMap.rows = recordList
+        returnMap.success = true
+        returnMap.total = totalOrdenes
+        render returnMap as JSON
     }
 }

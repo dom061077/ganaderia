@@ -41,7 +41,12 @@
                                         }
                                     }
                                 },{
-                                    text:'Listado Orden de Compra'
+                                    text:'Listado Orden de Compra',
+                                    listeners:{
+                                        click:function(men,item,e, eOpts){
+                                            window.location = '<%out << createLink(controller:'orden', action:'list')%>';
+                                        }
+                                    }
                                 },{
                                     text:'Alta de Orden de Venta'
                                 },{

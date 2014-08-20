@@ -1,4 +1,4 @@
-package ganaderia
+package com.rural.ganaderia
 
 class Operacion { 
     String nombre
