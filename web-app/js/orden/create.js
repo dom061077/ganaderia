@@ -577,8 +577,9 @@ Ext.onReady(function(){
                       xtype:'form',
                       itemId:'stepFormDatosExposicionId',
                       title:'Paso 3 - Datos de Exposición',
-                      height:300,
+                      height:400,
                       defaults : {
+                          autoScroll : true,
                           msgTarget:'under',
                           xtype:'textfield'
                       },
@@ -661,7 +662,28 @@ Ext.onReady(function(){
                               fieldLabel:'Guías'
                           },{
                               name:'destino',
-                              fieldLabel:'Destino'
+                              fieldLabel:'Destinoxxxx'
+                          },{
+                              xtype:'combo',
+                              name:'especie',
+                              fieldLabel:'Especie',
+                              allowBlank:false,
+                              width:300,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true ,
+                              store: storeEspecie,
+                              listeners:{
+                                  'select':function(combo,records,options){
+                                      storeRaza.proxy.extraParams={especieId:records[0].data.id};
+                                      storeRaza.load();
+
+                                  }
+                              }
                           }
                       ],
                       buttons:[
@@ -695,28 +717,6 @@ Ext.onReady(function(){
                       },
                       items:[
                           {
-                              xtype:'combo',
-                              name:'especie',
-                              fieldLabel:'Especie',
-                              allowBlank:false,
-                              width:300,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              triggerAction:'all',
-                              valueField:'id',
-                              displayField:'nombre',
-                              selectOnTab: true ,
-                              store: storeEspecie,
-                              listeners:{
-                                  'select':function(combo,records,options){
-                                      storeRaza.proxy.extraParams={especieId:records[0].data.id};
-                                      storeRaza.load();
-
-                                  }
-                              }
-
-                          },{
                               xtype:'combo',
                               name:'raza',
                               fieldLabel:'Raza',

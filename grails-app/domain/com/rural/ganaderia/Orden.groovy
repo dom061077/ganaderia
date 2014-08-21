@@ -15,6 +15,28 @@ class Orden {
     Operacion operacion
     String guias
 
+    //--Gastos de Venta
+    BigDecimal auspicioBrangus
+    BigDecimal colegioMartilleros
+    BigDecimal comision
+    
+    //---Impuestos-----
+    BigDecimal gananciaInsc1
+    java.sql.Date gananciaInscVto1
+    BigDecimal gananciaInsc2
+    java.sql.Date gananciaInscVto2
+    BigDecimal gananciaInsc3
+    java.sql.Date gananciaInscVto3
+    //----Vencimientos y pagos---
+    BigDecimal pago1
+    java.sql.Date vencimiento1
+    BigDecimal pago2
+    java.sql.Date vencimiento2
+    BigDecimal pago3
+    java.sql.Date vencimiento3
+    BigDecimal pago4
+    java.sql.Date vencimiento4
+
     static hasMany = [detalle:DetalleOrden]
 
     static constraints = {
