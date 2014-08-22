@@ -66,6 +66,13 @@
                                 }
                                 },{
                                     text:'Clasificación de Ganado'
+                                },{
+                                    text:'Numeradores de Ordenes',
+                                    listeners:{
+                                        click: function(menu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'numerador',action:'list')%>';
+                                        }
+                                    }
                                 }
                             ]
                         }
@@ -78,7 +85,7 @@
         </script>
 	</head>
 	<body style="margin: 2em 13em 1.25em 13em">
-		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir: 'images', file: 'headersrt.png')}" alt="Grails"/></a></div>
+		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="" alt="Logo"/></a></div>
         <g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/>

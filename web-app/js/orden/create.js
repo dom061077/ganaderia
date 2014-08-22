@@ -90,6 +90,7 @@ Ext.onReady(function(){
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
+        var fieldValuesFormDatosImpuestosPagos = wizard.getComponent('stepFormDatosImpuestosPagosId').getForm().getFieldValues();
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
@@ -114,7 +115,26 @@ Ext.onReady(function(){
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
                 'guias':fieldValuesFormDatosExposicion.guias,
                 'tipoOrden':fieldValuesFormGanadero.tipoOrden,
-                'detalleJson': detalleJson
+                'detalleJson': detalleJson,
+
+                'gananciaInsc1':fieldValuesFormDatosImpuestosPagos.gananciaInsc1,
+                'gananciaInsc2':fieldValuesFormDatosImpuestosPagos.gananciaInsc2,
+                'gananciaInsc3':fieldValuesFormDatosImpuestosPagos.gananciaInsc3,
+                'gananciaInscVto1':Ext.getCmp('ganaciaInscVto1').getRawValue(),
+                'gananciaInscVto2':Ext.getCmp('ganaciaInscVto2').getRawValue(),
+                'gananciaInscVto3':Ext.getCmp('ganaciaInscVto3').getRawValue(),
+
+                'vencimiento1' :Ext.getCmp('vencimientoId1').getRawValue(),
+                'vencimiento2' :Ext.getCmp('vencimientoId2').getRawValue(),
+                'vencimiento3' :Ext.getCmp('vencimientoId3').getRawValue(),
+                'vencimiento4' :Ext.getCmp('vencimientoId4').getRawValue(),
+
+                'pago1' :fieldValuesFormDatosImpuestosPagos.pago1,
+                'pago2' :fieldValuesFormDatosImpuestosPagos.pago2,
+                'pago3' :fieldValuesFormDatosImpuestosPagos.pago3,
+                'pago4' :fieldValuesFormDatosImpuestosPagos.pago4
+
+
 
             },
             success: function(xhr){
@@ -576,6 +596,7 @@ Ext.onReady(function(){
                   {
                       xtype:'form',
                       itemId:'stepFormDatosExposicionId',
+                      margin:'10 10 10 10',
                       title:'Paso 3 - Datos de Exposición',
                       height:400,
                       defaults : {
@@ -662,7 +683,7 @@ Ext.onReady(function(){
                               fieldLabel:'Guías'
                           },{
                               name:'destino',
-                              fieldLabel:'Destinoxxxx'
+                              fieldLabel:'Destino'
                           },{
                               xtype:'combo',
                               name:'especie',
@@ -763,6 +784,7 @@ Ext.onReady(function(){
                   {
                      xtype:'grid',
                      id:'griddetalleId',
+                     title:'Detalle Confeccionado',
                      height:250,
                      width:900,
                      selType: 'cellmodel',
@@ -846,12 +868,114 @@ Ext.onReady(function(){
                         wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
                   }
                 },{
-                  text:'Confirmar',
+                  text:'siguiente',
                   handler: function(){
-                         confirmarorden();
+                      if (storeGridDetalle.count()==0){
+                          Ext.Msg.show({
+                              title:'Error',
+                              msg:'Agregue al menos una línea de detalle',
+                              buttons: Ext.Msg.OK,
+                              icon: Ext.Msg.ERROR
+                          });
+                          return;
+                      }
+                      var wizard = this.up('#wizardId');
+                      wizard.getLayout().setActiveItem('stepFormDatosImpuestosPagosId');
+
                   }
                 }
               ]
+          },{
+                xtype:'form',
+                itemId:'stepFormDatosImpuestosPagosId',
+                title: 'Paso 5 - Impuestos y Pagos',
+                margin:'10 10 10 10',
+                height: 500,
+                fieldDefaults:{
+                    msgTarget:'under',
+                    labelAlign: 'top'
+                },defaults:{
+                    autoScroll : true,
+                    margin:'10 10 10 10',
+                    xtype: 'panel',
+                    flex: 1 ,
+                    layout: 'anchor'
+                },
+                //layout:'hbox',
+                items:[
+                    {
+                        layout:'hbox',
+                        title:'Impuestos',
+                        defaults:{border:false,autoScroll : true,flex:1},
+                        width:700,
+                        items:[
+                            {
+                                layout: 'anchor',
+                                items:[
+                                    {   fieldLabel:'Ganancia Inscripto - (DB)'
+                                        ,xtype:'numberfield',value:2,anchor:'-5'
+                                        ,id:'ganaciaInsc1Id'
+                                        ,name:'gananciaInsc1'
+                                    },{ fieldLabel:'Ganancia Inscripto - (DB)'
+                                        ,id:'ganaciaInsc2Id'
+                                        ,xtype:'numberfield',value:2,anchor:'-5'
+                                        ,name:'gananciaInsc2'
+                                    },{ fieldLabel:'Ganancia Inscripto - (DB)'
+                                        ,id:'ganaciaInsc3Id'
+                                        ,xtype:'numberfield',value:2,anchor:'-5'
+                                        ,name:'gananciaInsc3'
+                                    }
+                                ]
+                            },{
+                                layout: 'anchor',
+                                items:[
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto1',name:'gananciaInscVto1'},
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto2',name:'gananciaInscVto2'},
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto3',name:'gananciaInscVto3'}
+                                ]
+                            }
+                        ]
+                    },{
+                        layout:'hbox',
+                        title:'Pagos',
+                        defaults:{border:false, flex:1},
+                        width:700,
+                        items:[
+                            {
+                                layout: 'anchor',
+                                items:[
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId1',name:'vencimiento1'},
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId2',name:'vencimiento2'},
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId3',name:'vencimiento3'},
+                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId4',name:'vencimiento4'}
+                                ]
+                            },{
+                                layout: 'anchor',
+                                items:[
+                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago1'},
+                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago2'},
+                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago3'},
+                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago4'}
+                                ]
+                            }
+                        ]
+
+                    }
+                ],
+                buttons:[
+                            {
+                                text:'Anterior',
+                                handler: function(){
+                                    var wizard = this.up('#wizardId');
+                                    wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                                }
+                            },{
+                                text:'Confirmar',
+                                handler: function(){
+                                    confirmarorden();
+                                }
+                            }
+                ]
           }
       ]
   });

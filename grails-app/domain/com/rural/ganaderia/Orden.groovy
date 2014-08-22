@@ -43,6 +43,10 @@ class Orden {
         exposicion(nullable: false,blank:false)
         cliente(nullable: false,blank:false)
         anioExposicion(nullable: false,false:false)
+        auspicioBrangus(nullable:true)
+        colegioMartilleros(nullable: true)
+        comision(nullable: true)
+        
     }
 
     static mapping = {

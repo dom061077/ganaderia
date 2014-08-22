@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource
 import org.springframework.transaction.TransactionStatus
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoNumerador
+import java.text.SimpleDateFormat
 
 class OrdenController {
     MessageSource  messageSource
@@ -109,6 +110,25 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
+        def fechaParseada
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
+        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto1).getTime())
+        orden.gananciaInscVto1 = fechaParseada
+        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto2).getTime())
+        orden.gananciaInscVto2 = fechaParseada
+        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto3).getTime())
+        orden.gananciaInscVto3 = fechaParseada
+
+        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento1).getTime())
+        orden.vencimiento1 = fechaParseada
+        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento2).getTime())
+        orden.vencimiento2 = fechaParseada
+        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento3).getTime())
+        orden.vencimiento3 = fechaParseada
+        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento4).getTime())
+        orden.vencimiento4 = fechaParseada
+
+
         def detalleJson = JSON.parse(params.detalleJson)
 
         detalleJson.each{
