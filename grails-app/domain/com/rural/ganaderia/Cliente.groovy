@@ -26,6 +26,7 @@ class Cliente {
 
 
     static constraints = {
+        cuit(unique: true)
         nombreRepresentante(nullable:true, blank: true,maxSize: 60)
         apellidoRepresentante(nullable: true,blank: true,maxSize: 60)
         direccion(maxSize: 60,nullable: true,blank: true)

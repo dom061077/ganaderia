@@ -3,7 +3,7 @@ package com.rural.ganaderia
 class Impuesto {
     String descripcion
     BigDecimal porcentaje
-    BigDecimal vencimiento
+    java.sql.Date vencimiento
     BigDecimal monto
 
     static constraints = {

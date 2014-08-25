@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.deep.JSON
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.MessageSource
+import grails.converters.JSON
 
 class ClienteController {
     MessageSource  messageSource
@@ -105,6 +106,20 @@ class ClienteController {
     }
     
     //-----------------json return-------------
+    def listjson(){
+        log.info("PARAMETROS: "+params)
+        def hashJson = [:]
+        def listRows = []
+        def clientes = Cliente.createCriteria().list{
+            order("razonSocial","asc")
+        }
+        clientes.each{
+            listRows << [id:it.id,nombre:it.razonSocial]
+        }
+        hashJson.success = true
+        hashJson.rows = listRows
+        render hashJson as JSON
+    }
 
     def savejson(){
         log.info("Parametros: "+params)
@@ -115,14 +130,17 @@ class ClienteController {
            objJson.idCliente = clienteInstance.id
            objJson.nombre = clienteInstance.razonSocial
            objJson.errors = errorList
+           objJson.success = true
         }else{
            objJson.idCliente = null
+           objJson.msgError = "Error de validación:"
            clienteInstance.errors.allErrors.each{
                errorList << [msg:messageSource.getMessage(it,LocaleContextHolder.locale)]
            }
            objJson.errors=errorList
+           objJson.success = false
         }
-        render objJson as JSON
+        render objJson as grails.converters.JSON
     }
     
     def getdatosjson(String cuitDni){
@@ -133,8 +151,10 @@ class ClienteController {
             clienteInstance =  Cliente.findByCuit(cuitDni);
         if(!clienteInstance)
             clienteInstance = new Cliente()
-            
-        render clienteInstance as JSON
+
+        JSON.use("deep"){
+            render clienteInstance as JSON
+        }
     }
     
 }

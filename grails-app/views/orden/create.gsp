@@ -20,6 +20,7 @@
             var condicionOperacionUrl = '<% out << createLink(controller:'orden',action:'condicionOperacionjson')%>';
             var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
             var altaClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'savejson')%>';
+            var clienteListUrl = '<% out << createLink(controller:'cliente',action:'listjson')%>';
         </script>
 
 	</head>

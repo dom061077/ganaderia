@@ -132,7 +132,7 @@ class OrdenController {
         def detalleJson = JSON.parse(params.detalleJson)
 
         detalleJson.each{
-            orden.addToDetalle(new DetalleOrden(raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
+            orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
 
         }
 

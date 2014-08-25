@@ -19,9 +19,11 @@ Ext.onReady(function(){
                     defaults:{autoScroll:true,msgTarget:'under'},
                     items:[
                          {
-                             fieldLabel:'C.U.I.T o D.N.I'
+                             fieldLabel:'C.U.I.T o D.N.I',
+                             name:'cuit'
                          },{
-                            fieldLabel:'Razon Social o Apellido y Nombre'
+                            fieldLabel:'Razon Social o Apellido y Nombre',
+                            name:'razonSocial'
                         }
                     ]
                 }
@@ -32,9 +34,25 @@ Ext.onReady(function(){
                     handler:function(){
                         Ext.getCmp('formClienteDetalleId').getForm().submit({
                             success:function(f,a){
-
+                                   storeClienteDetalle.load();
+                                   Ext.getCmp('comboClienteDetalleId').setValue(a.result.idCliente);
+                                   winClienteDetalle.close();
                             },
                             failure:function(f,a){
+                                var errores = a.result.errors;
+                                var msgError = a.result.msgError+'<br>';
+                                for(var i = 0; i < errores.length; i++){
+                                    msgError = msgError + '-'+errores[i].msg+'<br>';
+                                }
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg:msgError,
+                                    icon:Ext.MessageBox.ERROR,
+                                    buttons:Ext.MessageBox.OK,
+                                    fn:function(){
+                                        winClienteDetalle.close();
+                                    }
+                                });
 
                             }
                         });
@@ -258,7 +276,7 @@ Ext.onReady(function(){
         fields: [
             // the 'name' below matches the tag name to read, except 'availDate'
             // which is mapped to the tag 'availability'
-            {name: 'especie', type: 'int'},
+            {name: 'cliente', type: 'int'},
             {name: 'raza', type: 'int'},
             {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
@@ -267,6 +285,35 @@ Ext.onReady(function(){
             {name: 'subtotal', type: 'float'}
         ]
     });
+
+    Ext.define('ganaderia.model.grid.Gastos',{
+        extend: 'Ext.data.Model',
+        fields:[
+            {name:'descripcion',type: 'string'},
+            {name:'porcentaje',type:'float'},
+            {name:'monto',type:'float'},
+            {name:'subtotal',type:'float'}
+        ]
+    });
+
+    Ext.define('ganaderia.model.grid.Impuestos',{
+        extend:'Ext.data.Model',
+        fields:[
+            {name:'descripcion',type:'string'},
+            {name:'vencimiento',type:'date'},
+            {name:'porcentaje',type:'float'},
+            {name:'subtotal',type:'float'}
+        ]
+    });
+
+    Ext.define('ganaderia.model.grid.Vencimientos',{
+        extend:'Ext.data.Model',
+        fields:[
+            {name:'vencimiento',type:'date'},
+            {name:'monto',type:'float'}
+        ]
+    });
+
 
     //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
     Ext.define('ganaderia.model.combo.RazaStore',{
@@ -419,14 +466,14 @@ Ext.onReady(function(){
         root:'rows',
         proxy:{
             type:'ajax',
-            url:altaClienteDetalleUrl,
+            url:clienteListUrl,
             reader:{
                 type:'json',
                 root:'rows',
                 idProperty:'id'
-            },
-            fields:['id','nombre']
-        }
+            }
+        },
+        fields:['id','nombre']
     });
   var storeClienteDetalle = Ext.create('ganaderia.model.combo.Cliente');
 
@@ -436,6 +483,26 @@ Ext.onReady(function(){
           type:'memory'
       }
   });
+  var storeGridGastos = new Ext.data.Store({
+      model: ganaderia.model.grid.Gastos,
+      proxy:{
+          type:'memory'
+      }
+  });
+  var storeGridImpuestos = new Ext.data.Store({
+      model: ganaderia.model.grid.Impuestos,
+      proxy:{
+          type:'memory'
+      }
+  });
+
+  var storeGridVencimientos = new Ext.data.Store({
+      model: ganaderia.model.grid.Vencimientos,
+      proxy:{
+          type:'memory'
+      }
+  });
+
 
   var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
@@ -467,7 +534,42 @@ Ext.onReady(function(){
 
 
 
+  function onAddGastoClick(){
+      if(this.up('form').getForm().isValid()){
+          var form = this.up('form').getForm();
+          var fieldValues = form.getFieldValues();
+          var rec = new ganaderia.model.grid.Gastos({
+                descripcion: fieldValues.descripcion,
+                porcentaje: fieldValues.porcentaje,
+                monto: fieldValues.monto,
+                subtotal: 0
+          });
+      }
+  }
 
+  function onAddImpuestoClick(){
+      if(this.up('form').getForm().isValid()){
+          var form = this.up('form').getForm();
+          var fieldValues = form.getFieldValues();
+          var rec = new ganaderia.model.grid.Impuestos({
+              descripcion: fieldValues.descripcion,
+              vencimiento: fieldValues.vencimiento,
+              porcentaje: fieldValues.porcentaje,
+              subtotal: 0
+          });
+      }
+  }
+
+  function onAddVencimientoClick(){
+      if(this.up('form').getForm().isValid()){
+          var form = this.up('form').getForm();
+          var fieldValues = form.getFieldValues();
+          var rec = new ganaderia.model.grid.Impuestos({
+              vencimiento: fieldValues.vencimiento,
+              monto: fieldValues.monto
+          });
+      }
+    }
 
   function onAddClick(){
       if(this.up('form').getForm().isValid()){
@@ -475,7 +577,7 @@ Ext.onReady(function(){
           var fieldValues=form.getFieldValues();
 
           var rec = new ganaderia.model.grid.DetalleOrden({
-             especie: fieldValues.especie,
+             cliente: fieldValues.clienteDetalle,
              raza: fieldValues.raza,
              corral: fieldValues.corral,
              cantidad: fieldValues.cantidad,
@@ -814,6 +916,7 @@ Ext.onReady(function(){
                       items:[
                           {
                               xtype:'combo',
+                              id:'comboClienteDetalleId',
                               name:'clienteDetalle',
                               fieldLabel:'Cliente',
                               allowBlank:false,
@@ -825,7 +928,7 @@ Ext.onReady(function(){
                               valueField:'id',
                               displayField:'nombre',
                               selectOnTab:true,
-                              store:storeRaza
+                              store:storeClienteDetalle
                           },{
                               xtype:'combo',
                               name:'raza',
@@ -842,7 +945,7 @@ Ext.onReady(function(){
                               store: storeRaza
                           },{
                               xtype:'textfield',
-                              fieldLabel:'Datos del Corral',
+                              fieldLabel:'Leyenda',
                               name:'corral',
                               allowBlank:false,
                               width:300
@@ -882,19 +985,9 @@ Ext.onReady(function(){
                      store: storeGridDetalle,
                      columns:[
                          {
-                             header: 'Especie',
-                             dataIndex: 'especie',
-                             width: 150,
-                             renderer: function(value) {
-                                 var rec = storeEspecie.getById(value);
-
-                                 if (rec)
-                                 {
-                                     return rec.data.nombre;
-                                 }
-
-                                 return '';
-                             }
+                             header: 'Cliente',
+                             dataIndex: 'cliente',
+                             width: 150
                          },{
                              header: 'Raza',
                              dataIndex: 'raza',
@@ -969,15 +1062,90 @@ Ext.onReady(function(){
                           return;
                       }
                       var wizard = this.up('#wizardId');
-                      wizard.getLayout().setActiveItem('stepFormDatosImpuestosPagosId');
+                      wizard.getLayout().setActiveItem('stepFormGastosVentaId');
 
                   }
                 }
               ]
           },{
+                xtype:'panel',
+                margin:'10 10 10 10',
+                itemId:'stepFormGastosVentaId',
+                title:'Paso 5 - Gastos de Venta',
+                items:[
+                    {
+                        xtype:'form',
+                        defults:{msgTarget:'under'},
+                        items:[
+                            {
+                              fieldLabel:'Descripción Gasto',
+                              name:'descripcion'
+                            },{
+                              fieldLabel:'Porcentaje',
+                              name: 'porcentaje'
+                            },{
+                              fieldLabel:'Monto',
+                              name: 'monto'
+                            }
+                        ],
+                        buttons:[
+                            {
+                                text:'Agregar Linea',
+                                handler: onAddGastoClick
+                            }
+                        ]
+                    },
+                    {
+                        xtype:'grid',
+                        id:'gridDetalleGastosId',
+                        title:'Detalle Confeccionado',
+                        height:250,
+                        width:700,
+                        //selType: 'cellmodel',
+                        frame:false,
+                        store: storeGridGastos,
+                        columns:[
+                            {
+                                header: 'Descripción',
+                                dataIndex: 'descripcion',
+                                width: 150
+                            },{
+                                header: 'Porcentaje',
+                                dataIndex:'porcentaje'
+                            },{
+                                header: '$ Monto',
+                                dataIndex:'monto',
+                                width:80,
+                                align:'right'
+                            },{
+                                header: 'Subtotal',
+                                align:'right',
+                                dataIndex:'subtotal'
+                            },{
+
+                                xtype:'actioncolumn',
+                                width:30,
+                                sortable:false,
+                                menuDisabled:true,
+                                items:[
+                                    {
+                                        icon:deleteImg,
+                                        tooltip:'Eliminar Línea',
+                                        handler: function(grid,rowIndex){
+                                            Ext.getCmp('gridDetalleGastosId').getStore().removeAt(rowIndex);
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+
+                    }
+
+                ]
+          },{
                 xtype:'form',
                 itemId:'stepFormDatosImpuestosPagosId',
-                title: 'Paso 5 - Impuesto y Pagos',
+                title: 'Paso 6 - Impuesto y Pagos',
                 margin:'10 10 10 10',
                 height: 500,
                 fieldDefaults:{

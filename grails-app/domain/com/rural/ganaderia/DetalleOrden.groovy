@@ -4,6 +4,7 @@ class DetalleOrden {
     Orden orden
     Cliente cliente
     Raza raza
+
     
     String datosCorral
     
