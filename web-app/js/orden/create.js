@@ -1,7 +1,52 @@
 
-
 Ext.onReady(function(){
     var tempCuit;
+    function showAddCliente(){
+        var winClienteDetalle = Ext.create('Ext.window.Window',{
+            height:200,
+            width:400,
+            modal:true,
+            autoDestroy:false,
+            x:400,
+            y:200,
+            title:'Alta de Cliente',
+            items:[
+                {
+                    xtype:'form',
+                    id:'formClienteDetalleId',
+                    url:altaClienteDetalleUrl,
+                    defaultType:'textfield',
+                    defaults:{autoScroll:true,msgTarget:'under'},
+                    items:[
+                         {
+                             fieldLabel:'C.U.I.T o D.N.I'
+                         },{
+                            fieldLabel:'Razon Social o Apellido y Nombre'
+                        }
+                    ]
+                }
+            ],
+            buttons:[
+                {
+                    text:'Guardar',
+                    handler:function(){
+                        Ext.getCmp('formClienteDetalleId').getForm().submit({
+                            success:function(f,a){
+
+                            },
+                            failure:function(f,a){
+
+                            }
+                        });
+                    }
+                },{
+                 text:'Cancelar'
+                }
+            ]
+        });
+        winClienteDetalle.show();
+
+    }
 
     Ext.apply(Ext.form.VTypes,{
         //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
@@ -368,7 +413,22 @@ Ext.onReady(function(){
         },
         fields:['id','descripcion']
     });
-
+    Ext.define('ganaderia.model.combo.Cliente',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy:{
+            type:'ajax',
+            url:altaClienteDetalleUrl,
+            reader:{
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            },
+            fields:['id','nombre']
+        }
+    });
+  var storeClienteDetalle = Ext.create('ganaderia.model.combo.Cliente');
 
   var storeGridDetalle = new Ext.data.Store({
       model: ganaderia.model.grid.DetalleOrden,
@@ -462,11 +522,16 @@ Ext.onReady(function(){
                       name:'id',
                       xtype:'hidden'
                   },{
-                      fieldLabel:'C.U.I.T o D.N.I',
-                      name:'cuit',
-                      //vtype:'cuit',
-                      vtype:'numdocexists',
-                      allowBlank:false
+                                   fieldLabel:'C.U.I.T o D.N.I',
+                                   name:'cuit',
+                                   //vtype:'cuit',
+                                   xtype:'triggerfield',
+                                   triggerCls:'x-form-search-trigger',
+                                   onTriggerClick: function() {
+                                             Ext.Msg.alert('Status', 'You clicked my trigger!');
+                                   },
+                                   vtype:'numdocexists',
+                                   allowBlank:false
                   },{
                       fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
@@ -733,11 +798,35 @@ Ext.onReady(function(){
               items:[
                   {
                       xtype:'form',
+
+                      tools:[
+                          {
+                              type:'plus',
+                              tooltip:'Permite agregar un cliente',
+                              handler: function(event, toolEl, panelHeader) {
+                                    showAddCliente();
+                              }
+                          }
+                      ],
                       defaults:{
                             msgTarget:'under'
                       },
                       items:[
                           {
+                              xtype:'combo',
+                              name:'clienteDetalle',
+                              fieldLabel:'Cliente',
+                              allowBlank:false,
+                              width:300,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab:true,
+                              store:storeRaza
+                          },{
                               xtype:'combo',
                               name:'raza',
                               fieldLabel:'Raza',
@@ -888,7 +977,7 @@ Ext.onReady(function(){
           },{
                 xtype:'form',
                 itemId:'stepFormDatosImpuestosPagosId',
-                title: 'Paso 5 - Impuestos y Pagos',
+                title: 'Paso 5 - Impuesto y Pagos',
                 margin:'10 10 10 10',
                 height: 500,
                 fieldDefaults:{
@@ -905,7 +994,7 @@ Ext.onReady(function(){
                 items:[
                     {
                         layout:'hbox',
-                        title:'Impuestos',
+                        title:'Impuesto',
                         defaults:{border:false,autoScroll : true,flex:1},
                         width:700,
                         items:[

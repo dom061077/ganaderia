@@ -19,6 +19,7 @@
             var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
             var condicionOperacionUrl = '<% out << createLink(controller:'orden',action:'condicionOperacionjson')%>';
             var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
+            var altaClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'savejson')%>';
         </script>
 
 	</head>

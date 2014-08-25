@@ -93,7 +93,7 @@ class BootStrap {
                 new Operacion(nombre: "Reventa").save(failOnError: true)
 
                 //--------------------------
-                new Cliente(cuit: '23-26138236-9',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
+                new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
                           ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
                           ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
                         ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'

@@ -2,8 +2,11 @@ package com.rural.ganaderia
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.deep.JSON
+import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.context.MessageSource
 
 class ClienteController {
+    MessageSource  messageSource
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -102,9 +105,28 @@ class ClienteController {
     }
     
     //-----------------json return-------------
+
+    def savejson(){
+        log.info("Parametros: "+params)
+        def objJson = [:]
+        def errorList = []
+        def clienteInstance = new Cliente(params)
+        if (clienteInstance.save()){
+           objJson.idCliente = clienteInstance.id
+           objJson.nombre = clienteInstance.razonSocial
+           objJson.errors = errorList
+        }else{
+           objJson.idCliente = null
+           clienteInstance.errors.allErrors.each{
+               errorList << [msg:messageSource.getMessage(it,LocaleContextHolder.locale)]
+           }
+           objJson.errors=errorList
+        }
+        render objJson as JSON
+    }
     
     def getdatosjson(String cuitDni){
-        log.info("Parrametros: "+cuitDni)
+        log.info("Parametros: "+cuitDni)
        
         Cliente clienteInstance  
         if (cuitDni)
