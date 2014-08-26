@@ -8,6 +8,7 @@ import org.springframework.transaction.TransactionStatus
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoNumerador
 import java.text.SimpleDateFormat
+import java.text.ParseException
 
 class OrdenController {
     MessageSource  messageSource
@@ -130,10 +131,28 @@ class OrdenController {
 
 
         def detalleJson = JSON.parse(params.detalleJson)
+        def detalleGastosJson = JSON.parse(params.detalleGastosJson)
+        def detalleImpuestosJson = JSON.parse(params.detalleImpuestosJson)
+        def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
 
         detalleJson.each{
             orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
-
+        }
+        detalleGastosJson.each{
+            orden.addToDetallegastos(new Gasto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto: it.monto))
+        }
+        detalleImpuestosJson.each{
+            orden.addToDetalleimpuestos(new Impuesto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto:it.monto,vencimiento: it.vencimiento))
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
+        java.util.Date fecha 
+        detalleVencimientosJson.each{
+            try{
+                fecha = df.parse(it.vencimiento.substring(0,10))
+            }catch(ParseException e){
+                
+            }
+            orden.addToDetallevencimientos(new Vencimiento(vencimiento:fecha,monto: it.monto ))
         }
 
         def errorList = []

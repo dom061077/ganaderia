@@ -4,7 +4,9 @@ class Impuesto {
     String descripcion
     BigDecimal porcentaje
     java.sql.Date vencimiento
-    BigDecimal monto
+    Orden orden
+
+    static belongsTo = [orden:Orden]
 
     static constraints = {
     }

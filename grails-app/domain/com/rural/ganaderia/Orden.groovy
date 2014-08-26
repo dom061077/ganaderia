@@ -14,9 +14,10 @@ class Orden {
     CondicionOperacion condicionOperacion
     Operacion operacion
     String guias
+    boolean anulada = false
 
 
-    static hasMany = [detalle:DetalleOrden,gastos:Gasto,impuestos:Impuesto,vencimientos:Vencimiento]
+    static hasMany = [detalle:DetalleOrden,detallegastos:Gasto,detalleimpuestos:Impuesto,detallevencimientos:Vencimiento]
 
     static constraints = {
         exposicion(nullable: false,blank:false)

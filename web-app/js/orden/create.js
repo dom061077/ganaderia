@@ -1,6 +1,15 @@
 
 Ext.onReady(function(){
     var tempCuit;
+    function subTotal(){
+        var sumSubTotal=0
+        storeGridDetalle.data.each(function(row){
+            sumSubTotal = sumSubTotal + row.data.subtotal;
+        });
+        return sumSubTotal;
+    }
+
+
     function showAddCliente(){
         var winClienteDetalle = Ext.create('Ext.window.Window',{
             height:200,
@@ -53,7 +62,6 @@ Ext.onReady(function(){
                                         winClienteDetalle.close();
                                     }
                                 });
-
                             }
                         });
                     }
@@ -138,7 +146,7 @@ Ext.onReady(function(){
         if (storeGridDetalle.count()==0){
             Ext.Msg.show({
                 title:'Error',
-                msg:'Agregue al menos una línea de detalle',
+                msg:'Agregue al menos una línea de detalle de Animales',
                 buttons: Ext.Msg.OK,
                 icon: Ext.Msg.ERROR
             });
@@ -148,12 +156,28 @@ Ext.onReady(function(){
         storeGridDetalle.data.each(function(row){
              detalleArr.push(row.data);
         });
+        var detalleGastosArr = [];
+        storeGridGastos.data.each(function(row){
+            detalleGastosArr.push(row.data);
+        });
+        var detalleImpuestosArr = [];
+        storeGridImpuestos.data.each(function(row){
+            detalleImpuestosArr.push(row.data);
+        });
+        var detalleVencimientosArr = [];
+        storeGridVencimientos.data.each(function(row){
+            detalleVencimientosArr.push(row.data);
+        });
+
+        var detalle
         var detalleJson = Ext.encode(detalleArr);
+        var detalleGastosJson = Ext.encode(detalleGastosArr);
+        var detalleImpuestosJson = Ext.encode(detalleImpuestosJson);
+        var detalleVencimientosJson = Ext.encode(detalleVencimientosArr);
         var wizard = Ext.getCmp('wizardId');
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
-        var fieldValuesFormDatosImpuestosPagos = wizard.getComponent('stepFormDatosImpuestosPagosId').getForm().getFieldValues();
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
@@ -179,26 +203,9 @@ Ext.onReady(function(){
                 'guias':fieldValuesFormDatosExposicion.guias,
                 'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'detalleJson': detalleJson,
-
-                'gananciaInsc1':fieldValuesFormDatosImpuestosPagos.gananciaInsc1,
-                'gananciaInsc2':fieldValuesFormDatosImpuestosPagos.gananciaInsc2,
-                'gananciaInsc3':fieldValuesFormDatosImpuestosPagos.gananciaInsc3,
-                'gananciaInscVto1':Ext.getCmp('ganaciaInscVto1').getRawValue(),
-                'gananciaInscVto2':Ext.getCmp('ganaciaInscVto2').getRawValue(),
-                'gananciaInscVto3':Ext.getCmp('ganaciaInscVto3').getRawValue(),
-
-                'vencimiento1' :Ext.getCmp('vencimientoId1').getRawValue(),
-                'vencimiento2' :Ext.getCmp('vencimientoId2').getRawValue(),
-                'vencimiento3' :Ext.getCmp('vencimientoId3').getRawValue(),
-                'vencimiento4' :Ext.getCmp('vencimientoId4').getRawValue(),
-
-                'pago1' :fieldValuesFormDatosImpuestosPagos.pago1,
-                'pago2' :fieldValuesFormDatosImpuestosPagos.pago2,
-                'pago3' :fieldValuesFormDatosImpuestosPagos.pago3,
-                'pago4' :fieldValuesFormDatosImpuestosPagos.pago4
-
-
-
+                'detalleGastosJson': detalleGastosJson,
+                'detalleImpuestosJson' : detalleImpuestosJson,
+                'detalleVencimientosJson' : detalleVencimientosJson
             },
             success: function(xhr){
                 loadMask.hide();
@@ -301,8 +308,8 @@ Ext.onReady(function(){
         fields:[
             {name:'descripcion',type:'string'},
             {name:'vencimiento',type:'date'},
-            {name:'porcentaje',type:'float'},
-            {name:'subtotal',type:'float'}
+            {name:'porcentaje' ,type:'float'},
+            {name:'subtotal'   ,type:'float'}
         ]
     });
 
@@ -535,15 +542,28 @@ Ext.onReady(function(){
 
 
   function onAddGastoClick(){
+      var form = this.up('form').getForm();
+      var fieldValues = form.getFieldValues();
       if(this.up('form').getForm().isValid()){
-          var form = this.up('form').getForm();
-          var fieldValues = form.getFieldValues();
+          if(fieldValues.porcentaje!=0 && fieldValues.monto!=0){
+              Ext.Msg.show({
+                  title:'Error',
+                  msg:'Solo puede ser mayor a cero el porcentaje o el monto no los dos al mismo tiempo',
+                  icon:Ext.MessageBox.ERROR,
+                  buttons: Ext.MessageBox.OK,
+                  fn:function(){
+                  }
+              });
+              return;
+          }
           var rec = new ganaderia.model.grid.Gastos({
                 descripcion: fieldValues.descripcion,
                 porcentaje: fieldValues.porcentaje,
                 monto: fieldValues.monto,
-                subtotal: 0
+                subtotal: subTotal()*fieldValues.porcentaje/100
           });
+          form.reset();
+          storeGridGastos.add(rec);
       }
   }
 
@@ -557,6 +577,9 @@ Ext.onReady(function(){
               porcentaje: fieldValues.porcentaje,
               subtotal: 0
           });
+          form.reset();
+          storeGridImpuestos.add(rec);
+
       }
   }
 
@@ -564,10 +587,12 @@ Ext.onReady(function(){
       if(this.up('form').getForm().isValid()){
           var form = this.up('form').getForm();
           var fieldValues = form.getFieldValues();
-          var rec = new ganaderia.model.grid.Impuestos({
+          var rec = new ganaderia.model.grid.Vencimientos({
               vencimiento: fieldValues.vencimiento,
               monto: fieldValues.monto
           });
+          form.reset();
+          storeGridVencimientos.add(rec);
       }
     }
 
@@ -1072,18 +1097,25 @@ Ext.onReady(function(){
                 margin:'10 10 10 10',
                 itemId:'stepFormGastosVentaId',
                 title:'Paso 5 - Gastos de Venta',
+
                 items:[
                     {
                         xtype:'form',
-                        defults:{msgTarget:'under'},
+                        //height:300,
+                        layout:'anchor',
+                        defaults:{msgTarget:'under'},
+                        defaultType:'textfield',
                         items:[
                             {
                               fieldLabel:'Descripción Gasto',
+                              allowBlank:'false',
                               name:'descripcion'
                             },{
+                              xtype:'numberfield',
                               fieldLabel:'Porcentaje',
                               name: 'porcentaje'
                             },{
+                              xtype:'numberfield',
                               fieldLabel:'Monto',
                               name: 'monto'
                             }
@@ -1111,10 +1143,12 @@ Ext.onReady(function(){
                                 width: 150
                             },{
                                 header: 'Porcentaje',
-                                dataIndex:'porcentaje'
+                                dataIndex:'porcentaje',
+                                value:0
                             },{
                                 header: '$ Monto',
                                 dataIndex:'monto',
+                                value:0,
                                 width:80,
                                 align:'right'
                             },{
@@ -1141,99 +1175,211 @@ Ext.onReady(function(){
 
                     }
 
-                ]
-          },{
-                xtype:'form',
-                itemId:'stepFormDatosImpuestosPagosId',
-                title: 'Paso 6 - Impuesto y Pagos',
-                margin:'10 10 10 10',
-                height: 500,
-                fieldDefaults:{
-                    msgTarget:'under',
-                    labelAlign: 'top'
-                },defaults:{
-                    autoScroll : true,
-                    margin:'10 10 10 10',
-                    xtype: 'panel',
-                    flex: 1 ,
-                    layout: 'anchor'
-                },
-                //layout:'hbox',
-                items:[
-                    {
-                        layout:'hbox',
-                        title:'Impuesto',
-                        defaults:{border:false,autoScroll : true,flex:1},
-                        width:700,
-                        items:[
-                            {
-                                layout: 'anchor',
-                                items:[
-                                    {   fieldLabel:'Ganancia Inscripto - (DB)'
-                                        ,xtype:'numberfield',value:2,anchor:'-5'
-                                        ,id:'ganaciaInsc1Id'
-                                        ,name:'gananciaInsc1'
-                                    },{ fieldLabel:'Ganancia Inscripto - (DB)'
-                                        ,id:'ganaciaInsc2Id'
-                                        ,xtype:'numberfield',value:2,anchor:'-5'
-                                        ,name:'gananciaInsc2'
-                                    },{ fieldLabel:'Ganancia Inscripto - (DB)'
-                                        ,id:'ganaciaInsc3Id'
-                                        ,xtype:'numberfield',value:2,anchor:'-5'
-                                        ,name:'gananciaInsc3'
-                                    }
-                                ]
-                            },{
-                                layout: 'anchor',
-                                items:[
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto1',name:'gananciaInscVto1'},
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto2',name:'gananciaInscVto2'},
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'ganaciaInscVto3',name:'gananciaInscVto3'}
-                                ]
-                            }
-                        ]
-                    },{
-                        layout:'hbox',
-                        title:'Pagos',
-                        defaults:{border:false, flex:1},
-                        width:700,
-                        items:[
-                            {
-                                layout: 'anchor',
-                                items:[
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId1',name:'vencimiento1'},
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId2',name:'vencimiento2'},
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId3',name:'vencimiento3'},
-                                    {fieldLabel:'Vto. al',xtype:'datefield',anchor:'-5',id:'vencimientoId4',name:'vencimiento4'}
-                                ]
-                            },{
-                                layout: 'anchor',
-                                items:[
-                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago1'},
-                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago2'},
-                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago3'},
-                                    {fieldLabel:'$',xtype:'numberfield',anchor:'-5',name:'pago4'}
-                                ]
-                            }
-                        ]
-
-                    }
                 ],
                 buttons:[
-                            {
-                                text:'Anterior',
-                                handler: function(){
-                                    var wizard = this.up('#wizardId');
-                                    wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
-                                }
-                            },{
-                                text:'Confirmar',
-                                handler: function(){
-                                    confirmarorden();
-                                }
-                            }
+                    {
+                        text:'Anterior',
+                        handler:function(){
+                            var wizard = this.up('#wizardId');
+                            wizard.getLayout().setActiveItem('stepFormDetalleOrdenId');
+                        }
+                    },{
+                        text:'Siguiente',
+                        handler:function(){
+                            var wizard = this.up('#wizardId');
+                            wizard.getLayout().setActiveItem('stepFormImpuestosId');
+                        }
+                    }
                 ]
+          },{
+              xtype:'panel',
+              margin:'10 10 10 10',
+              itemId:'stepFormImpuestosId',
+              title:'Paso 6 - Impuestos',
+
+              items:[
+                  {
+                      xtype:'form',
+                      //height:300,
+                      layout:'anchor',
+                      defaults:{msgTarget:'under'},
+                      defaultType:'textfield',
+                      items:[
+                          {
+                              fieldLabel:'Descripción del Impuesto',
+                              allowBlank:'false',
+                              name:'descripcion'
+                          },{
+                              xtype:'numberfield',
+                              fieldLabel:'Porcentaje',
+                              name: 'porcentaje'
+                          },{
+                              xtype:'datefield',
+                              fieldLabel:'Vencimiento',
+                              name: 'vencimiento'
+                          }
+                      ],
+                      buttons:[
+                          {
+                              text:'Agregar Linea',
+                              handler: onAddImpuestoClick
+                          }
+                      ]
+                  },
+                  {
+                      xtype:'grid',
+                      id:'gridDetalleImpuestosId',
+                      title:'Detalle Confeccionado',
+                      height:250,
+                      width:700,
+                      //selType: 'cellmodel',
+                      frame:false,
+                      store: storeGridImpuestos,
+                      columns:[
+                          {
+                              header: 'Descripción',
+                              dataIndex: 'descripcion',
+                              width: 150
+                          },{
+                              header: 'Porcentaje',
+                              dataIndex:'porcentaje',
+                              value:0
+                          },{
+                              header: 'Vencimiento',
+                              dataIndex:'vencimiento',
+                              dateFormat:'d/m/Y',
+                              width:80,
+                              align:'right'
+                          },{
+                              header: 'SubTotal',
+                              align:'right',
+                              dataIndex:'subtotal'
+                          },{
+
+                              xtype:'actioncolumn',
+                              width:30,
+                              sortable:false,
+                              menuDisabled:true,
+                              items:[
+                                  {
+                                      icon:deleteImg,
+                                      tooltip:'Eliminar Línea',
+                                      handler: function(grid,rowIndex){
+                                          Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
+                                      }
+                                  }
+                              ]
+                          }
+                      ]
+
+                  }
+
+              ],
+              buttons:[
+                  {
+                      text:'Anterior',
+                      handler:function(){
+                          var wizard = this.up('#wizardId');
+                          wizard.getLayout().setActiveItem('stepFormGastosVentaId');
+                      }
+                  },{
+                      text:'Siguiente',
+                      handler:function(){
+                          var wizard = this.up('#wizardId');
+                          wizard.getLayout().setActiveItem('stepFormVencimientosId');
+                      }
+                  }
+              ]
+          },{
+              xtype:'panel',
+              margin:'10 10 10 10',
+              itemId:'stepFormVencimientosId',
+              title:'Paso 7 - Vencimientos',
+
+              items:[
+                  {
+                      xtype:'form',
+                      //height:300,
+                      layout:'anchor',
+                      defaults:{msgTarget:'under'},
+                      defaultType:'textfield',
+                      items:[
+                          {
+                              xtype:'datefield',
+                              fieldLabel:'Vencimiento',
+                              name: 'vencimiento'
+                          },{
+                              xtype:'numberfield',
+                              fieldLabel:'Monto',
+                              name: 'monto'
+                          }
+                      ],
+                      buttons:[
+                          {
+                              text:'Agregar Linea',
+                              handler: onAddVencimientoClick
+                          }
+                      ]
+                  },
+                  {
+                      xtype:'grid',
+                      id:'gridDetalleVencimientosId',
+                      title:'Detalle Confeccionado',
+                      height:250,
+                      width:700,
+                      //selType: 'cellmodel',
+                      frame:false,
+                      store: storeGridVencimientos,
+                      columns:[
+                          {
+                              header: 'Vencimiento',
+                              dataIndex:'vencimiento',
+                              dateFormat:'d/m/Y',
+                              width:100,
+                              align:'right'
+                          },{
+                              header: 'Monto',
+                              align:'right',
+                              dataIndex:'monto'
+                          },{
+
+                              xtype:'actioncolumn',
+                              width:30,
+                              sortable:false,
+                              menuDisabled:true,
+                              items:[
+                                  {
+                                      icon:deleteImg,
+                                      tooltip:'Eliminar Línea',
+                                      handler: function(grid,rowIndex){
+                                          Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
+                                      }
+                                  }
+                              ]
+                          }
+                      ]
+
+                  }
+
+              ],
+              buttons:[
+                  {
+                      text:'Anterior',
+                      handler:function(){
+                          var wizard = this.up('#wizardId');
+                          wizard.getLayout().setActiveItem('stepFormImpuestosId');
+                      }
+                  },{
+                      text:'Confirmar',
+                      handler:function(){
+                          confirmarorden();
+                      }
+                  }
+              ]
           }
+
+
+
       ]
   });
   storeRaza.load();
