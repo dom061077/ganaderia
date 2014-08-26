@@ -111,29 +111,14 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
-        def fechaParseada
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
-        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto1).getTime())
-        orden.gananciaInscVto1 = fechaParseada
-        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto2).getTime())
-        orden.gananciaInscVto2 = fechaParseada
-        fechaParseada = new java.sql.Date(sdf.parse(params.gananciaInscVto3).getTime())
-        orden.gananciaInscVto3 = fechaParseada
-
-        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento1).getTime())
-        orden.vencimiento1 = fechaParseada
-        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento2).getTime())
-        orden.vencimiento2 = fechaParseada
-        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento3).getTime())
-        orden.vencimiento3 = fechaParseada
-        fechaParseada = new java.sql.Date(sdf.parse(params.vencimiento4).getTime())
-        orden.vencimiento4 = fechaParseada
-
 
         def detalleJson = JSON.parse(params.detalleJson)
         def detalleGastosJson = JSON.parse(params.detalleGastosJson)
         def detalleImpuestosJson = JSON.parse(params.detalleImpuestosJson)
         def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
+        java.util.Date fecha
 
         detalleJson.each{
             orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
@@ -142,10 +127,16 @@ class OrdenController {
             orden.addToDetallegastos(new Gasto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto: it.monto))
         }
         detalleImpuestosJson.each{
-            orden.addToDetalleimpuestos(new Impuesto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto:it.monto,vencimiento: it.vencimiento))
+            try{
+                fecha = df.parse(it.vencimiento.substring(0,10))
+            }catch(ParseException e){
+
+            }
+
+            orden.addToDetalleimpuestos(new Impuesto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto:it.monto,vencimiento: fecha))
         }
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
-        java.util.Date fecha 
+
+
         detalleVencimientosJson.each{
             try{
                 fecha = df.parse(it.vencimiento.substring(0,10))
