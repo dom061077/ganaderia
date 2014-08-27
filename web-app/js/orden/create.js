@@ -102,6 +102,7 @@ Ext.onReady(function(){
                                     var rec = new ganaderia.model.ClienteGanadero({
                                         id : objJson.id,
                                         cuit : objJson.cuit,
+                                        ingresosBrutos: objJson.ingresosBrutos,
                                         razonSocial: objJson.razonSocial,
                                         telefono1 : objJson.telefono1,
                                         telefono2 : objJson.telefono2,
@@ -187,6 +188,7 @@ Ext.onReady(function(){
             params:{
                 'cliente.id' : fieldValuesFormGanadero.id,
                 'cliente.cuit' :fieldValuesFormGanadero.cuit,
+                'cliente.ingresosBrutos' : fieldValuesFormGanadero.ingresosBrutos,
                 'cliente.razonSocial':fieldValuesFormGanadero.razonSocial,
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
                 'cliente.telefono2':fieldValuesFormGanadero.telefono2,
@@ -204,7 +206,8 @@ Ext.onReady(function(){
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
                 'numeroOperacion':fieldValuesFormDatosExposicion.numeroOperacion,
                 'destino': fieldValuesFormDatosExposicion.destino,
-                'fechaOperacion' : fieldValuesFormDatosExposicion.fechaOperacion,
+                'procedencia': fieldValuesFormDatosExposicion.procedencia,
+                'fechaoperacion' : fieldValuesFormDatosExposicion.fechaOperacion,
                 'guias':fieldValuesFormDatosExposicion.guias,
                 'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'detalleJson': detalleJson,
@@ -250,6 +253,7 @@ Ext.onReady(function(){
 
             },
             failure: function(xhr){
+                loadMask.hide();
                 console.log("Error: "+xhr.statusText);
             }
         });
@@ -262,6 +266,7 @@ Ext.onReady(function(){
                     //-------form cliente-----------
                     {name:'clienteId',type:'int'},
                     {name:'cuit',type:'string'},
+                    {name:'ingresosBrutos',type:'string'},
                     {name:'razonSocial',type:'string'},
                     {name:'telefono1',type:'string'},
                     {name:'telefono2',type:'string'},
@@ -665,6 +670,9 @@ Ext.onReady(function(){
                                    vtype:'numdocexists',
                                    allowBlank:false
                   },{
+                      fieldLabel:'Ingresos Brutos',
+                      name:'ingresosBrutos'
+                  },{
                       fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
                       maxLengthText:60,
@@ -793,9 +801,9 @@ Ext.onReady(function(){
                   {
                       xtype:'form',
                       itemId:'stepFormDatosExposicionId',
+                      layout:'anchor',
                       margin:'10 10 10 10',
                       title:'Paso 3 - Datos de Exposición',
-                      height:400,
                       defaults : {
                           autoScroll : true,
                           msgTarget:'under',
@@ -1031,7 +1039,7 @@ Ext.onReady(function(){
                              dataIndex: 'cliente',
                              width: 150,
                              renderer: function(value) {
-                                 var rec = storeRaza.getById(value);
+                                 var rec = storeClienteDetalle.getById(value);
 
                                  if (rec)
                                  {

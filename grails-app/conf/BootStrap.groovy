@@ -97,7 +97,8 @@ class BootStrap {
                           ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
                           ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
                         ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'
-                        ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3').save(failOnError: true)
+                        ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3'
+                        ,ingresosBrutos: '123456').save(failOnError: true)
 
 
             }

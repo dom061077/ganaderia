@@ -119,6 +119,17 @@ class OrdenController {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
         java.util.Date fecha
+        log.debug ("SUBSTRING DE FECHA: "+params.fechaoperacion.substring(0,10) )
+        try{
+            fecha = df.parse(params.fechaoperacion.substring(0,9))
+        }catch(Exception e){
+            log.debug "ERROR PARSEANDO LA FECHA DE OPERACION"
+
+        }
+        log.debug "FECHA OPERACION: "+fecha
+        orden.fechaOperacion = new java.sql.Date(fecha.getTime())
+        //log.debug "FECHA DE OPERACION ASIGNADA: "+orden.fechaOperacion
+
 
         detalleJson.each{
             orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
@@ -176,13 +187,6 @@ class OrdenController {
                 render objJson as JSON
                 return
             }
-            try{
-                fecha = df.parse(params.fechaOperacion.substring(0,10))
-            }catch(ParseException e){
-
-            }
-            orden.fechaOperacion = new java.sql.Date(fecha.getTime())
-
             if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
@@ -250,7 +254,8 @@ class OrdenController {
             
         }
         ordenes.each {
-            recordList << [id: it.id,numero:it.numero,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre,anio:it.anioExposicion,fechacarga:it.fechaAlta,total:0]
+            recordList << [id: it.id,numero:it.numero,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
+                    ,anio:it.anioExposicion.anio,fechacarga:it.fechaAlta,total:0,anulada:it.anulada]
         }
         
         def totalOrdenes = Orden.createCriteria().count(){
@@ -260,5 +265,26 @@ class OrdenController {
         returnMap.success = true
         returnMap.total = totalOrdenes
         render returnMap as JSON
+    }
+
+    def imprimircomprobante(){
+        def ordenInstance = Orden.get(params.id)
+        ordenInstance.detalle.each{
+        }
+
+        List ordenList = new ArrayList()
+        ordenList.add(ordenInstance)
+        ordenList.add(ordenInstance)
+        ordenList.add(ordenInstance)
+
+        String reportsDirPath = servletContext.getRealPath("/reports/");
+        params.put("reportsDirPath", reportsDirPath);
+        //open('ordenreservareporte?tipo=ORIGINAL&_format=PDF&_name=ordenReservaInstance&_file=OrdenReserva&id='+sel.data.ordenId
+        params.put("_format","PDF")
+        params.put("_name","OrdendeCompra")
+        params.put("_file","ComprobanteOrden")
+        log.debug("Parametros: $params")
+        chain(controller:'jasper',action:'index',model:[data:ordenList],params:params)
+
     }
 }

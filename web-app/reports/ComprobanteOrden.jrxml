@@ -13,10 +13,101 @@
 	<field name="cliente.telefono2" class="java.lang.String"/>
 	<field name="cliente.localidad.nombre" class="java.lang.String"/>
 	<field name="cliente.localidad.provincia.nombre" class="java.lang.String"/>
+	<field name="fechaAlta" class="java.sql.Date">
+		<fieldDescription><![CDATA[Emitida el:]]></fieldDescription>
+	</field>
+	<field name="cliente.id" class="java.lang.Long"/>
+	<field name="situacionIVA.name" class="java.lang.String"/>
+	<field name="condicionOperacion.nombre" class="java.lang.String"/>
+	<field name="operacion.nombre" class="java.lang.String"/>
+	<field name="numeroOperacion" class="java.lang.Integer"/>
+	<field name="fechaOperacion" class="java.sql.Date"/>
+	<field name="destino" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="424" splitType="Stretch">
+			<textField>
+				<reportElement uuid="537d4d53-5e2a-4b03-8e1f-c902f2f784d4" x="455" y="21" width="81" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaAlta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="829a626b-e8dd-4d38-8e00-df1c077ed2f0" x="12" y="86" width="129" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9" x="12" y="116" width="129" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="408f5c89-b243-49e6-ad5a-acca33be5619" x="12" y="147" width="100" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.localidad.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923" x="125" y="147" width="100" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.localidad.provincia.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23" x="12" y="178" width="129" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{situacionIVA.name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="550c0b22-9a38-4476-b485-8955a2cd22f3" x="319" y="86" width="90" height="20"/>
+				<textElement/>
+				<text><![CDATA[Condición de Op.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bf64e82f-c0f9-4e05-9b7d-72ffc9493f18" x="409" y="86" width="127" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{condicionOperacion.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="022c14e0-0ec4-4629-b3f3-3e9391f47c24" x="319" y="117" width="59" height="20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Operación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6fe93602-6b76-49e6-bd22-3f67ee01636e" x="409" y="117" width="100" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{operacion.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d4181247-a472-40c4-9ef3-3aec00b72fe0" x="319" y="147" width="59" height="20"/>
+				<textElement/>
+				<text><![CDATA[destino]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="e63ae0c3-6b10-415a-952f-ae23d1e7f4e2" x="409" y="147" width="100" height="20"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
 </jasperReport>
