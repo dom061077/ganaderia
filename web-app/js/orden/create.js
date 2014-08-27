@@ -29,9 +29,11 @@ Ext.onReady(function(){
                     items:[
                          {
                              fieldLabel:'C.U.I.T o D.N.I',
+                             allowBlank:false,
                              name:'cuit'
                          },{
                             fieldLabel:'Razon Social o Apellido y Nombre',
+                            allowBlank:false,
                             name:'razonSocial'
                         }
                     ]
@@ -200,6 +202,9 @@ Ext.onReady(function(){
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
                 'condicionOperacion.id': fieldValuesFormDatosExposicion.condicionOperacion,
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
+                'numeroOperacion':fieldValuesFormDatosExposicion.numeroOperacion,
+                'destino': fieldValuesFormDatosExposicion.destino,
+                'fechaOperacion' : fieldValuesFormDatosExposicion.fechaOperacion,
                 'guias':fieldValuesFormDatosExposicion.guias,
                 'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'detalleJson': detalleJson,
@@ -871,15 +876,27 @@ Ext.onReady(function(){
                               displayField:'descripcion',
                               store:storeOperacion
                           },{
+                              xtype:'numberfield',
+                              name:'numeroOperacion',
+                              fieldLabel:'Nº de Operación',
+                              allowBlank:false
+                          },{
                               name:'guias',
                               fieldLabel:'Guías'
                           },{
                               name:'destino',
                               fieldLabel:'Destino'
                           },{
+                              name:'procedencia',
+                              fieldLabel:'Proc./Remitente'
+                          },{
+                              xtype:'datefield',
+                              name:'fechaOperacion',
+                              fieldLabel:'Fecha Operación'
+                          },{
                               xtype:'combo',
                               name:'especie',
-                              fieldLabel:'Especie',
+                              fieldLabel:'Categoría',
                               allowBlank:false,
                               width:300,
                               queryMode:'remote',
@@ -972,7 +989,7 @@ Ext.onReady(function(){
                               xtype:'textfield',
                               fieldLabel:'Leyenda',
                               name:'corral',
-                              allowBlank:false,
+
                               width:300
                           },{
                               xtype:'numberfield',
@@ -982,7 +999,7 @@ Ext.onReady(function(){
                           },{
                               xtype:'numberfield',
                               name:'peso',
-                              allowBlank:false,
+
                               fieldLabel:'Peso'
                           },{
                               xtype:'numberfield',
@@ -1012,7 +1029,18 @@ Ext.onReady(function(){
                          {
                              header: 'Cliente',
                              dataIndex: 'cliente',
-                             width: 150
+                             width: 150,
+                             renderer: function(value) {
+                                 var rec = storeRaza.getById(value);
+
+                                 if (rec)
+                                 {
+                                     return rec.data.nombre;
+                                 }
+
+                                 return '';
+                             }
+
                          },{
                              header: 'Raza',
                              dataIndex: 'raza',
@@ -1028,7 +1056,7 @@ Ext.onReady(function(){
                                  return '';
                              }
                          },{
-                             header: 'Corral',
+                             header: 'Leyenda',
                              dataIndex:'corral'
                          },{
                              header: 'Cantidad',
@@ -1247,7 +1275,7 @@ Ext.onReady(function(){
                           },{
                               header: 'Vencimiento',
                               dataIndex:'vencimiento',
-                              dateFormat:'d/m/Y',
+                              xtype: 'datecolumn',   format:'d/m/Y',
                               width:80,
                               align:'right'
                           },{
@@ -1334,7 +1362,7 @@ Ext.onReady(function(){
                           {
                               header: 'Vencimiento',
                               dataIndex:'vencimiento',
-                              dateFormat:'d/m/Y',
+                              xtype: 'datecolumn',   format:'d/m/Y',
                               width:100,
                               align:'right'
                           },{

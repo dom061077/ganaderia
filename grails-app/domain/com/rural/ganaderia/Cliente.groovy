@@ -11,6 +11,7 @@ class Cliente {
     String telefono2
     String cargoRep//cargo representante
     String dniRep
+    String ingresosBrutos
 
 
     //datos fiscales para la facturaci�n

@@ -13,7 +13,11 @@ class Orden {
     SituacionIVA situacionIVA = SituacionIVA.IVA
     CondicionOperacion condicionOperacion
     Operacion operacion
+    int numeroOperacion
     String guias
+    String destino
+    String procedencia
+    java.sql.Date fechaOperacion
     boolean anulada = false
 
 

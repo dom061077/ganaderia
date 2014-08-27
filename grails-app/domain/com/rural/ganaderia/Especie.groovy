@@ -2,7 +2,7 @@ package com.rural.ganaderia
 
 class Especie {
     String nombre
-
+    BigDecimal porcentajeIVA
     static hasMany = [razas:Raza]
 
     static constraints = {

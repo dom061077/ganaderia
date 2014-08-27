@@ -136,14 +136,13 @@ class OrdenController {
             orden.addToDetalleimpuestos(new Impuesto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto:it.monto,vencimiento: fecha))
         }
 
-
         detalleVencimientosJson.each{
             try{
                 fecha = df.parse(it.vencimiento.substring(0,10))
             }catch(ParseException e){
                 
             }
-            orden.addToDetallevencimientos(new Vencimiento(vencimiento:fecha,monto: it.monto ))
+            orden.addToDetallevencimientos(new Vencimiento(vencimiento: new java.sql.Date(fecha.getTime()),monto: it.monto ))
         }
 
         def errorList = []
@@ -177,6 +176,13 @@ class OrdenController {
                 render objJson as JSON
                 return
             }
+            try{
+                fecha = df.parse(params.fechaOperacion.substring(0,10))
+            }catch(ParseException e){
+
+            }
+            orden.fechaOperacion = new java.sql.Date(fecha.getTime())
+
             if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
