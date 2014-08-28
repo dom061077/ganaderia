@@ -740,65 +740,10 @@ Ext.onReady(function(){
                   handler: function() {
                       var wizard = this.up('#wizardId');
                       if(this.up('form').getForm().isValid())
-                        wizard.getLayout().setActiveItem('stepFormRepresentanteId');
+                        wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
                   }
               }]
           },{
-              itemId:'stepFormRepresentanteId',
-              xtype:'form',
-              margin:'10 10 10 10',
-              title:'Paso 2 - Registro de datos del Representante',
-              layout:'anchor',
-              defaultType:'textfield',
-              defaults:{
-                  autoScroll :  true,
-                  msgTarget:'under'
-              },
-              items:[
-                  {
-                      fieldLabel:'Nombre del Representante',
-                      name:'nombreRepresentante',
-                      maxLengthText:60,
-                      allowBlank:true
-                  },{
-                      fieldLabel:'Apellido Representante',
-                      name:'apellidoRepresentante',
-                      maxLengthText:60,
-                      allowBlank:true
-                  },{
-                      fieldLabel:'Teléfono 1 Representante',
-                      name:'telefonoRepresentante1',
-                      maxLengthText:20,
-                      allowBlank:true
-                  },{
-                      fieldLabel:'Teléfono 2 Representante',
-                      maxLengthText:20,
-                      name:'telefonoRepresentante2'
-                  },{
-                      fieldLabel:'Teléfono 3 Representante',
-                      maxLengthText:20,
-                      name:'telefonoRepresentante3'
-                  }
-              ],
-              buttons:[
-                  {
-                     text:'Anterior',
-                     handler:function(){
-                         var wizard = this.up('#wizardId');
-                         wizard.getLayout().setActiveItem('stepFormGanaderoId');
-                     }
-                  },{
-                     text:'Siguiente',
-                     handler:function(){
-                         var wizard = this.up('#wizardId');
-                         if(this.up('form').getForm().isValid())
-                             wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
-                     }
-                  }
-              ]
-
-          },
-                  {
                       xtype:'form',
                       itemId:'stepFormDatosExposicionId',
                       layout:'anchor',
@@ -1227,105 +1172,6 @@ Ext.onReady(function(){
                         }
                     }
                 ]
-          },{
-              xtype:'panel',
-              margin:'10 10 10 10',
-              itemId:'stepFormImpuestosId',
-              title:'Paso 6 - Impuestos',
-
-              items:[
-                  {
-                      xtype:'form',
-                      //height:300,
-                      layout:'anchor',
-                      defaults:{msgTarget:'under'},
-                      defaultType:'textfield',
-                      items:[
-                          {
-                              fieldLabel:'Descripción del Impuesto',
-                              allowBlank:'false',
-                              name:'descripcion'
-                          },{
-                              xtype:'numberfield',
-                              fieldLabel:'Porcentaje',
-                              name: 'porcentaje'
-                          },{
-                              xtype:'datefield',
-                              fieldLabel:'Vencimiento',
-                              name: 'vencimiento'
-                          }
-                      ],
-                      buttons:[
-                          {
-                              text:'Agregar Linea',
-                              handler: onAddImpuestoClick
-                          }
-                      ]
-                  },
-                  {
-                      xtype:'grid',
-                      id:'gridDetalleImpuestosId',
-                      title:'Detalle Confeccionado',
-                      height:250,
-                      width:700,
-                      //selType: 'cellmodel',
-                      frame:false,
-                      store: storeGridImpuestos,
-                      columns:[
-                          {
-                              header: 'Descripción',
-                              dataIndex: 'descripcion',
-                              width: 150
-                          },{
-                              header: 'Porcentaje',
-                              dataIndex:'porcentaje',
-                              value:0
-                          },{
-                              header: 'Vencimiento',
-                              dataIndex:'vencimiento',
-                              xtype: 'datecolumn',   format:'d/m/Y',
-                              width:80,
-                              align:'right'
-                          },{
-                              header: 'SubTotal',
-                              align:'right',
-                              dataIndex:'subtotal'
-                          },{
-
-                              xtype:'actioncolumn',
-                              width:30,
-                              sortable:false,
-                              menuDisabled:true,
-                              items:[
-                                  {
-                                      icon:deleteImg,
-                                      tooltip:'Eliminar Línea',
-                                      handler: function(grid,rowIndex){
-                                          Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
-                                      }
-                                  }
-                              ]
-                          }
-                      ]
-
-                  }
-
-              ],
-              buttons:[
-                  {
-                      text:'Anterior',
-                      handler:function(){
-                          var wizard = this.up('#wizardId');
-                          wizard.getLayout().setActiveItem('stepFormGastosVentaId');
-                      }
-                  },{
-                      text:'Siguiente',
-                      handler:function(){
-                          var wizard = this.up('#wizardId');
-                          wizard.getLayout().setActiveItem('stepFormVencimientosId');
-                      }
-                  }
-              ]
           },{
               xtype:'panel',
               margin:'10 10 10 10',

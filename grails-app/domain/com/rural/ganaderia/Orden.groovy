@@ -21,7 +21,7 @@ class Orden {
     boolean anulada = false
 
 
-    static hasMany = [detalle:DetalleOrden,detallegastos:Gasto,detalleimpuestos:Impuesto,detallevencimientos:Vencimiento]
+    static hasMany = [detalle:DetalleOrden,detallegastos:Gasto,detallevencimientos:Vencimiento]
 
     static constraints = {
         exposicion(nullable: false,blank:false)

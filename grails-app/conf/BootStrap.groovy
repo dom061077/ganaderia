@@ -11,6 +11,8 @@ import com.rural.ganaderia.CondicionOperacion
 import com.rural.ganaderia.Operacion
 import com.rural.ganaderia.Numerador
 import com.rural.ganaderia.enums.TipoNumerador
+import com.rural.ganaderia.Categoria
+import com.rural.ganaderia.enums.SituacionIVA
 
 class BootStrap {
 
@@ -42,25 +44,102 @@ class BootStrap {
     void datosprueba(){
             if(ApplicationHolder.application.config.dataSource.dbCreate == "create-drop"){
                 def especie = new Especie(nombre: "BOVINO",porcentajeIVA: 10.5)
-                especie.addToRazas(new Raza(nombre: "RAZA BOVINO 1"))
-                especie.addToRazas(new Raza(nombre: "RAZA BOVINO 2"))
-                especie.addToRazas(new Raza(nombre: "RAZA BOVINO 3"))
+                def categoria = new Categoria(nombre: "CATEGORIA 1 - BOVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 1 - BOVINO"))
+                especie.addToCategorias(categoria)
+
+                categoria = new Categoria(nombre: "CATEGORIA 2 - BOVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 2 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 2 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 2 - BOVINO"))
+                especie.addToCategorias(categoria)
+
+
+                categoria = new Categoria(nombre: "CATEGORIA 3 - BOVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 3 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 3 - BOVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 3 - BOVINO"))
+                especie.addToCategorias(categoria)
+
                 especie.save(failOnError: true)
-                especie = new Especie(nombre: "EQUINO",porcentajeIVA: 21)
-                especie.addToRazas(new Raza(nombre: "RAZA EQUINO 1"))
-                especie.addToRazas(new Raza(nombre: "RAZA EQUINO 2"))
-                especie.addToRazas(new Raza(nombre: "RAZA EQUINO 3"))
-                especie.save(failOnError: true)
+                //------------------------------------------------------------------
+
                 especie = new Especie(nombre: "PORCINO",porcentajeIVA: 21)
-                especie.addToRazas(new Raza(nombre: "RAZA PORCINO 1"))
-                especie.addToRazas(new Raza(nombre: "RAZA PORCINO 2"))
-                especie.addToRazas(new Raza(nombre: "RAZA PORCINO 3"))
+                categoria = new Categoria(nombre: "CATEGORIA 1 - PORCINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 1 - PORCINO"))
+                especie.addToCategorias(categoria)
+
+                categoria = new Categoria(nombre: "CATEGORIA 2 - PORCINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 2 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 2 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 2 - PORCINO"))
+                especie.addToCategorias(categoria)
+
+
+                categoria = new Categoria(nombre: "CATEGORIA 3 - PORCINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 3 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 3 - PORCINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 3 - PORCINO"))
+                especie.addToCategorias(categoria)
+
                 especie.save(failOnError: true)
+                //----------------------
+
+
+                //------------------------------------------------------------------
+
                 especie = new Especie(nombre: "OVINO",porcentajeIVA: 10.5)
-                especie.addToRazas(new Raza(nombre: "RAZA VACUNO 1"))
-                especie.addToRazas(new Raza(nombre: "RAZA VACUNO 2"))
-                especie.addToRazas(new Raza(nombre: "RAZA VACUNO 3"))
+                categoria = new Categoria(nombre: "CATEGORIA 1 - OVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 1 - OVINO"))
+                especie.addToCategorias(categoria)
+
+                categoria = new Categoria(nombre: "CATEGORIA 2 - OVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 2 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 2 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 2 - OVINO"))
+                especie.addToCategorias(categoria)
+
+
+                categoria = new Categoria(nombre: "CATEGORIA 3 - OVINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 3 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 3 - OVINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 3 - OVINO"))
+                especie.addToCategorias(categoria)
+
                 especie.save(failOnError: true)
+                //----------------------
+
+                //------------------------------------------------------------------
+
+                especie = new Especie(nombre: "EQUINO",porcentajeIVA: 21)
+                categoria = new Categoria(nombre: "CATEGORIA 1 - EQUINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 1 - EQUINO"))
+                especie.addToCategorias(categoria)
+
+                categoria = new Categoria(nombre: "CATEGORIA 2 - EQUINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 2 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 2 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 2 - EQUINO"))
+                especie.addToCategorias(categoria)
+
+
+                categoria = new Categoria(nombre: "CATEGORIA 3 - EQUINO")
+                categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 3 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 3 - EQUINO"))
+                categoria.addToRazas(new Raza(nombre: "RAZA 3- CATEGORIA 3 - EQUINO"))
+                especie.addToCategorias(categoria)
+
+                especie.save(failOnError: true)
+                //----------------------
+
 
                 def provincia = new Provincia(nombre:"TUCUMAN").save(failOnError: true)
                 new Localidad(nombre: 'S.M DE TUCUMAN',provincia: provincia).save(failOnError: true)
@@ -98,7 +177,8 @@ class BootStrap {
                           ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
                         ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'
                         ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3'
-                        ,ingresosBrutos: '123456').save(failOnError: true)
+                        ,ingresosBrutos: '123456'
+                        ,situacionIVA: SituacionIVA.IVA).save(failOnError: true)
 
 
             }

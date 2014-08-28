@@ -144,7 +144,6 @@ class OrdenController {
 
             }
 
-            orden.addToDetalleimpuestos(new Impuesto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto:it.monto,vencimiento: fecha))
         }
 
         detalleVencimientosJson.each{
