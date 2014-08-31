@@ -2,6 +2,7 @@ package com.rural.ganaderia
 
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoOrden
+import com.rural.ganaderia.localizacion.Localidad
 
 class Orden {
     long numero
@@ -15,13 +16,14 @@ class Orden {
     Operacion operacion
     int numeroOperacion
     String guias
-    String destino
-    String procedencia
+    Destino destino
+    Localidad procedencia
     java.sql.Date fechaOperacion
     boolean anulada = false
+    boolean regimen2daVenta = false
 
 
-    static hasMany = [detalle:DetalleOrden,detallegastos:Gasto,detallevencimientos:Vencimiento]
+    static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento]
 
     static constraints = {
         exposicion(nullable: false,blank:false)

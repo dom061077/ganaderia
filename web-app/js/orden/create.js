@@ -204,7 +204,6 @@ Ext.onReady(function(){
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
                 'condicionOperacion.id': fieldValuesFormDatosExposicion.condicionOperacion,
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
-                'numeroOperacion':fieldValuesFormDatosExposicion.numeroOperacion,
                 'destino': fieldValuesFormDatosExposicion.destino,
                 'procedencia': fieldValuesFormDatosExposicion.procedencia,
                 'fechaoperacion' : fieldValuesFormDatosExposicion.fechaOperacion,
@@ -429,7 +428,7 @@ Ext.onReady(function(){
              idProperty:'id'
           }
       },
-      fields:['id','nombre']
+      fields:['id','nombre','regimen2daVenta']
   });
 
   Ext.define('ganaderia.model.combo.SituacionIVAStore',{
@@ -829,11 +828,6 @@ Ext.onReady(function(){
                               displayField:'descripcion',
                               store:storeOperacion
                           },{
-                              xtype:'numberfield',
-                              name:'numeroOperacion',
-                              fieldLabel:'Nº de Operación',
-                              allowBlank:false
-                          },{
                               name:'guias',
                               fieldLabel:'Guías'
                           },{
@@ -862,11 +856,21 @@ Ext.onReady(function(){
                               store: storeEspecie,
                               listeners:{
                                   'select':function(combo,records,options){
+                                      if(records[0].data.regimen2daVenta==true){
+                                         Ext.getCmp('regimen2daVentaId').show();
+                                      }else
+                                          Ext.getCmp('regimen2daVentaId').hide();
                                       storeRaza.proxy.extraParams={especieId:records[0].data.id};
                                       storeRaza.load();
 
                                   }
                               }
+                          },{
+                              xtype:'checkboxfield',
+                              id:'regimen2daVentaId',
+                              fieldLabel:'Se cobra I.V.A',
+                              name:'regimen2daVenta'
+
                           }
                       ],
                       buttons:[
@@ -1265,7 +1269,7 @@ Ext.onReady(function(){
       ]
   });
   storeRaza.load();
-
+  Ext.getCmp('regimen2daVentaId').hide();
 
 
 });

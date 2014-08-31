@@ -13,6 +13,7 @@ import com.rural.ganaderia.Numerador
 import com.rural.ganaderia.enums.TipoNumerador
 import com.rural.ganaderia.Categoria
 import com.rural.ganaderia.enums.SituacionIVA
+import com.rural.ganaderia.Destino
 
 class BootStrap {
 
@@ -172,6 +173,16 @@ class BootStrap {
                 new Operacion(nombre: "Reventa").save(failOnError: true)
 
                 //--------------------------
+
+                new Destino(descripcion:"Faena").save()
+                new Destino(descripcion:"Invernada o cría").save()
+                new Destino(descripcion:"Puro Pedigree").save()
+                new Destino(descripcion:"Puro Pedigree Cruza").save()
+                new Destino(descripcion:"Puro Registrado").save()
+                new Destino(descripcion:"Reproductores").save()
+                new Destino(descripcion:"Reventa").save()
+                new Destino(descripcion:"Tambo").save()
+
                 new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
                           ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
                           ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'

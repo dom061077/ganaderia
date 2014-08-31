@@ -106,7 +106,7 @@ class EspecieController {
         def returnList = []
         def especies = Especie.list()
         especies.each {
-            returnList << [id: it.id,nombre:it.nombre]
+            returnList << [id: it.id,nombre:it.nombre,regimen2daVenta:it.regimen2daVenta]
         }
         returnMap.rows = returnList
         returnMap.success = true

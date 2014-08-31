@@ -1,9 +1,7 @@
 package com.rural.ganaderia
 
-class Gasto {
-
+class Destino {
     String descripcion
-
     static constraints = {
     }
 }
