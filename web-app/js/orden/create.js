@@ -1,5 +1,6 @@
 
 Ext.onReady(function(){
+    Ext.QuickTips.init();
     var tempCuit;
     function subTotal(){
         var sumSubTotal=0
@@ -10,9 +11,158 @@ Ext.onReady(function(){
     }
 
 
+    function showEditCliente(idCliente){
+        if(!idCliente){
+            Ext.Msg.show({
+                title:'Error',
+                msg:'Seleccione un cliente para modificar',
+                buttons:Ext.Msg.OK,
+                icon:Ext.Msg.ERROR
+            });
+            return;
+        }
+        var winEditCliente = Ext.create('Ext.window.Window',{
+            //height:200,
+            width:400,
+            modal:true,
+            autoDestroy:false,
+            x:400,
+            y:200,
+            title:'Modificación de Cliente',
+            items:[
+                {
+                    xtype:'form',
+                    id:'formEditClienteId',
+                    url:altaClienteDetalleUrl,
+                    defaultType:'textfield',
+                    defaults:{autoScroll:true,msgTarget:'under'},
+                    items:[
+                        {
+                            xtype:'hidden',
+                            fieldLabel:'id',
+                            name:'id'
+                        },{
+                            fieldLabel:'C.U.I.T o D.N.I',
+                            allowBlank:false,
+                            name:'cuit'
+                        },{
+                            fieldLabel:'Razon Social o Apellido y Nombre',
+                            allowBlank:false,
+                            name:'razonSocial'
+                        },{
+
+                            xtype:'combo',
+                            fieldLabel:'Situación I.V.A',
+                            forceSelection: true,
+                            name:'situacionIVA',
+                            allowBlank:false,
+                            editable:false,
+                            queryMode:'remote',
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            valueField:'id',
+                            displayField:'descripcion',
+                            store: storeSituacionIVA
+                        },{
+                            fieldLabel:'Ing.Brutos',
+                            name:'ingresosBrutos',
+                            allowBlank:false
+                        },{
+                            fieldLabel:'Provincia',
+                            xtype:'combo',
+                            store:storeProvinciaAltaCliente,
+                            forceSelection : true,
+                            name:'provincia',
+                            allowBlank:false,
+                            anyMatch:true,
+                            queryMode:'remote',
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction:'all',
+                            valueField:'id',
+                            displayField:'nombre',
+                            selectOnTab:true,
+                            listeners:{
+                                'select':function(combo,records,options){
+                                    storeLocalidadAltaCliente.proxy.extraParams={provinciaId:records[0].data.id};
+                                    storeLocalidadAltaCliente.load();
+                                    Ext.getCmp('localidadAltaClienteId').clearValue();
+                                }
+                            }
+                        },{
+                            fieldLabel:'Localidad',
+                            xtype:'combo',
+                            id:'localidadAltaClienteId',
+                            allowBlank:false,
+                            store:storeLocalidadAltaCliente,
+                            forceSelection:true,
+                            queryMode:'remote',
+                            anyMatch:true,
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction:'all',
+                            valueField:'id',
+                            displayField:'nombre',
+                            selectOnTab: true,
+                            name:'localidad.id',
+                            allowBlank:false
+                        },{
+                            fieldLabel:'Dirección',
+                            name:'direccion',
+                            allowBlank:false
+                        }
+                    ]
+                }
+            ],
+            buttons:[
+                {
+                    text:'Guardar',
+                    handler:function(){
+                        Ext.getCmp('formClienteDetalleId').getForm().submit({
+                            success:function(f,a){
+                                storeClienteDetalle.load();
+                                Ext.getCmp('comboClienteDetalleId').setValue(a.result.idCliente);
+                                winClienteDetalle.close();
+                            },
+                            failure:function(f,a){
+                                var errores = a.result.errors;
+                                var msgError = a.result.msgError+'<br>';
+                                for(var i = 0; i < errores.length; i++){
+                                    msgError = msgError + '-'+errores[i].msg+'<br>';
+                                }
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg:msgError,
+                                    icon:Ext.MessageBox.ERROR,
+                                    buttons:Ext.MessageBox.OK,
+                                    fn:function(){
+                                        winEditCliente.close();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                },{
+                    text:'Cancelar',
+                    handler:function(){
+                        winEditCliente.close();
+                    }
+                }
+            ],
+            listeners:{
+                'afterrender':function(form,opts){
+                    loadCliente(idCliente);
+                }
+            }
+        });
+        winEditCliente.show();
+
+    }
+
     function showAddCliente(){
         var winClienteDetalle = Ext.create('Ext.window.Window',{
-            height:200,
+            //height:200,
             width:400,
             modal:true,
             autoDestroy:false,
@@ -35,6 +185,68 @@ Ext.onReady(function(){
                             fieldLabel:'Razon Social o Apellido y Nombre',
                             allowBlank:false,
                             name:'razonSocial'
+                        },{
+
+                            xtype:'combo',
+                            fieldLabel:'Situación I.V.A',
+                            forceSelection: true,
+                            name:'situacionIVA',
+                            allowBlank:false,
+                            editable:false,
+                            queryMode:'remote',
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            valueField:'id',
+                            displayField:'descripcion',
+                            store: storeSituacionIVA
+                        },{
+                            fieldLabel:'Ing.Brutos',
+                            name:'ingresosBrutos',
+                            allowBlank:false
+                        },{
+                            fieldLabel:'Provincia',
+                            xtype:'combo',
+                            store:storeProvinciaAltaCliente,
+                            forceSelection : true,
+                            name:'provincia',
+                            allowBlank:false,
+                            anyMatch:true,
+                            queryMode:'remote',
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction:'all',
+                            valueField:'id',
+                            displayField:'nombre',
+                            selectOnTab:true,
+                            listeners:{
+                                'select':function(combo,records,options){
+                                    storeLocalidadAltaCliente.proxy.extraParams={provinciaId:records[0].data.id};
+                                    storeLocalidadAltaCliente.load();
+                                    Ext.getCmp('localidadAltaClienteId').clearValue();
+                                }
+                            }
+                        },{
+                            fieldLabel:'Localidad',
+                            xtype:'combo',
+                            id:'localidadAltaClienteId',
+                            allowBlank:false,
+                            store:storeLocalidadAltaCliente,
+                            forceSelection:true,
+                            queryMode:'remote',
+                            anyMatch:true,
+                            emptyText:'',
+                            typeAhead: true,
+                            triggerAction:'all',
+                            valueField:'id',
+                            displayField:'nombre',
+                            selectOnTab: true,
+                            name:'localidad.id',
+                            allowBlank:false
+                        },{
+                            fieldLabel:'Dirección',
+                            name:'direccion',
+                            allowBlank:false
                         }
                     ]
                 }
@@ -68,12 +280,61 @@ Ext.onReady(function(){
                         });
                     }
                 },{
-                 text:'Cancelar'
+                 text:'Cancelar',
+                 handler:function(){
+                     winClienteDetalle.close();
+                 }
                 }
             ]
         });
         winClienteDetalle.show();
 
+    }
+
+    function loadCliente(idCliente){
+        var rec = new ganaderia.model.ClienteGanadero();
+        Ext.Ajax.request(
+            {
+                url: getDatosClientesByIdUrl,
+                method: 'POST',
+                async:false,
+                params : {
+                    id: idCliente
+                },  // end-params
+
+                success: function(response, opts) {
+                    var objJson = Ext.decode(response.responseText);
+                    if (objJson.id != null) {
+                        tempCuit = objJson.cuit;
+                        rec.id = objJson.id;
+                        rec.cuit = objJson.cuit;
+                        rec.ingresosBrutos = objJson.ingresosBrutos;
+                        rec.razonSocial = objJson.razonSocial;
+                        rec.telefono1 = objJson.telefono1;
+                        rec.telefono2 = objJson.telefono2;
+                        rec.email = objJson.email;
+                        rec.situacionIVA = objJson.situacionIVA;
+                        rec.provincia = (objJson.localidad!=null? objJson.localidad.provincia.id:null);
+                        rec.localidad = (objJson.localidad!=null?objJson.localidad.id:null);
+                        rec.direccion = objJson.direccion;
+                    }
+                }, // end-function
+                failure: function (response, options) {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg:'Se produjo un error de comunicación',
+                        icon:Ext.MessageBox.ERROR,
+                        buttons:Ext.MessageBox.OK,
+                        fn:function(btn){
+                            //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                            console.log("Error al traer datos del cliente ganadero");
+                        }
+                    });
+                }
+
+            } // end-ajax
+        );
+        return rec;
     }
 
     Ext.apply(Ext.form.VTypes,{
@@ -109,15 +370,10 @@ Ext.onReady(function(){
                                         email : objJson.email,
                                         provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
                                         localidad :(objJson.localidad!=null?objJson.localidad.id:null),
-                                        direccion : objJson.direccion,
-                                        nombreRepresentante : objJson.nombreRepresentante,
-                                        apellidoRepresentate : objJson.apellidoRepresentate,
-                                        telefonoRepresentante1 : objJson.telefonoRepresentante1,
-                                        telefonoRepresentante2 : objJson.telefonoRepresentante2,
-                                        telefonoRepresentante3 : objJson.telefonoRepresentante3
-
+                                        direccion : objJson.direccion
                                     });
                                     var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+
                                 }
 
                             }, // end-function
@@ -578,8 +834,10 @@ Ext.onReady(function(){
   var storeGasto = Ext.create('ganaderia.model.combo.GastoStore');
   var storeProvincia = Ext.create('ganaderia.model.combo.ProvinciaStore');
   var storeProvinciaRemitente = Ext.create('ganaderia.model.combo.ProvinciaStore');
+  var storeProvinciaAltaCliente = Ext.create('ganaderia.model.combo.ProvinciaStore');
   var storeLocalidad = Ext.create('ganaderia.model.combo.LocalidadStore');
   var storeLocalidadRemitente =Ext.create('ganaderia.model.combo.LocalidadStore');
+  var storeLocalidadAltaCliente =Ext.create('ganaderia.model.combo.LocalidadStore');
   var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
   var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
   var storeSituacionIVA = Ext.create('ganaderia.model.combo.SituacionIVAStore');
@@ -728,7 +986,7 @@ Ext.onReady(function(){
                   {
                       name:'tipoOrden',
                       xtype:'hidden',
-                      value:'COMPRA'
+                      value:'VENTA'
                   },{
                       name:'id',
                       xtype:'hidden'
@@ -1025,10 +1283,17 @@ Ext.onReady(function(){
 
                       tools:[
                           {
+                              type:'gear',
+                              tooltip:'Permite modificar datos del cliente seleccionado',
+                              handler: function(event, toolEl, panelHeader){
+                                  showEditCliente();
+                              }
+                          },{
                               type:'plus',
+                              tooltipType:'title',
                               tooltip:'Permite agregar un cliente',
                               handler: function(event, toolEl, panelHeader) {
-                                    showAddCliente();
+                                    showAddCliente(Ext.getCmp('comboClienteDetalleId').getValue());
                               }
                           }
                       ],
@@ -1050,7 +1315,12 @@ Ext.onReady(function(){
                               valueField:'id',
                               displayField:'nombre',
                               selectOnTab:true,
-                              store:storeClienteDetalle
+                              store:storeClienteDetalle,
+                              listeners:{
+                                  'select':function(combo,records,options){
+
+                                  }
+                              }
                           },{
                               xtype:'combo',
                               name:'categoria',
@@ -1354,7 +1624,7 @@ Ext.onReady(function(){
               items:[
                    {
                       xtype:'combo',
-                      fieldLable:'Forma de Pago',
+                      fieldLabel:'Forma de Pago'
 
                    },{
                       xtype:'panel',

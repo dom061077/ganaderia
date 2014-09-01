@@ -111,6 +111,9 @@ class ClienteController {
         def hashJson = [:]
         def listRows = []
         def clientes = Cliente.createCriteria().list{
+            if(params.query){
+                ilike("razonSocial",'%'+params.query+'%')
+            }
             order("razonSocial","asc")
         }
         clientes.each{
@@ -155,6 +158,19 @@ class ClienteController {
         JSON.use("deep"){
             render clienteInstance as JSON
         }
+    }
+    
+    def getdatosjsonbyid(long id){
+        Cliente clienteInstance
+        if (id)
+            clienteInstance =  Cliente.load(id);
+        if(!clienteInstance)
+            clienteInstance = new Cliente()
+
+        JSON.use("deep"){
+            render clienteInstance as JSON
+        }
+        
     }
     
 }

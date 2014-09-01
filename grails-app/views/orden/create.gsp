@@ -16,6 +16,7 @@
             var saveOrdenUrl = '${createLink(controller:'orden',action:'savejson')}';
             var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
+            var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
             var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
             var condicionOperacionUrl = '<% out << createLink(controller:'orden',action:'condicionOperacionjson')%>';
             var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
