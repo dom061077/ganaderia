@@ -8,10 +8,20 @@ class Orden {
     long numero
     TipoOrden tipoOrden
     Cliente cliente
+    
+    //-------------------datos el cliente que se persisten-----------
+    String razonSocial
+    Localidad localidad
+    String direccion
+    SituacionIVA situacionIVA = SituacionIVA.IVA
+    String cuit
+    String ingresosBrutos
+
+    //----------------
+    
     java.sql.Date fechaAlta = new java.sql.Date(new java.util.Date().getTime())
     Exposicion exposicion
     AnioExposicion anioExposicion
-    SituacionIVA situacionIVA = SituacionIVA.IVA
     CondicionOperacion condicionOperacion
     Operacion operacion
     int numeroOperacion

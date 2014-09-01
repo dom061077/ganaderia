@@ -118,7 +118,7 @@ class BootStrap {
 
                 //------------------------------------------------------------------
 
-                especie = new Especie(nombre: "EQUINO",porcentajeIVA: 21)
+                especie = new Especie(nombre: "EQUINO",porcentajeIVA: 21,regimen2daVenta: true)
                 categoria = new Categoria(nombre: "CATEGORIA 1 - EQUINO")
                 categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - EQUINO"))
                 categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - EQUINO"))

@@ -64,8 +64,8 @@ class EspecieController {
         if (version != null) {
             if (especieInstance.version > version) {
                 especieInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                        [message(code: 'especie.label', default: 'Especie')] as Object[],
-                        "Another user has updated this Especie while you were editing")
+                          [message(code: 'especie.label', default: 'Especie')] as Object[],
+                          "Another user has updated this Especie while you were editing")
                 render(view: "edit", model: [especieInstance: especieInstance])
                 return
             }
@@ -100,6 +100,7 @@ class EspecieController {
             redirect(action: "show", id: id)
         }
     }
+
     //---------------------------------
     def listjson(){
         def returnMap = [:]
@@ -113,5 +114,4 @@ class EspecieController {
         returnMap.total = especies.size()
         render returnMap as JSON
     }
-
 }

@@ -108,6 +108,7 @@ class RazaController {
             categoria{
                 eq("id",categoriaId)
             }
+            order("nombre","asc")
         }
         razas.each{
             listRows << [id:it.id,nombre:it.nombre]

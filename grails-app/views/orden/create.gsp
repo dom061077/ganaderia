@@ -21,6 +21,9 @@
             var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
             var altaClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'savejson')%>';
             var clienteListUrl = '<% out << createLink(controller:'cliente',action:'listjson')%>';
+            var destinoUrl = '<% out << createLink(controller:'destino',action:'listjson')%>';
+            var categoriasUrl = '<% out << createLink(controller:'categoria',action:'listjson')%>';
+            var gastosUrl = '<% out << createLink(controller:'gasto',action:'listjson')%>';
         </script>
 
 	</head>

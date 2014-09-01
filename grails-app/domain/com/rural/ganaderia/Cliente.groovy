@@ -8,10 +8,6 @@ class Cliente {
     String email
     String telefono1
     String telefono2
-
-
-
-
     //datos fiscales para la facturaci�n
     String cuit
     String razonSocial //apellido y nombre del expositor o raz�n social

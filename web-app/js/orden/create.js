@@ -305,7 +305,7 @@ Ext.onReady(function(){
     Ext.define('ganaderia.model.grid.Gastos',{
         extend: 'Ext.data.Model',
         fields:[
-            {name:'descripcion',type: 'string'},
+            {name:'gasto',type: 'int'},
             {name:'porcentaje',type:'float'},
             {name:'monto',type:'float'},
             {name:'subtotal',type:'float'}
@@ -349,6 +349,25 @@ Ext.onReady(function(){
         listeners:{
         }
     });
+
+    Ext.define('ganaderia.model.combo.GastoStore',{
+        extend:'Ext.data.Store',
+        autoLoad:true,
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:gastosUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion'],
+        listeners:{
+        }
+    });
+
 
     Ext.define('ganaderia.model.combo.ProvinciaStore',{
         extend:'Ext.data.Store',
@@ -431,6 +450,23 @@ Ext.onReady(function(){
       fields:['id','nombre','regimen2daVenta']
   });
 
+    Ext.define('ganaderia.model.combo.CategoriaStore',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy: {
+            type:'ajax',
+            url:categoriasUrl,
+            reader:{
+                type: 'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','nombre']
+    });
+
+
   Ext.define('ganaderia.model.combo.SituacionIVAStore',{
         extend:'Ext.data.Store',
         autoLoad:false,
@@ -476,6 +512,22 @@ Ext.onReady(function(){
         },
         fields:['id','descripcion']
     });
+    Ext.define('ganaderia.model.combo.Destino',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy:{
+            type:'ajax',
+            url: destinoUrl,
+            reader: {
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion']
+    });
+
     Ext.define('ganaderia.model.combo.Cliente',{
         extend:'Ext.data.Store',
         autoLoad:false,
@@ -521,14 +573,19 @@ Ext.onReady(function(){
 
 
   var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
+  var storeCategoria =Ext.create('ganaderia.model.combo.CategoriaStore');
   var storeRaza = Ext.create('ganaderia.model.combo.RazaStore');
+  var storeGasto = Ext.create('ganaderia.model.combo.GastoStore');
   var storeProvincia = Ext.create('ganaderia.model.combo.ProvinciaStore');
+  var storeProvinciaRemitente = Ext.create('ganaderia.model.combo.ProvinciaStore');
   var storeLocalidad = Ext.create('ganaderia.model.combo.LocalidadStore');
+  var storeLocalidadRemitente =Ext.create('ganaderia.model.combo.LocalidadStore');
   var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
   var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
   var storeSituacionIVA = Ext.create('ganaderia.model.combo.SituacionIVAStore');
   var storeCondicionOperacion = Ext.create('ganaderia.model.combo.CondicionOperacion');
   var storeOperacion = Ext.create('ganaderia.model.combo.Operacion');
+  var storeDestino = Ext.create('ganaderia.model.combo.Destino');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,
@@ -566,10 +623,10 @@ Ext.onReady(function(){
               return;
           }
           var rec = new ganaderia.model.grid.Gastos({
-                descripcion: fieldValues.descripcion,
+                gasto: fieldValues.gasto,
                 porcentaje: fieldValues.porcentaje,
                 monto: fieldValues.monto,
-                subtotal: subTotal()*fieldValues.porcentaje/100
+                subtotal: (fieldValues.porcentaje>0?subTotal()*fieldValues.porcentaje/100:fieldValues.monto)
           });
           form.reset();
           storeGridGastos.add(rec);
@@ -609,6 +666,24 @@ Ext.onReady(function(){
       if(this.up('form').getForm().isValid()){
           var form=this.up('form').getForm();
           var fieldValues=form.getFieldValues();
+          if(fieldValues.cantidad==0 && fieldValues.peso==0){
+              Ext.Msg.show({
+                  title:'Error',
+                  msg:'Ingrese una Cantidad o un valor para el Peso',
+                  buttons: Ext.Msg.OK,
+                  icon: Ext.Msg.ERROR
+              });
+              return;
+          }
+          if(fieldValues.cantidad>0 && fieldValues.peso>0){
+              Ext.Msg.show({
+                  title:'Error',
+                  msg:'Tiene que dejar en cero la cantidado el peso, no puede ingresar un valor mayor a cero para ambos',
+                  buttons: Ext.Msg.OK,
+                  icon: Ext.Msg.ERROR
+              });
+              return;
+          }
 
           var rec = new ganaderia.model.grid.DetalleOrden({
              cliente: fieldValues.clienteDetalle,
@@ -617,7 +692,7 @@ Ext.onReady(function(){
              cantidad: fieldValues.cantidad,
              peso: fieldValues.peso,
              preciounitario: fieldValues.preciounitario,
-             subtotal:fieldValues.cantidad * fieldValues.preciounitario
+             subtotal:(fieldValues.cantidad>0?fieldValues.cantidad:fieldValues.peso) * fieldValues.preciounitario
           });
           form.reset();
           storeGridDetalle.add(rec);
@@ -747,7 +822,7 @@ Ext.onReady(function(){
                       itemId:'stepFormDatosExposicionId',
                       layout:'anchor',
                       margin:'10 10 10 10',
-                      title:'Paso 3 - Datos de Exposición',
+                      title:'Paso 2 - Datos de Exposición',
                       defaults : {
                           autoScroll : true,
                           msgTarget:'under',
@@ -832,10 +907,58 @@ Ext.onReady(function(){
                               fieldLabel:'Guías'
                           },{
                               name:'destino',
-                              fieldLabel:'Destino'
+                              fieldLabel:'Destino',
+                              xtype:'combo',
+                              allowBlank:false,
+                              queryMode:'remote',
+                              forceSelection:true,
+                              editable:false,
+                              emptyText:'',
+                              typeAhead:true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'descripcion',
+                              selectOnTab: true,
+                              store:storeDestino
                           },{
+                              fieldLabel:'Provincia Proc./Remitente',
+                              xtype:'combo',
+                              store:storeProvinciaRemitente,
+                              forceSelection : true,
+                              name:'provincia',
+                              allowBlank:false,
+                              anyMatch:true,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab:true,
+                              listeners:{
+                                  'select':function(combo,records,options){
+                                      storeLocalidadRemitente.proxy.extraParams={provinciaId:records[0].data.id};
+                                      storeLocalidadRemitente.load();
+                                      Ext.getCmp('localidadRemitenteId').clearValue();
+                                  }
+                              }
+                          },{
+                              fieldLabel:'Localidad Proc./Remitente',
+                              xtype:'combo',
+                              id:'localidadRemitenteId',
+                              allowBlank:false,
+                              store:storeLocalidadRemitente,
+                              forceSelection:true,
+                              queryMode:'remote',
+                              anyMatch:true,
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true,
                               name:'procedencia',
-                              fieldLabel:'Proc./Remitente'
+                              allowBlank:false
                           },{
                               xtype:'datefield',
                               name:'fechaOperacion',
@@ -843,7 +966,7 @@ Ext.onReady(function(){
                           },{
                               xtype:'combo',
                               name:'especie',
-                              fieldLabel:'Categoría',
+                              fieldLabel:'Especie',
                               allowBlank:false,
                               width:300,
                               queryMode:'remote',
@@ -860,8 +983,8 @@ Ext.onReady(function(){
                                          Ext.getCmp('regimen2daVentaId').show();
                                       }else
                                           Ext.getCmp('regimen2daVentaId').hide();
-                                      storeRaza.proxy.extraParams={especieId:records[0].data.id};
-                                      storeRaza.load();
+                                      storeCategoria.proxy.extraParams={especieId:records[0].data.id};
+                                      storeCategoria.load();
 
                                   }
                               }
@@ -878,7 +1001,7 @@ Ext.onReady(function(){
                             text:'Anterior',
                             handler:function(){
                                 var wizard = this.up('#wizardId');
-                                wizard.getLayout().setActiveItem('stepFormRepresentanteId');
+                                wizard.getLayout().setActiveItem('stepFormGanaderoId');
                             }
                           },{
                             text:'Siguiente',
@@ -930,6 +1053,27 @@ Ext.onReady(function(){
                               store:storeClienteDetalle
                           },{
                               xtype:'combo',
+                              name:'categoria',
+                              fieldLabel:'Categoría',
+                              allowBlank:false ,
+                              width:300,
+                              queryMode:'remote',
+                              emptyText:'',
+                              typeAhead: true,
+                              triggerAction:'all',
+                              valueField:'id',
+                              displayField:'nombre',
+                              selectOnTab: true,
+                              store: storeCategoria,
+                              listeners:{
+                                  'select':function(combo,records,options){
+                                      storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
+                                      storeRaza.load();
+                                  }
+                              }
+
+                          },{
+                              xtype:'combo',
                               name:'raza',
                               fieldLabel:'Raza',
                               allowBlank:false ,
@@ -937,6 +1081,7 @@ Ext.onReady(function(){
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
+                              forceSelection:true,
                               triggerAction:'all',
                               valueField:'id',
                               displayField:'nombre',
@@ -952,11 +1097,12 @@ Ext.onReady(function(){
                               xtype:'numberfield',
                               name:'cantidad',
                               allowBlank:false,
+                              value:0,
                               fieldLabel:'Cantidad'
                           },{
                               xtype:'numberfield',
                               name:'peso',
-
+                              value:0,
                               fieldLabel:'Peso'
                           },{
                               xtype:'numberfield',
@@ -1092,9 +1238,21 @@ Ext.onReady(function(){
                         defaultType:'textfield',
                         items:[
                             {
-                              fieldLabel:'Descripción Gasto',
-                              allowBlank:'false',
-                              name:'descripcion'
+                                xtype:'combo',
+                                name:'gasto',
+                                fieldLabel:'Gasto',
+                                allowBlank:false ,
+                                width:300,
+                                queryMode:'remote',
+                                emptyText:'',
+                                typeAhead: true,
+                                forceSelection:true,
+                                triggerAction:'all',
+                                valueField:'id',
+                                displayField:'descripcion',
+                                selectOnTab: true,
+                                store: storeGasto
+
                             },{
                               xtype:'numberfield',
                               fieldLabel:'Porcentaje',
@@ -1124,8 +1282,19 @@ Ext.onReady(function(){
                         columns:[
                             {
                                 header: 'Descripción',
-                                dataIndex: 'descripcion',
-                                width: 150
+                                dataIndex: 'gasto',
+                                width: 150,
+                                renderer: function(value) {
+                                    var rec = storeGasto.getById(value);
+
+                                    if (rec)
+                                    {
+                                        return rec.data.descripcion;
+                                    }
+
+                                    return '';
+                                }
+
                             },{
                                 header: 'Porcentaje',
                                 dataIndex:'porcentaje',
@@ -1172,7 +1341,7 @@ Ext.onReady(function(){
                         text:'Siguiente',
                         handler:function(){
                             var wizard = this.up('#wizardId');
-                            wizard.getLayout().setActiveItem('stepFormImpuestosId');
+                            wizard.getLayout().setActiveItem('stepFormVencimientosId');
                         }
                     }
                 ]
@@ -1180,73 +1349,82 @@ Ext.onReady(function(){
               xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormVencimientosId',
-              title:'Paso 7 - Vencimientos',
+              title:'Paso 7 - Pago',
 
               items:[
-                  {
-                      xtype:'form',
-                      //height:300,
-                      layout:'anchor',
-                      defaults:{msgTarget:'under'},
-                      defaultType:'textfield',
+                   {
+                      xtype:'combo',
+                      fieldLable:'Forma de Pago',
+
+                   },{
+                      xtype:'panel',
+                      id:'panelPagosVencimientosId',
                       items:[
                           {
-                              xtype:'datefield',
-                              fieldLabel:'Vencimiento',
-                              name: 'vencimiento'
-                          },{
-                              xtype:'numberfield',
-                              fieldLabel:'Monto',
-                              name: 'monto'
-                          }
-                      ],
-                      buttons:[
-                          {
-                              text:'Agregar Linea',
-                              handler: onAddVencimientoClick
-                          }
-                      ]
-                  },
-                  {
-                      xtype:'grid',
-                      id:'gridDetalleVencimientosId',
-                      title:'Detalle Confeccionado',
-                      height:250,
-                      width:700,
-                      //selType: 'cellmodel',
-                      frame:false,
-                      store: storeGridVencimientos,
-                      columns:[
-                          {
-                              header: 'Vencimiento',
-                              dataIndex:'vencimiento',
-                              xtype: 'datecolumn',   format:'d/m/Y',
-                              width:100,
-                              align:'right'
-                          },{
-                              header: 'Monto',
-                              align:'right',
-                              dataIndex:'monto'
-                          },{
-
-                              xtype:'actioncolumn',
-                              width:30,
-                              sortable:false,
-                              menuDisabled:true,
+                              xtype:'form',
+                              //height:300,
+                              layout:'anchor',
+                              defaults:{msgTarget:'under'},
+                              defaultType:'textfield',
                               items:[
                                   {
-                                      icon:deleteImg,
-                                      tooltip:'Eliminar Línea',
-                                      handler: function(grid,rowIndex){
-                                          Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
-                                      }
+                                      xtype:'datefield',
+                                      fieldLabel:'Vencimiento',
+                                      name: 'vencimiento'
+                                  },{
+                                      xtype:'numberfield',
+                                      fieldLabel:'Monto',
+                                      name: 'monto'
+                                  }
+                              ],
+                              buttons:[
+                                  {
+                                      text:'Agregar Linea',
+                                      handler: onAddVencimientoClick
                                   }
                               ]
+                          },{
+                              xtype:'grid',
+                              id:'gridDetalleVencimientosId',
+                              title:'Detalle Confeccionado',
+                              height:250,
+                              width:700,
+                              //selType: 'cellmodel',
+                              frame:false,
+                              store: storeGridVencimientos,
+                              columns:[
+                                  {
+                                      header: 'Vencimiento',
+                                      dataIndex:'vencimiento',
+                                      xtype: 'datecolumn',   format:'d/m/Y',
+                                      width:100,
+                                      align:'right'
+                                  },{
+                                      header: 'Monto',
+                                      align:'right',
+                                      dataIndex:'monto'
+                                  },{
+
+                                      xtype:'actioncolumn',
+                                      width:30,
+                                      sortable:false,
+                                      menuDisabled:true,
+                                      items:[
+                                          {
+                                              icon:deleteImg,
+                                              tooltip:'Eliminar Línea',
+                                              handler: function(grid,rowIndex){
+                                                  Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
+                                              }
+                                          }
+                                      ]
+                                  }
+                              ]
+
                           }
+
                       ]
-
-                  }
-
+                   }
               ],
               buttons:[
                   {
@@ -1263,9 +1441,6 @@ Ext.onReady(function(){
                   }
               ]
           }
-
-
-
       ]
   });
   storeRaza.load();
