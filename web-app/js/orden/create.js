@@ -995,7 +995,8 @@ Ext.onReady(function(){
                       value:'VENTA'
                   },{
                       name:'id',
-                      xtype:'hidden'
+                      fieldLabel:'Código de Cliente',
+                      disabled:true
                   },{
                                    fieldLabel:'C.U.I.T o D.N.I',
                                    name:'cuit',
