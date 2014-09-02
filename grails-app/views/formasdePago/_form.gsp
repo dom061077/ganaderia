@@ -18,11 +18,11 @@
 	<g:field name="porcentajeDescuento" value="${fieldValue(bean: formasdePagoInstance, field: 'porcentajeDescuento')}" required=""/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: formasdePagoInstance, field: 'tienePlazos', 'error')} ">
-	<label for="tienePlazos">
-		<g:message code="formasdePago.tienePlazos.label" default="Tiene Plazos" />
+<div class="fieldcontain ${hasErrors(bean: formasdePagoInstance, field: 'tieneVencimientos', 'error')} ">
+	<label for="tieneVencimientos">
+		<g:message code="formasdePago.tieneVencimientos.label" default="Tiene Vencimientos" />
 		
 	</label>
-	<g:checkBox name="tienePlazos" value="${formasdePagoInstance?.tienePlazos}" />
+	<g:checkBox name="tieneVencimientos" value="${formasdePagoInstance?.tieneVencimientos}" />
 </div>
 

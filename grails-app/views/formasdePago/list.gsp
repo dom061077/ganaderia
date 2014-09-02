@@ -28,7 +28,7 @@
 					
 						<g:sortableColumn property="porcentajeDescuento" title="${message(code: 'formasdePago.porcentajeDescuento.label', default: 'Porcentaje Descuento')}" />
 					
-						<g:sortableColumn property="tienePlazos" title="${message(code: 'formasdePago.tienePlazos.label', default: 'Tiene Plazos')}" />
+						<g:sortableColumn property="tieneVencimientos" title="${message(code: 'formasdePago.tieneVencimientos.label', default: 'Tiene Vencimientos')}" />
 					
 					</tr>
 				</thead>
@@ -40,7 +40,7 @@
 					
 						<td>${fieldValue(bean: formasdePagoInstance, field: "porcentajeDescuento")}</td>
 					
-						<td><g:formatBoolean boolean="${formasdePagoInstance.tienePlazos}" /></td>
+						<td><g:formatBoolean boolean="${formasdePagoInstance.tieneVencimientos}" /></td>
 					
 					</tr>
 				</g:each>

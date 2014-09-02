@@ -26,6 +26,7 @@
             var destinoUrl = '<% out << createLink(controller:'destino',action:'listjson')%>';
             var categoriasUrl = '<% out << createLink(controller:'categoria',action:'listjson')%>';
             var gastosUrl = '<% out << createLink(controller:'gasto',action:'listjson')%>';
+            var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
         </script>
 
 	</head>

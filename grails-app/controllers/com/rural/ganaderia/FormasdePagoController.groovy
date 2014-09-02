@@ -1,6 +1,7 @@
 package com.rural.ganaderia
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class FormasdePagoController {
 
@@ -99,4 +100,21 @@ class FormasdePagoController {
             redirect(action: "show", id: id)
         }
     }
+    //--------------------------
+    def listjson(){
+        def returnMap = [:]
+        def returnList = []
+        def formasdePago = FormasdePago.createCriteria().list(){
+            order("descripcion","asc")
+        }
+        formasdePago.each {
+            returnList << [id: it.id,descripcion:it.descripcion,tieneVencimientos:it.tieneVencimientos]
+        }
+        returnMap.rows = returnList
+        returnMap.success = true
+        returnMap.total = formasdePago.size()
+        render returnMap as JSON
+
+    }
+
 }

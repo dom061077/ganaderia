@@ -441,8 +441,8 @@ Ext.onReady(function(){
         var detalleVencimientosJson = Ext.encode(detalleVencimientosArr);
         var wizard = Ext.getCmp('wizardId');
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
-        var fieldValuesFormRepresentante = wizard.getComponent('stepFormRepresentanteId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
+        var fieldValuesFormDatosPagos = wizard.getComponent('stepFormVencimientosId').getForm().getFieldValues();
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
@@ -457,20 +457,16 @@ Ext.onReady(function(){
                 'cliente.email':fieldValuesFormGanadero.email,
                 'cliente.direccion':fieldValuesFormGanadero.direccion,
                 'cliente.localidad.id':fieldValuesFormGanadero.localidad,
-                'cliente.nombreRepresentante':fieldValuesFormRepresentante.nombreRepresentante,
-                'cliente.apellidoRepresentante':fieldValuesFormRepresentante.apellidoRepresentante,
-                'cliente.telefonoRepresentante1':fieldValuesFormRepresentante.telefonoRepresentante1,
-                'cliente.telefonoRepresentante2':fieldValuesFormRepresentante.telefonoRepresentante2,
-                'cliente.telefonoRepresentante3':fieldValuesFormRepresentante.telefonoRepresentante3,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
                 'condicionOperacion.id': fieldValuesFormDatosExposicion.condicionOperacion,
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
-                'destino': fieldValuesFormDatosExposicion.destino,
-                'procedencia': fieldValuesFormDatosExposicion.procedencia,
+                'destino.id': fieldValuesFormDatosExposicion.destino,
+                'procedencia.id': fieldValuesFormDatosExposicion.procedencia,
                 'fechaoperacion' : fieldValuesFormDatosExposicion.fechaOperacion,
                 'guias':fieldValuesFormDatosExposicion.guias,
-                'tipoOrden':fieldValuesFormGanadero.tipoOrden,
+                //'tipoOrden':fieldValuesFormGanadero.tipoOrden,
+                'formasdePago.id' : fieldValuesFormDatosPagos.formadePago,
                 'detalleJson': detalleJson,
                 'detalleGastosJson': detalleGastosJson,
                 'detalleImpuestosJson' : detalleImpuestosJson,
@@ -497,7 +493,6 @@ Ext.onReady(function(){
                 //----limpiar datos-----
                 storeGridDetalle.removeAll();
                 Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
-                Ext.getCmp('wizardId').getComponent('stepFormRepresentanteId').getForm().reset();
                 Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
                 Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
                 var t = new Ext.ToolTip({
@@ -790,6 +785,23 @@ Ext.onReady(function(){
         fields:['id','descripcion']
     });
 
+    Ext.define('ganaderia.model.combo.FormasdePago',{
+        extend:'Ext.data.Store',
+        autoLoad:false,
+        root:'rows',
+        proxy:{
+            type:'ajax',
+            url: formasdePagoUrl,
+            reader: {
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion','porcentajeDescuento','tieneVencimientos']
+    });
+
+
     Ext.define('ganaderia.model.combo.Cliente',{
         extend:'Ext.data.Store',
         autoLoad:false,
@@ -850,6 +862,7 @@ Ext.onReady(function(){
   var storeCondicionOperacion = Ext.create('ganaderia.model.combo.CondicionOperacion');
   var storeOperacion = Ext.create('ganaderia.model.combo.Operacion');
   var storeDestino = Ext.create('ganaderia.model.combo.Destino');
+  var storeFormasdePago = Ext.create('ganaderia.model.combo.FormasdePago');
 
   var plugin = new Ext.grid.plugin.CellEditing({
         clicksToEdit: 1,
@@ -995,8 +1008,11 @@ Ext.onReady(function(){
                       value:'VENTA'
                   },{
                       name:'id',
-                      fieldLabel:'Código de Cliente',
-                      disabled:true
+                      xtype:'hidden'
+                  },{
+                      name:'codigoDisplay',
+                      xtype:'displayfield',
+                      fieldLabel:'Código de Cliente'
                   },{
                                    fieldLabel:'C.U.I.T o D.N.I',
                                    name:'cuit',
@@ -1101,7 +1117,7 @@ Ext.onReady(function(){
                               name:'exposicion',
                               editable:false,
                               width:300,
-                              allowBlank:false,
+                              //allowBlank:false,
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
@@ -1115,7 +1131,7 @@ Ext.onReady(function(){
                               fieldLabel:'Año de Exposición',
                               forceSelection: true,
                               name:'anioExposicion',
-                              allowBlank:false,
+                              //allowBlank:false,
                               editable:false,
                               queryMode:'remote',
                               emptyText:'',
@@ -1130,7 +1146,7 @@ Ext.onReady(function(){
                               fieldLabel:'Situación IVA',
                               forceSelection: true,
                               name:'situacionIVA',
-                              allowBlank:false,
+                              //allowBlank:false,
                               editable:false,
                               queryMode:'remote',
                               emptyText:'',
@@ -1144,7 +1160,7 @@ Ext.onReady(function(){
                               fieldLabel:'Condición de Operación',
                               forceSelection:true,
                               name:'condicionOperacion',
-                              allowBlank:false,
+                              //allowBlank:false,
                               editable:false,
                               queryMode:'remote',
                               emptyText:'',
@@ -1158,7 +1174,7 @@ Ext.onReady(function(){
                               fieldLabel:'Operación',
                               forceSelection:true,
                               name:'operacion',
-                              allowBlank:false,
+                              //allowBlank:false,
                               editable:false,
                               queryMode:'remote',
                               emtpytext:'',
@@ -1174,7 +1190,7 @@ Ext.onReady(function(){
                               name:'destino',
                               fieldLabel:'Destino',
                               xtype:'combo',
-                              allowBlank:false,
+                              //allowBlank:false,
                               queryMode:'remote',
                               forceSelection:true,
                               editable:false,
@@ -1191,7 +1207,7 @@ Ext.onReady(function(){
                               store:storeProvinciaRemitente,
                               forceSelection : true,
                               name:'provincia',
-                              allowBlank:false,
+                              //allowBlank:false,
                               anyMatch:true,
                               queryMode:'remote',
                               emptyText:'',
@@ -1211,7 +1227,7 @@ Ext.onReady(function(){
                               fieldLabel:'Localidad Proc./Remitente',
                               xtype:'combo',
                               id:'localidadRemitenteId',
-                              allowBlank:false,
+                              //allowBlank:false,
                               store:storeLocalidadRemitente,
                               forceSelection:true,
                               queryMode:'remote',
@@ -1227,6 +1243,7 @@ Ext.onReady(function(){
                           },{
                               xtype:'datefield',
                               name:'fechaOperacion',
+                              //allowBlank:false,
                               fieldLabel:'Fecha Operación'
                           },{
                               xtype:'combo',
@@ -1624,7 +1641,7 @@ Ext.onReady(function(){
                     }
                 ]
           },{
-              xtype:'panel',
+              xtype:'form',
               margin:'10 10 10 10',
               itemId:'stepFormVencimientosId',
               title:'Paso 5 - Pago',
@@ -1632,11 +1649,33 @@ Ext.onReady(function(){
               items:[
                    {
                       xtype:'combo',
-                      fieldLabel:'Forma de Pago'
+                      fieldLabel:'Forma de Pago',
+                      forceSelection:true,
+                      name:'formadePago',
+                      id:'formadePagoId',
+                      allowBlank:false,
+                      editable:false,
+                      queryMode:'remote',
+                      emtpyText:'',
+                      typeAhead:true,
+                      triggerAction:'all',
+                      valueField:'id',
+                      displayField:'descripcion',
+                      store: storeFormasdePago,
+                      listeners:{
+                          'select':function(combo,records,options){
+                              if(records[0].data.tieneVencimientos==true){
+                                  Ext.getCmp('panelPagosVencimientosId').setDisabled(false);
+                              }else
+                                  Ext.getCmp('panelPagosVencimientosId').setDisabled(true);
+                          }
+                      }
 
                    },{
                       xtype:'panel',
                       id:'panelPagosVencimientosId',
+                      border:false,
+                      disabled:true,
                       items:[
                           {
                               xtype:'form',

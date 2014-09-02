@@ -41,11 +41,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${formasdePagoInstance?.tienePlazos}">
+				<g:if test="${formasdePagoInstance?.tieneVencimientos}">
 				<li class="fieldcontain">
-					<span id="tienePlazos-label" class="property-label"><g:message code="formasdePago.tienePlazos.label" default="Tiene Plazos" /></span>
+					<span id="tieneVencimientos-label" class="property-label"><g:message code="formasdePago.tieneVencimientos.label" default="Tiene Vencimientos" /></span>
 					
-						<span class="property-value" aria-labelledby="tienePlazos-label"><g:formatBoolean boolean="${formasdePagoInstance?.tienePlazos}" /></span>
+						<span class="property-value" aria-labelledby="tieneVencimientos-label"><g:formatBoolean boolean="${formasdePagoInstance?.tieneVencimientos}" /></span>
 					
 				</li>
 				</g:if>

@@ -49,9 +49,10 @@ Ext.onReady(function(){
             {text:'Número', dataIndex: 'numero', width: 60},
             {header:'Cliente', dataIndex:'cliente', width:250},
             {header:'Exposición', dataIndex:'exposicion', width:250},
-            {header:'Año', dataIndex:'anio',width:100},
+            {header:'Año', dataIndex:'anio',width:50},
             {header:'Fecha Carga',dataIndex:'fechacarga',width:100, xtype: 'datecolumn',   format:'d/m/Y'},
-            {header:'Anulada', dataIndex:'anulada',width:50,xtype:'booleancolumn',trueText:'Si',falseText:'No'}
+            {header:'Total',dataIndex:'total',width:100, xtype: 'numbercolumn'},
+            {header:'Anulada', dataIndex:'anulada',width:70,xtype:'booleancolumn',trueText:'Si',falseText:'No'}
         ]
     });
 

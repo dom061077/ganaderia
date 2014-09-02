@@ -9,6 +9,8 @@ import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoNumerador
 import java.text.SimpleDateFormat
 import java.text.ParseException
+import com.rural.ganaderia.localizacion.Localidad
+import com.rural.ganaderia.enums.TipoOrden
 
 class OrdenController {
     MessageSource  messageSource
@@ -111,6 +113,9 @@ class OrdenController {
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
+        def errorList = []
+        def objJson = [:]
+        
 
         def detalleJson = JSON.parse(params.detalleJson)
         def detalleGastosJson = JSON.parse(params.detalleGastosJson)
@@ -119,15 +124,22 @@ class OrdenController {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
         java.util.Date fecha
-        log.debug ("SUBSTRING DE FECHA: "+params.fechaoperacion.substring(0,10) )
         try{
             fecha = df.parse(params.fechaoperacion.substring(0,9))
         }catch(Exception e){
             log.debug "ERROR PARSEANDO LA FECHA DE OPERACION"
 
         }
-        log.debug "FECHA OPERACION: "+fecha
-        orden.fechaOperacion = new java.sql.Date(fecha.getTime())
+
+        if (!fecha){
+            objJson.idOrden = null
+            errorList << [msg: "Ingrese una Fecha de Operación Valida"]
+            objJson.errors = errorList
+            render objJson as JSON
+            return
+        }
+
+        orden.fechaOperacion = new java.sql.Date(fecha?.getTime())
         //log.debug "FECHA DE OPERACION ASIGNADA: "+orden.fechaOperacion
 
 
@@ -155,9 +167,8 @@ class OrdenController {
             orden.addToDetallevencimientos(new Vencimiento(vencimiento: new java.sql.Date(fecha.getTime()),monto: it.monto ))
         }
 
-        def errorList = []
-        def objJson = [:]
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
+        orden.tipoOrden = TipoOrden.VENTA
         Orden.withTransaction{TransactionStatus status->
             if (!orden.cliente.id){
                if(!orden.cliente.save()){
@@ -186,6 +197,13 @@ class OrdenController {
                 render objJson as JSON
                 return
             }
+            orden.razonSocial = orden.cliente.razonSocial
+            orden.localidad = orden.cliente.localidad
+            orden.direccion = orden.cliente.direccion
+            orden.situacionIVA = orden.cliente.situacionIVA
+            orden.cuit = orden.cliente.cuit
+            orden.ingresosBrutos = orden.cliente.ingresosBrutos
+
             if (!orden.save()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
