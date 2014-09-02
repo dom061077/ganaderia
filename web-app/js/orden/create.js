@@ -33,21 +33,30 @@ Ext.onReady(function(){
                 {
                     xtype:'form',
                     id:'formEditClienteId',
-                    url:altaClienteDetalleUrl,
+                    url:editClienteDetalleUrl,
                     defaultType:'textfield',
+                    listeners:{
+                        'afterrender':function(form,opts){
+                            loadCliente(idCliente);
+
+                        }
+                    },
                     defaults:{autoScroll:true,msgTarget:'under'},
                     items:[
                         {
                             xtype:'hidden',
                             fieldLabel:'id',
+                            id:'idEditClienteId',
                             name:'id'
                         },{
                             fieldLabel:'C.U.I.T o D.N.I',
                             allowBlank:false,
+                            id:'cuitEditClienteId',
                             name:'cuit'
                         },{
                             fieldLabel:'Razon Social o Apellido y Nombre',
                             allowBlank:false,
+                            id:'razonSocialEditClienteId',
                             name:'razonSocial'
                         },{
 
@@ -55,6 +64,7 @@ Ext.onReady(function(){
                             fieldLabel:'Situación I.V.A',
                             forceSelection: true,
                             name:'situacionIVA',
+                            id:'situacionIVAEditClienteId',
                             allowBlank:false,
                             editable:false,
                             queryMode:'remote',
@@ -66,6 +76,7 @@ Ext.onReady(function(){
                             store: storeSituacionIVA
                         },{
                             fieldLabel:'Ing.Brutos',
+                            id:'ingresosBrutosEditClienteId',
                             name:'ingresosBrutos',
                             allowBlank:false
                         },{
@@ -73,6 +84,7 @@ Ext.onReady(function(){
                             xtype:'combo',
                             store:storeProvinciaAltaCliente,
                             forceSelection : true,
+                            id:'provinciaEditClienteId',
                             name:'provincia',
                             allowBlank:false,
                             anyMatch:true,
@@ -93,7 +105,7 @@ Ext.onReady(function(){
                         },{
                             fieldLabel:'Localidad',
                             xtype:'combo',
-                            id:'localidadAltaClienteId',
+                            id:'localidadEditClienteId',
                             allowBlank:false,
                             store:storeLocalidadAltaCliente,
                             forceSelection:true,
@@ -110,6 +122,7 @@ Ext.onReady(function(){
                         },{
                             fieldLabel:'Dirección',
                             name:'direccion',
+                            id:'direccionEditClienteId',
                             allowBlank:false
                         }
                     ]
@@ -119,11 +132,11 @@ Ext.onReady(function(){
                 {
                     text:'Guardar',
                     handler:function(){
-                        Ext.getCmp('formClienteDetalleId').getForm().submit({
+                        Ext.getCmp('formEditClienteId').getForm().submit({
                             success:function(f,a){
                                 storeClienteDetalle.load();
                                 Ext.getCmp('comboClienteDetalleId').setValue(a.result.idCliente);
-                                winClienteDetalle.close();
+                                winEditCliente.close();
                             },
                             failure:function(f,a){
                                 var errores = a.result.errors;
@@ -147,14 +160,11 @@ Ext.onReady(function(){
                     text:'Cancelar',
                     handler:function(){
                         winEditCliente.close();
+
+
                     }
                 }
-            ],
-            listeners:{
-                'afterrender':function(form,opts){
-                    loadCliente(idCliente);
-                }
-            }
+            ]
         });
         winEditCliente.show();
 
@@ -292,7 +302,6 @@ Ext.onReady(function(){
     }
 
     function loadCliente(idCliente){
-        var rec = new ganaderia.model.ClienteGanadero();
         Ext.Ajax.request(
             {
                 url: getDatosClientesByIdUrl,
@@ -305,18 +314,15 @@ Ext.onReady(function(){
                 success: function(response, opts) {
                     var objJson = Ext.decode(response.responseText);
                     if (objJson.id != null) {
-                        tempCuit = objJson.cuit;
-                        rec.id = objJson.id;
-                        rec.cuit = objJson.cuit;
-                        rec.ingresosBrutos = objJson.ingresosBrutos;
-                        rec.razonSocial = objJson.razonSocial;
-                        rec.telefono1 = objJson.telefono1;
-                        rec.telefono2 = objJson.telefono2;
-                        rec.email = objJson.email;
-                        rec.situacionIVA = objJson.situacionIVA;
-                        rec.provincia = (objJson.localidad!=null? objJson.localidad.provincia.id:null);
-                        rec.localidad = (objJson.localidad!=null?objJson.localidad.id:null);
-                        rec.direccion = objJson.direccion;
+                        Ext.getCmp('idEditClienteId').setValue(objJson.id);
+                        Ext.getCmp('cuitEditClienteId').setValue(objJson.cuit);
+                        Ext.getCmp('razonSocialEditClienteId').setValue(objJson.razonSocial);
+                        Ext.getCmp('situacionIVAEditClienteId').setValue(objJson.situacionIVA.name);
+                        Ext.getCmp('ingresosBrutosEditClienteId').setValue(objJson.ingresosBrutos);
+                        Ext.getCmp('provinciaEditClienteId').setValue(objJson.localidad!=null? objJson.localidad.provincia.id:null);
+                        Ext.getCmp('localidadEditClienteId').setValue(objJson.localidad!=null?objJson.localidad.id:null);
+                        Ext.getCmp('direccionEditClienteId').setValue( objJson.direccion);
+
                     }
                 }, // end-function
                 failure: function (response, options) {
@@ -334,7 +340,7 @@ Ext.onReady(function(){
 
             } // end-ajax
         );
-        return rec;
+
     }
 
     Ext.apply(Ext.form.VTypes,{
@@ -958,7 +964,7 @@ Ext.onReady(function(){
   }
 
   Ext.widget('panel',{
-      title:'Registro de Orden de Compra',
+      title:'Registro de Orden de Venta',
       itemId:'wizardId',
       id:'wizardId',
       renderTo:'formpanelId',
@@ -1276,7 +1282,7 @@ Ext.onReady(function(){
               xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormDetalleOrdenId',
-              title:'Paso 4 - Confección del Detalle',
+              title:'Paso 3 - Confección del Detalle',
               items:[
                   {
                       xtype:'form',
@@ -1286,14 +1292,14 @@ Ext.onReady(function(){
                               type:'gear',
                               tooltip:'Permite modificar datos del cliente seleccionado',
                               handler: function(event, toolEl, panelHeader){
-                                  showEditCliente();
+                                  showEditCliente(Ext.getCmp('comboClienteDetalleId').getValue());
                               }
                           },{
                               type:'plus',
                               tooltipType:'title',
                               tooltip:'Permite agregar un cliente',
                               handler: function(event, toolEl, panelHeader) {
-                                    showAddCliente(Ext.getCmp('comboClienteDetalleId').getValue());
+                                    showAddCliente();
                               }
                           }
                       ],
@@ -1497,12 +1503,13 @@ Ext.onReady(function(){
                 xtype:'panel',
                 margin:'10 10 10 10',
                 itemId:'stepFormGastosVentaId',
-                title:'Paso 5 - Gastos de Venta',
+                title:'Paso 4 - Gastos de Venta',
 
                 items:[
                     {
                         xtype:'form',
                         //height:300,
+                        border:false,
                         layout:'anchor',
                         defaults:{msgTarget:'under'},
                         defaultType:'textfield',
@@ -1526,10 +1533,12 @@ Ext.onReady(function(){
                             },{
                               xtype:'numberfield',
                               fieldLabel:'Porcentaje',
+                              value:0,
                               name: 'porcentaje'
                             },{
                               xtype:'numberfield',
                               fieldLabel:'Monto',
+                              value:0,
                               name: 'monto'
                             }
                         ],
@@ -1543,7 +1552,7 @@ Ext.onReady(function(){
                     {
                         xtype:'grid',
                         id:'gridDetalleGastosId',
-                        title:'Detalle Confeccionado',
+                        title:'Detalle de Gastos Confeccionado',
                         height:250,
                         width:700,
                         //selType: 'cellmodel',
@@ -1567,12 +1576,10 @@ Ext.onReady(function(){
 
                             },{
                                 header: 'Porcentaje',
-                                dataIndex:'porcentaje',
-                                value:0
+                                dataIndex:'porcentaje'
                             },{
                                 header: '$ Monto',
                                 dataIndex:'monto',
-                                value:0,
                                 width:80,
                                 align:'right'
                             },{
@@ -1619,7 +1626,7 @@ Ext.onReady(function(){
               xtype:'panel',
               margin:'10 10 10 10',
               itemId:'stepFormVencimientosId',
-              title:'Paso 7 - Pago',
+              title:'Paso 5 - Pago',
 
               items:[
                    {
@@ -1633,6 +1640,7 @@ Ext.onReady(function(){
                           {
                               xtype:'form',
                               //height:300,
+                              border:false,
                               layout:'anchor',
                               defaults:{msgTarget:'under'},
                               defaultType:'textfield',
@@ -1701,7 +1709,7 @@ Ext.onReady(function(){
                       text:'Anterior',
                       handler:function(){
                           var wizard = this.up('#wizardId');
-                          wizard.getLayout().setActiveItem('stepFormImpuestosId');
+                          wizard.getLayout().setActiveItem('stepFormGastosVentaId');
                       }
                   },{
                       text:'Confirmar',

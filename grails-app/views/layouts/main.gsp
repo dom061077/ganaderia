@@ -7,12 +7,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Orden de Compra</title>
+		<title>Sistema de Ganado</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
+		<link rel="shortcut icon" href="${resource(dir: 'images', file: 'srt.ico')}" type="image/x-icon">
 		<link rel="apple-touch-icon" href="${resource(dir: 'images', file: 'apple-touch-icon.png')}">
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
-		<!--link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css"-->
+		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
         <!--link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css"-->
         <link rel="stylesheet" href="${resource(dir:'css/extjs',file: 'ext-theme-neptune-all.css')}">
         <script type="text/javascript" src="${resource(dir:'js/extjs',file: 'ext-all-rtl-debug-w.js')}"></script>
@@ -26,6 +26,7 @@
             Ext.onReady(function(){
                 Ext.widget({
                     xtype:'panel',
+                    border:false,
                     margin: '0 0 30 0',
                     renderTo:'grailsLogo',
                     //title: 'Mix and match icon sizes to create a huge unusable toolbar',
@@ -34,14 +35,14 @@
                             xtype:'button',
                             text:'Ordenes',
                             menu:[{
-                                    text:'Alta Orden de Compra',
+                                    text:'Alta Orden de Venta',
                                     listeners:{
                                         click:function(menu, item, e, eOpts){
                                             window.location = '<%out << createLink(controller:'orden',action:'create')%>'
                                         }
                                     }
                                 },{
-                                    text:'Listado Orden de Compra',
+                                    text:'Listado Orden de Venta',
                                     listeners:{
                                         click:function(men,item,e, eOpts){
                                             window.location = '<%out << createLink(controller:'orden', action:'list')%>';

@@ -8,6 +8,9 @@ class Orden {
     long numero
     TipoOrden tipoOrden
     Cliente cliente
+    Orden ordenVenta
+    static belongsTo = [ordenVenta:Orden]
+
     
     //-------------------datos el cliente que se persisten-----------
     String razonSocial
@@ -24,6 +27,7 @@ class Orden {
     AnioExposicion anioExposicion
     CondicionOperacion condicionOperacion
     Operacion operacion
+    FormasdePago formasdePago
     int numeroOperacion
     String guias
     Destino destino
@@ -33,7 +37,7 @@ class Orden {
     boolean regimen2daVenta = false
 
 
-    static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento]
+    static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden]
 
     static constraints = {
         exposicion(nullable: false,blank:false)

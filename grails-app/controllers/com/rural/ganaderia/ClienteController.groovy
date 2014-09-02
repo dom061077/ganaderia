@@ -124,6 +124,35 @@ class ClienteController {
         render hashJson as JSON
     }
 
+    def updatejson(long id){
+        log.info("Parametros: "+params)
+        def objJson = [:]
+        def errorList = []
+        def clienteInstance = Cliente.get(id)
+        if (clienteInstance){
+            clienteInstance.properties = params
+            if (clienteInstance.save(flush: true)){
+                objJson.idCliente = clienteInstance.id
+                objJson.nombre = clienteInstance.razonSocial
+                objJson.errors = errorList
+                objJson.success = true
+            }else{
+                objJson.idCliente = null
+                objJson.msgError = "Error de validación:"
+                clienteInstance.errors.allErrors.each{
+                    errorList << [msg:messageSource.getMessage(it,LocaleContextHolder.locale)]
+                }
+                objJson.errors=errorList
+                objJson.success = false
+            }
+        }else{
+            objJson.idCliente = null
+            objJson.msgError = "Error de integridad"
+            errorList << [msg: "No se encontró el cliente con Identificador: "+id]
+        }
+        render objJson as grails.converters.JSON
+    }
+    
     def savejson(){
         log.info("Parametros: "+params)
         def objJson = [:]
