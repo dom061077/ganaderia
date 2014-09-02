@@ -5,17 +5,12 @@
 	<property name="ireport.y" value="0"/>
 	<field name="cliente.cuit" class="java.lang.String"/>
 	<field name="cliente.razonSocial" class="java.lang.String"/>
-	<field name="cliente.apellidoRepresentante" class="java.lang.String"/>
-	<field name="cliente.nombreRepresentante" class="java.lang.String"/>
 	<field name="cliente.direccion" class="java.lang.String"/>
 	<field name="cliente.email" class="java.lang.String"/>
 	<field name="cliente.telefono1" class="java.lang.String"/>
 	<field name="cliente.telefono2" class="java.lang.String"/>
 	<field name="cliente.localidad.nombre" class="java.lang.String"/>
 	<field name="cliente.localidad.provincia.nombre" class="java.lang.String"/>
-	<field name="fechaAlta" class="java.sql.Date">
-		<fieldDescription><![CDATA[Emitida el:]]></fieldDescription>
-	</field>
 	<field name="cliente.id" class="java.lang.Long"/>
 	<field name="situacionIVA.name" class="java.lang.String"/>
 	<field name="condicionOperacion.nombre" class="java.lang.String"/>
@@ -28,13 +23,6 @@
 	</background>
 	<detail>
 		<band height="424" splitType="Stretch">
-			<textField>
-				<reportElement uuid="537d4d53-5e2a-4b03-8e1f-c902f2f784d4" x="455" y="21" width="81" height="20"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{fechaAlta}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement uuid="829a626b-e8dd-4d38-8e00-df1c077ed2f0" x="12" y="86" width="129" height="20"/>
 				<textElement>

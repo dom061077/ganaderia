@@ -288,11 +288,21 @@ class OrdenController {
         def ordenInstance = Orden.get(params.id)
         ordenInstance.detalle.each{
         }
+        log.debug ordenInstance.cliente.razonSocial
 
         List ordenList = new ArrayList()
         ordenList.add(ordenInstance)
         ordenList.add(ordenInstance)
         ordenList.add(ordenInstance)
+        log.debug ordenInstance.cliente
+        log.debug ordenInstance.condicionOperacion.id
+        log.debug ordenInstance.operacion.id
+        log.debug ordenInstance.anioExposicion.id
+        log.debug ordenInstance.destino.id
+        log.debug ordenInstance.exposicion.id
+        log.debug ordenInstance.situacionIVA.name
+        log.debug ordenInstance.cliente.localidad
+        log.debug ordenInstance.cliente.localidad.provincia.id
 
         String reportsDirPath = servletContext.getRealPath("/reports/");
         params.put("reportsDirPath", reportsDirPath);
