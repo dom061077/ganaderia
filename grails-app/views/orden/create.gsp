@@ -18,6 +18,7 @@
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
             var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
             var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
+            var selectImg = '<% out << resource(dir:'images',file:'select.jpg')%>';
             var condicionOperacionUrl = '<% out << createLink(controller:'orden',action:'condicionOperacionjson')%>';
             var operacionUrl = '<% out << createLink(controller: 'orden',action:'operacionjson')%>';
             var altaClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'savejson')%>';
@@ -28,6 +29,7 @@
             var gastosUrl = '<% out << createLink(controller:'gasto',action:'listjson')%>';
             var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
             var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
+            var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
         </script>
 
 	</head>

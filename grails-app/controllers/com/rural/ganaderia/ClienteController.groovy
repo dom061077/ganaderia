@@ -202,4 +202,31 @@ class ClienteController {
         
     }
     
+    def listjsongrid(){
+        def hashJson = [:]
+        def data = []
+        def clientes = Cliente.createCriteria().list(){
+            order("razonSocial","asc")
+        }
+        clientes.each {
+            data<<[id: it.id,razonSocial:it.razonSocial,cuit:it.cuit
+                    ,ingresosBrutos: it.ingresosBrutos,telefono1: it.telefono1,telefono2:it.telefono2
+                    ,email:it.email,provincia:(it.localidad!=null?it.localidad.provincia.id:null)
+                    ,localidad : (it.localidad!=null?it.localidad.id:null),direccion:it.direccion
+                    ,situacionIVA:it.situacionIVA.name]
+        }
+
+        def total = Cliente.createCriteria().get(){
+            projections{
+                count("id")
+            }
+        }
+                
+        hashJson.total=total
+        hashJson.data = data
+        render hashJson as JSON
+
+    }
+    
+    
 }

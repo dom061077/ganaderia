@@ -1,5 +1,72 @@
 
 Ext.onReady(function(){
+    Ext.apply(Ext.form.VTypes,{
+        //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
+
+        numdocexistsText:'Número de documento ya existe',
+        numdocexists :		function CPcuitValido(numdoc) {
+
+            var vec= new Array(10);
+            if( tempCuit!=numdoc ){
+                Ext.Ajax.request(
+                    {
+                        url: getDatosClientesUrl,
+                        method: 'POST',
+                        async:false,
+                        params : {
+                            cuitDni: numdoc
+                        },  // end-params
+
+                        success: function(response, opts) {
+                            var objJson = Ext.decode(response.responseText);
+                            if (objJson.id != null) {
+                                tempCuit = objJson.cuit;
+                                storeProvincia.load();
+                                storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
+                                var rec = new ganaderia.model.ClienteGanadero({
+                                    id : objJson.id,
+                                    clienteId: objJson.id,
+                                    cuit : objJson.cuit,
+                                    ingresosBrutos: objJson.ingresosBrutos,
+                                    razonSocial: objJson.razonSocial,
+                                    telefono1 : objJson.telefono1,
+                                    telefono2 : objJson.telefono2,
+                                    email : objJson.email,
+                                    situacionIVA: objJson.situacionIVA.name,
+                                    provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
+                                    localidad :(objJson.localidad!=null?objJson.localidad.id:null),
+                                    direccion : objJson.direccion
+                                });
+                                var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+
+                            }
+
+                        }, // end-function
+
+                        failure: function (response, options) {
+                            Ext.Msg.show({
+                                title:'Error',
+                                msg:'Se produjo un error de comunicación',
+                                icon:Ext.MessageBox.ERROR,
+                                buttons:Ext.MessageBox.OK,
+                                fn:function(btn){
+                                    //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                                    console.log("Error al traer datos del cliente ganadero");
+                                }
+                            });
+                        }
+
+                    } // end-ajax
+
+                );
+            }
+
+
+            return true;
+            // return true;//true determina que la validacion pase false indica error en la validacion
+        }
+    });
+
     Ext.QuickTips.init();
     var tempCuit;
     function subTotal(){
@@ -23,13 +90,13 @@ Ext.onReady(function(){
         var storeGrid = Ext.create('Ext.data.JsonStore',{
             autoDestroy:true,
             autoLoad:true,
-            model: ganaderia.model.grid.Orden,
+            model: ganaderia.model.grid.BuscarCliente,
             proxy : {
                 type:'ajax',
-                url: listordenUrl,
+                url: clientegridUrl,
                 reader:{
                     type:'json',
-                    root: 'rows',
+                    root: 'data',
                     idProperty: 'id',
                     totalProperty: 'total'
                 }
@@ -37,35 +104,82 @@ Ext.onReady(function(){
             remoteSort: true,
             pageSize:50
         });
-        var filters = {
-            ftype:'filters',
-            encode: false,
-            local:false
-        }
         var grid = Ext.create('Ext.grid.Panel',{
             border:false,
             margin: '10 10 10 10',
-            //loadMask: true,
-            //renderTo: 'gridordencompraId',
-
+            loadMask: true,
+            height:350,
+            emptyText:'No hay Registros',
+            dockedItems: [Ext.create('Ext.toolbar.Paging', {
+                dock: 'bottom',
+                store: storeGrid
+            })],
             store:storeGrid,
             columns :[
-                {text:'C.U.I.T', dataIndex: 'cuit', width: 60},
-                {text:'Razón Social', dataIndex:'razonSocial', width:250},
-                {text:'Situación I.V.A', dataIndex:'situacionIVA', width:250}
+                {text:'C.U.I.T', dataIndex: 'cuit', width: 100},
+                {text:'Razón Social', dataIndex:'razonSocial', width:250,
+                    filterable: true,
+                    filter: {
+                        type:'string'
+                    }
+                },
+                {text:'Situación I.V.A', dataIndex:'situacionIVA', width:100},
+                {
+                    xtype:'actioncolumn',
+                    width:30,
+                    sortable:false,
+                    menuDisabled:true,
+                    items:[
+                        {
+                            icon:selectImg,
+                            tooltip:'Seleccionar',
+                            handler: function(grid,rowIndex){
+                                var clienteSeleccionado = storeGrid.getAt(rowIndex);
+                                Ext.getCmp('cuitclienteId').setValue(clienteSeleccionado.data.cuit);
+                                win.close();
+                                /*var rec = new ganaderia.model.ClienteGanadero({
+                                    id : clienteSeleccionado.data.id,
+                                    clienteId: clienteSeleccionado.data.id,
+                                    cuit : clienteSeleccionado.data.cuit,
+                                    ingresosBrutos: clienteSeleccionado.data.ingresosBrutos,
+                                    razonSocial: clienteSeleccionado.data.razonSocial,
+                                    telefono1 : clienteSeleccionado.data.telefono1,
+                                    telefono2 : clienteSeleccionado.data.telefono2,
+                                    email : clienteSeleccionado.data.email,
+                                    provincia: (clienteSeleccionado.data.localidad!=null? clienteSeleccionado.data.localidad.provincia.id:null),
+                                    localidad :(clienteSeleccionado.data.localidad!=null?clienteSeleccionado.data.localidad.id:null),
+                                    direccion : clienteSeleccionado.data.direccion
+                                });
+                                var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+                                */
+
+                            }
+                        }
+                    ]
+                }
             ]
         });
 
 
          var win = Ext.create('Ext.window.Window',{
              modal:true,
+             width:600,
+             x:400,
+             y:200,
+
              title:'Buscar Cliente',
              items:[
                  {
-                   grid
+                     xtype:'panel',
+                     width:600,
+                     height:400,
+                     border:false,
+                     items:[grid]
                  }
+
              ]
          });
+        win.show();
     }
 
     function showEditCliente(idCliente){
@@ -400,71 +514,7 @@ Ext.onReady(function(){
 
     }
 
-    Ext.apply(Ext.form.VTypes,{
-        //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
 
-        numdocexistsText:'Número de documento ya existe',
-        numdocexists :		function CPcuitValido(numdoc) {
-
-            var vec= new Array(10);
-            if( tempCuit!=numdoc ){
-                    Ext.Ajax.request(
-                        {
-                            url: getDatosClientesUrl,
-                            method: 'POST',
-                            async:false,
-                            params : {
-                                cuitDni: numdoc
-                            },  // end-params
-
-                            success: function(response, opts) {
-                                var objJson = Ext.decode(response.responseText);
-                                if (objJson.id != null) {
-                                    tempCuit = objJson.cuit;
-                                    storeProvincia.load();
-                                    storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
-                                    var rec = new ganaderia.model.ClienteGanadero({
-                                        id : objJson.id,
-                                        clienteId: objJson.id,
-                                        cuit : objJson.cuit,
-                                        ingresosBrutos: objJson.ingresosBrutos,
-                                        razonSocial: objJson.razonSocial,
-                                        telefono1 : objJson.telefono1,
-                                        telefono2 : objJson.telefono2,
-                                        email : objJson.email,
-                                        provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
-                                        localidad :(objJson.localidad!=null?objJson.localidad.id:null),
-                                        direccion : objJson.direccion
-                                    });
-                                    var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
-
-                                }
-
-                            }, // end-function
-
-                            failure: function (response, options) {
-                                Ext.Msg.show({
-                                    title:'Error',
-                                    msg:'Se produjo un error de comunicación',
-                                    icon:Ext.MessageBox.ERROR,
-                                    buttons:Ext.MessageBox.OK,
-                                    fn:function(btn){
-                                        //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
-                                        console.log("Error al traer datos del cliente ganadero");
-                                    }
-                                });
-                            }
-
-                        } // end-ajax
-
-                    );
-            }
-
-
-            return true;
-            // return true;//true determina que la validacion pase false indica error en la validacion
-        }
-    });
     function confirmarorden(){
         if (storeGridDetalle.count()==0){
             Ext.Msg.show({
@@ -584,22 +634,14 @@ Ext.onReady(function(){
                     {name:'id',type:'int'},
                     {name:'cuit',type:'string'},
                     {name:'ingresosBrutos',type:'string'},
+                    {name:'situacionIVA',type:'string'},
                     {name:'razonSocial',type:'string'},
                     {name:'telefono1',type:'string'},
                     {name:'telefono2',type:'string'},
                     {name:'email',type:'string'},
                     {name:'provincia',type:'int'},
                     {name:'localidad',type:'int'},
-                    {name:'direccion',type:'string'},
-                    //--------form representante-----
-                    {name:'nombreRepresentante',type:'string'},
-                    {name:'apellidoRepresentante',type:'string'},
-                    {name:'telefonoRepresentante1',type:'string'},
-                    {name:'telefonoRepresentante2',type:'string'},
-                    {name:'telefonoRepresentante3',type:'string'},
-                    //-------form datos exposicion-----------
-                    {name:'exposicion',type:'int'},
-                    {name:'anioExposicion',type:'int'}
+                    {name:'direccion',type:'string'}
             ]
 
 
@@ -787,7 +829,7 @@ Ext.onReady(function(){
 
   Ext.define('ganaderia.model.combo.SituacionIVAStore',{
         extend:'Ext.data.Store',
-        autoLoad:false,
+        autoLoad:true,
       root:'rows',
         proxy:{
             type:'ajax',
@@ -1064,10 +1106,6 @@ Ext.onReady(function(){
               },
               items:[
                   {
-                      name:'tipoOrden',
-                      xtype:'hidden',
-                      value:'VENTA'
-                  },{
                       name:'id',
                       xtype:'hidden'
                   },{
@@ -1077,17 +1115,33 @@ Ext.onReady(function(){
                   },{
                                    fieldLabel:'C.U.I.T o D.N.I',
                                    name:'cuit',
+                                   id:'cuitclienteId',
                                    //vtype:'cuit',
                                    xtype:'triggerfield',
                                    triggerCls:'x-form-search-trigger',
                                    onTriggerClick: function() {
-                                             Ext.Msg.alert('Status', 'You clicked my trigger!');
+                                        buscarClienteVenta();
                                    },
                                    vtype:'numdocexists',
                                    allowBlank:false
                   },{
                       fieldLabel:'Ingresos Brutos',
                       name:'ingresosBrutos'
+                  },{
+                      xtype:'combo',
+                      fieldLabel:'Situación I.V.A',
+                      forceSelection: true,
+                      name:'situacionIVA',
+                      //allowBlank:false,
+                      editable:false,
+                      queryMode:'remote',
+                      emptyText:'',
+                      typeAhead: true,
+                      triggerAction: 'all',
+                      valueField:'id',
+                      displayField:'descripcion',
+                      store: storeSituacionIVA
+
                   },{
                       fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
@@ -1202,20 +1256,6 @@ Ext.onReady(function(){
                               displayField:'anio',
                               selectOnTab: true,
                               store:storeAnioExposicion
-                          },{
-                              xtype:'combo',
-                              fieldLabel:'Situación IVA',
-                              forceSelection: true,
-                              name:'situacionIVA',
-                              //allowBlank:false,
-                              editable:false,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              triggerAction: 'all',
-                              valueField:'id',
-                              displayField:'descripcion',
-                              store: storeSituacionIVA
                           },{
                               xtype:'combo',
                               fieldLabel:'Condición de Operación',

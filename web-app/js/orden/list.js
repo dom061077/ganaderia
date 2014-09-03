@@ -43,7 +43,11 @@ Ext.onReady(function(){
         margin: '10 10 10 10',
         //loadMask: true,
         //renderTo: 'gridordencompraId',
-
+        emptyText:'No hay Registros',
+        dockedItems: [Ext.create('Ext.toolbar.Paging', {
+            dock: 'bottom',
+            store: storeGrid
+        })],
         store:storeGrid,
         columns :[
             {text:'Número', dataIndex: 'numero', width: 60},
