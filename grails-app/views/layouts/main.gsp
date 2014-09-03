@@ -48,10 +48,6 @@
                                             window.location = '<%out << createLink(controller:'orden', action:'list')%>';
                                         }
                                     }
-                                },{
-                                    text:'Alta de Orden de Venta'
-                                },{
-                                    text:'Listado de Orden de Venta'
                                 }
 
                             ]
@@ -59,15 +55,30 @@
                             xtype:'button',
                             text:'Configuración',
                             menu:[{
-                                text:'Ganado',
+                                text:'Especies',
                                 listeners:{
                                     click:function(menu, item, e, eOpts){
-                                        window.location = '<%out << createLink(controller:'orden',action:'create')%>'
+                                        window.location = '<%out << createLink(controller:'especie',action:'list')%>'
                                     }
                                 }
-                                },{
-                                    text:'Clasificación de Ganado'
-                                },{
+
+                            },{
+                                text:'Categorias de Especies',
+                                listeners:{
+                                    click:function(menu, item, e, eOpts){
+                                        window.location = '<%out << createLink(controller:'categoria',action:'list')%>'
+                                    }
+                                }
+                            },{
+                                text:'Razas',
+                                listeners:{
+                                    click:function(menu, item, e, eOpts){
+                                        window.location = '<%out << createLink(controller:'raza',action:'list')%>'
+                                    }
+                                }
+                            },{
+
+
                                     text:'Numeradores de Ordenes',
                                     listeners:{
                                         click: function(menu,item,e,eOpts){

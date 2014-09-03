@@ -27,6 +27,7 @@
             var categoriasUrl = '<% out << createLink(controller:'categoria',action:'listjson')%>';
             var gastosUrl = '<% out << createLink(controller:'gasto',action:'listjson')%>';
             var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
+            var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
         </script>
 
 	</head>

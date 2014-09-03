@@ -10,6 +10,63 @@ Ext.onReady(function(){
         return sumSubTotal;
     }
 
+    function buscarClienteVenta(){
+        Ext.define('ganaderia.model.grid.BuscarCliente',{
+            extend: 'Ext.data.Model',
+            fields: [
+                {name:'id',type:'int'},
+                {name:'cuit',type:'string'},
+                {name:'razonSocial', type:'string'},
+                {name:'situacionIVA', type:'string'}
+            ]
+        });
+        var storeGrid = Ext.create('Ext.data.JsonStore',{
+            autoDestroy:true,
+            autoLoad:true,
+            model: ganaderia.model.grid.Orden,
+            proxy : {
+                type:'ajax',
+                url: listordenUrl,
+                reader:{
+                    type:'json',
+                    root: 'rows',
+                    idProperty: 'id',
+                    totalProperty: 'total'
+                }
+            },
+            remoteSort: true,
+            pageSize:50
+        });
+        var filters = {
+            ftype:'filters',
+            encode: false,
+            local:false
+        }
+        var grid = Ext.create('Ext.grid.Panel',{
+            border:false,
+            margin: '10 10 10 10',
+            //loadMask: true,
+            //renderTo: 'gridordencompraId',
+
+            store:storeGrid,
+            columns :[
+                {text:'C.U.I.T', dataIndex: 'cuit', width: 60},
+                {text:'Razón Social', dataIndex:'razonSocial', width:250},
+                {text:'Situación I.V.A', dataIndex:'situacionIVA', width:250}
+            ]
+        });
+
+
+         var win = Ext.create('Ext.window.Window',{
+             modal:true,
+             title:'Buscar Cliente',
+             items:[
+                 {
+                   grid
+                 }
+             ]
+         });
+    }
 
     function showEditCliente(idCliente){
         if(!idCliente){
@@ -368,6 +425,7 @@ Ext.onReady(function(){
                                     storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
                                     var rec = new ganaderia.model.ClienteGanadero({
                                         id : objJson.id,
+                                        clienteId: objJson.id,
                                         cuit : objJson.cuit,
                                         ingresosBrutos: objJson.ingresosBrutos,
                                         razonSocial: objJson.razonSocial,
@@ -507,6 +565,8 @@ Ext.onReady(function(){
                 });
                 t.show();
 
+                window.location=comprobanteUrl+'/'+jsonObj.idOrden+'?target=_blank';
+
             },
             failure: function(xhr){
                 loadMask.hide();
@@ -521,6 +581,7 @@ Ext.onReady(function(){
             fields: [
                     //-------form cliente-----------
                     {name:'clienteId',type:'int'},
+                    {name:'id',type:'int'},
                     {name:'cuit',type:'string'},
                     {name:'ingresosBrutos',type:'string'},
                     {name:'razonSocial',type:'string'},
@@ -1010,7 +1071,7 @@ Ext.onReady(function(){
                       name:'id',
                       xtype:'hidden'
                   },{
-                      name:'codigoDisplay',
+                      name:'clienteId',
                       xtype:'displayfield',
                       fieldLabel:'Código de Cliente'
                   },{

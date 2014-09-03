@@ -6,6 +6,11 @@ public enum SituacionIVA {
     EXENTO("EXENTO"),
     CONSUMIDOR_FINAL("CONSUMIDOR FINAL"),
     MONOTRIBUTO("MONOTRIBUTO")
+    /*
+    * HACER MARCA EN IVA PARA INDICAR EL PORCENTAJE DE GANACIAS
+    *
+    *
+    * */
     
     String name
     

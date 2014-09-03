@@ -188,7 +188,7 @@ class OrdenController {
 
             }
             try{
-                orden.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
+                orden.numero = Numerador.sigNumero(TipoNumerador.ORDEN_VENTA)
             }catch(Exception e){
                 status.setRollbackOnly()
                 errorList << [msg: e.getMessage()]
