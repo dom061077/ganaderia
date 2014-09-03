@@ -54,37 +54,49 @@
                         },{
                             xtype:'button',
                             text:'Configuración',
-                            menu:[{
-                                text:'Especies',
+                            menu:[
+                            {
+                                text:'Condiciones de Operación',
                                 listeners:{
                                     click:function(menu, item, e, eOpts){
-                                        window.location = '<%out << createLink(controller:'especie',action:'list')%>'
-                                    }
-                                }
-
-                            },{
-                                text:'Categorias de Especies',
-                                listeners:{
-                                    click:function(menu, item, e, eOpts){
-                                        window.location = '<%out << createLink(controller:'categoria',action:'list')%>'
+                                        window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
                                     }
                                 }
                             },{
-                                text:'Razas',
-                                listeners:{
-                                    click:function(menu, item, e, eOpts){
-                                        window.location = '<%out << createLink(controller:'raza',action:'list')%>'
-                                    }
-                                }
-                            },{
-
-
-                                    text:'Numeradores de Ordenes',
+                                    text:'Numeradores de Comprobantes',
                                     listeners:{
                                         click: function(menu,item,e,eOpts){
                                             window.location = '<%out << createLink(controller:'numerador',action:'list')%>';
                                         }
                                     }
+                                }
+                            ]
+                        },{
+                            xtype:'button',
+                            text:'Datos de Ganado',
+                            menu:[
+                                {
+                                    text:'Categorias',
+                                    listeners:{
+                                        click:function(menu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'categoria',action:'list')%>';
+                                        }
+                                    }
+                                },{
+                                    text:'Especies',
+                                    listeners:{
+                                        click:function(meu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'especie',action:'list')%>';
+                                        }
+                                    }
+                                },{
+                                    text:'Razas',
+                                    listeners:{
+                                        click:function(meu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'raza',action:'list')%>';
+                                        }
+                                    }
+
                                 }
                             ]
                         }

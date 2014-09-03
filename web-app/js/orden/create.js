@@ -117,12 +117,7 @@ Ext.onReady(function(){
             store:storeGrid,
             columns :[
                 {text:'C.U.I.T', dataIndex: 'cuit', width: 100},
-                {text:'Razón Social', dataIndex:'razonSocial', width:250,
-                    filterable: true,
-                    filter: {
-                        type:'string'
-                    }
-                },
+                {text:'Razón Social', dataIndex:'razonSocial', width:250},
                 {text:'Situación I.V.A', dataIndex:'situacionIVA', width:100},
                 {
                     xtype:'actioncolumn',
@@ -174,7 +169,15 @@ Ext.onReady(function(){
                      width:600,
                      height:400,
                      border:false,
-                     items:[grid]
+                     items:[
+                         {xtype:'textfield',id:'filtroRazonSocialId',fieldLabel:'Filtrar por razón social'},
+                         {xtype:'button',text:'Buscar',
+                             handler:function(){
+                                 storeGrid.load({params:{razonSocial:Ext.getCmp('filtroRazonSocialId').getValue()}});
+                             }
+                         },
+                         grid
+                     ]
                  }
 
              ]
@@ -567,7 +570,6 @@ Ext.onReady(function(){
                 'cliente.localidad.id':fieldValuesFormGanadero.localidad,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
-                'condicionOperacion.id': fieldValuesFormDatosExposicion.condicionOperacion,
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
                 'destino.id': fieldValuesFormDatosExposicion.destino,
                 'procedencia.id': fieldValuesFormDatosExposicion.procedencia,
@@ -842,21 +844,7 @@ Ext.onReady(function(){
         },
         fields:['id','descripcion']
     });
-    Ext.define('ganaderia.model.combo.CondicionOperacion',{
-        extend:'Ext.data.Store',
-        autoLoad:false,
-        root:'rows',
-        proxy:{
-            type:'ajax',
-            url:condicionOperacionUrl,
-            reader:{
-                type:'json',
-                root:'rows',
-                idProperty:'id'
-            }
-        },
-        fields:['id','descripcion']
-    });
+
     Ext.define('ganaderia.model.combo.Operacion',{
         extend:'Ext.data.Store',
         autoLoad:false,
@@ -962,7 +950,6 @@ Ext.onReady(function(){
   var storeExposicion = Ext.create('ganaderia.model.combo.ExposicionStore');
   var storeAnioExposicion = Ext.create('ganaderia.model.combo.AnioExposicionStore');
   var storeSituacionIVA = Ext.create('ganaderia.model.combo.SituacionIVAStore');
-  var storeCondicionOperacion = Ext.create('ganaderia.model.combo.CondicionOperacion');
   var storeOperacion = Ext.create('ganaderia.model.combo.Operacion');
   var storeDestino = Ext.create('ganaderia.model.combo.Destino');
   var storeFormasdePago = Ext.create('ganaderia.model.combo.FormasdePago');
@@ -1256,20 +1243,6 @@ Ext.onReady(function(){
                               displayField:'anio',
                               selectOnTab: true,
                               store:storeAnioExposicion
-                          },{
-                              xtype:'combo',
-                              fieldLabel:'Condición de Operación',
-                              forceSelection:true,
-                              name:'condicionOperacion',
-                              //allowBlank:false,
-                              editable:false,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              triggerAction: 'all',
-                              valueField:'id',
-                              displayField:'descripcion',
-                              store: storeCondicionOperacion
                           },{
                               xtype:'combo',
                               fieldLabel:'Operación',
@@ -1746,11 +1719,11 @@ Ext.onReady(function(){
               margin:'10 10 10 10',
               itemId:'stepFormVencimientosId',
               title:'Paso 5 - Pago',
-
+              defaults:{msgTarget:'under'},
               items:[
                    {
                       xtype:'combo',
-                      fieldLabel:'Forma de Pago',
+                      fieldLabel:'Condición de Operación',
                       forceSelection:true,
                       name:'formadePago',
                       id:'formadePagoId',

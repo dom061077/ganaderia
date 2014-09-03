@@ -164,10 +164,6 @@ class BootStrap {
                 new AnioExposicion(anio: 2012).save(failOnError: true)
                 new AnioExposicion(anio: 2014).save(failOnError: true)
                 
-                new CondicionOperacion(nombre: "A Plazos").save(failOnError: true)
-                new CondicionOperacion(nombre: "Sin Plazo").save(failOnError: true)
-                new CondicionOperacion(nombre: "Condición").save(failOnError: true)
-                
                 new Operacion(nombre: "Remate").save(failOnError: true)
                 new Operacion(nombre: "Hacienda").save(failOnError: true)
                 new Operacion(nombre: "Reventa").save(failOnError: true)

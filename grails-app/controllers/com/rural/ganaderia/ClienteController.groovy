@@ -203,9 +203,12 @@ class ClienteController {
     }
     
     def listjsongrid(){
+        log.debug('PARAMETROS: '+params)
         def hashJson = [:]
         def data = []
         def clientes = Cliente.createCriteria().list(){
+            if(params.razonSocial)
+               ilike("razonSocial","%"+params.razonSocial+"%")
             order("razonSocial","asc")
         }
         clientes.each {
