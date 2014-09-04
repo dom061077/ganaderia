@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat
 import java.text.ParseException
 import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.enums.TipoOrden
+import com.rural.ganaderia.enums.TipoNotaDC
 
 class OrdenController {
     MessageSource  messageSource
@@ -204,7 +205,7 @@ class OrdenController {
             orden.cuit = orden.cliente.cuit
             orden.ingresosBrutos = orden.cliente.ingresosBrutos
 
-            if (!orden.save()){
+            if (!orden.validate()){
                     log.debug (orden.errors)
                     status.setRollbackOnly()
                     orden.errors.allErrors.each{
@@ -217,6 +218,16 @@ class OrdenController {
                     }
 
             }else{
+                
+                    //-----------Aplicar descuentos por el tipo de pago con descuentos-----
+                    if (orden.formasdePago.porcentajeDescuento>0){
+                         //todo confirmar donde se aplica el descuento el subtotal o bruto o en el total 
+                         def totalDescuento = orden.subTotal * orden.formasdePago.porcentajeDescuento/100
+                         def notaDCInstance = new NotaDC(descripcion:"Descuento pago "+orden.formasdePago.descripcion+" "+orden.formasdePago.porcentajeDescuento+"%"
+                                                 ,monto: totalDescuento,tipo: TipoNotaDC.CREDITO)
+                         orden.addToNotas(notaDCInstance)
+                    }
+                    //
                     objJson.idOrden = orden.id
                     objJson.errors = null
             }

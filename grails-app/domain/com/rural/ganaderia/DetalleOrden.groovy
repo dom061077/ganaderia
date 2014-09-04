@@ -11,8 +11,12 @@ class DetalleOrden {
     BigDecimal precio
     Integer cantidad
     Integer peso
-    
 
+    BigDecimal getSubTotal(){
+        return(cantidad>0?cantidad*precio:peso*precio)
+    }
+
+    static transients = ['subTotal']
 
     static belongsTo = [orden:Orden]
     static constraints = {

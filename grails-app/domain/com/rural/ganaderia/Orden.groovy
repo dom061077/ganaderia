@@ -3,6 +3,7 @@ package com.rural.ganaderia
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoOrden
 import com.rural.ganaderia.localizacion.Localidad
+import com.rural.ganaderia.enums.TipoNotaDC
 
 class Orden {
     long numero
@@ -36,8 +37,33 @@ class Orden {
     boolean anulada = false
     boolean regimen2daVenta = false
 
+    public getSubTotal(){//a esto le llaman total bruto, calculado sin los gastos
+        def sumatoria=0
+        detalle.each{
+            sumatoria+=it.subTotal
+        }
+        return sumatoria
+    }
 
-    static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden]
+    public getTotal(){
+       def totalGastos=0
+       def totalNotas=0
+       detallegastos.each{
+           totalGastos+=it.subTotal
+       }
+       notas.each {
+           if (it.tipo==TipoNotaDC.CREDITO)
+              totalNotas-=it.monto
+           else
+              totalNotas+=it.monto
+       }
+       return subTotal+totalGastos+totalNotas
+    }
+
+
+    static transients = ['subTotal','total']
+
+    static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 
     static constraints = {
         exposicion(nullable: false,blank:false)
