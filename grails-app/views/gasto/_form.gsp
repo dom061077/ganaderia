@@ -10,19 +10,11 @@
 	<g:textField name="descripcion" value="${gastoInstance?.descripcion}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: gastoInstance, field: 'restaCompra', 'error')} ">
-	<label for="restaCompra">
-		<g:message code="gasto.restaCompra.label" default="Resta Compra" />
+<div class="fieldcontain ${hasErrors(bean: gastoInstance, field: 'restaBaseImponible', 'error')} ">
+	<label for="restaBaseImponible">
+		<g:message code="gasto.restaBaseImponible.label" default="Resta Base Imponible" />
 		
 	</label>
-	<g:checkBox name="restaCompra" value="${gastoInstance?.restaCompra}" />
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: gastoInstance, field: 'restaVenta', 'error')} ">
-	<label for="restaVenta">
-		<g:message code="gasto.restaVenta.label" default="Resta Venta" />
-		
-	</label>
-	<g:checkBox name="restaVenta" value="${gastoInstance?.restaVenta}" />
+	<g:checkBox name="restaBaseImponible" value="${gastoInstance?.restaBaseImponible}" />
 </div>
 

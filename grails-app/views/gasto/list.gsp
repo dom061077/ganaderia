@@ -26,9 +26,7 @@
 					
 						<g:sortableColumn property="descripcion" title="${message(code: 'gasto.descripcion.label', default: 'Descripcion')}" />
 					
-						<g:sortableColumn property="restaCompra" title="${message(code: 'gasto.restaCompra.label', default: 'Resta Compra')}" />
-					
-						<g:sortableColumn property="restaVenta" title="${message(code: 'gasto.restaVenta.label', default: 'Resta Venta')}" />
+						<g:sortableColumn property="restaBaseImponible" title="${message(code: 'gasto.restaBaseImponible.label', default: 'Resta Base Imponible')}" />
 					
 					</tr>
 				</thead>
@@ -38,9 +36,7 @@
 					
 						<td><g:link action="show" id="${gastoInstance.id}">${fieldValue(bean: gastoInstance, field: "descripcion")}</g:link></td>
 					
-						<td><g:formatBoolean boolean="${gastoInstance.restaCompra}" /></td>
-					
-						<td><g:formatBoolean boolean="${gastoInstance.restaVenta}" /></td>
+						<td><g:formatBoolean boolean="${gastoInstance.restaBaseImponible}" /></td>
 					
 					</tr>
 				</g:each>

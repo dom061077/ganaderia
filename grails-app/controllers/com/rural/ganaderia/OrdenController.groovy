@@ -111,6 +111,46 @@ class OrdenController {
         }
     }
     //----------------------------------------
+    def generarOrdenesdeCompra(Orden ordenVenta){
+        Orden ordenCompraInstance
+        def listCompras=[]
+        def detalleOrdenInstance
+        ordenVenta.detalle.each{det
+            ordenCompraInstance = listCompras.findAll { c
+                c.id==det.cliente.id
+            }
+            if (ordenCompraInstance){
+                
+            }else{
+                ordenCompraInstance = new Orden(tipoOrden: TipoOrden.COMPRA)
+                ordenCompraInstance.cliente = det.cliente
+
+                ordenCompraInstance.razonSocial = ordenVenta.cliente.razonSocial
+                ordenCompraInstance.localidad = ordenVenta.cliente.localidad
+                ordenCompraInstance.direccion = ordenVenta.cliente.direccion
+                ordenCompraInstance.situacionIVA = ordenVenta.cliente.situacionIVA
+                ordenCompraInstance.cuit = ordenVenta.cliente.cuit
+                ordenCompraInstance.ingresosBrutos = ordenVenta.cliente.ingresosBrutos
+
+                ordenCompraInstance.anioExposicion = ordenVenta.anioExposicion
+                ordenCompraInstance.exposicion = ordenVenta.exposicion
+                ordenCompraInstance.especie = ordenVenta.especie
+                ordenCompraInstance.situacionIVA = ordenVenta.situacionIVA
+            }
+            detalleOrdenInstance = new DetalleOrden()
+            detalleOrdenInstance.cantidad = det.cantidad
+            detalleOrdenInstance.cliente = ordenVenta.cliente
+            detalleOrdenInstance.datosCorral = det.datosCorral
+            detalleOrdenInstance.peso = det.peso
+            detalleOrdenInstance.precio = det.precio
+            detalleOrdenInstance.raza = det.raza
+            ordenCompraInstance.addToDetalle(detalleOrdenInstance)
+            
+        }
+
+    }
+
+
     def savejson(){
         log.debug("Parametros: $params")
         def orden = new Orden(params)
@@ -120,7 +160,6 @@ class OrdenController {
 
         def detalleJson = JSON.parse(params.detalleJson)
         def detalleGastosJson = JSON.parse(params.detalleGastosJson)
-        def detalleImpuestosJson = JSON.parse(params.detalleImpuestosJson)
         def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
@@ -149,14 +188,6 @@ class OrdenController {
         }
         detalleGastosJson.each{
             orden.addToDetallegastos(new Gasto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto: it.monto))
-        }
-        detalleImpuestosJson.each{
-            try{
-                fecha = df.parse(it.vencimiento.substring(0,10))
-            }catch(ParseException e){
-
-            }
-
         }
 
         detalleVencimientosJson.each{
@@ -198,12 +229,23 @@ class OrdenController {
                 render objJson as JSON
                 return
             }
+            try{
+                orden.numeroOperacion = Numerador.sigNumero(TipoNumerador.OPERACION)
+            }catch(Exception e){
+                status.setRollbackOnly()
+                errorList << [msg: e.getMessage()]
+                objJson.idOrden = null
+                objJson.errors = errorList
+                render objJson as JSON
+                return
+            }
             orden.razonSocial = orden.cliente.razonSocial
             orden.localidad = orden.cliente.localidad
             orden.direccion = orden.cliente.direccion
             orden.situacionIVA = orden.cliente.situacionIVA
             orden.cuit = orden.cliente.cuit
             orden.ingresosBrutos = orden.cliente.ingresosBrutos
+
 
             if (!orden.validate()){
                     log.debug (orden.errors)

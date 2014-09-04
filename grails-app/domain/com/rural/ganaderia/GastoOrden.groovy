@@ -16,10 +16,8 @@ class GastoOrden {
             subTotalCalc = porcentaje * orden.subTotal/100
         else
             subTotalCalc = monto
-        if(orden.tipoOrden==TipoOrden.COMPRA && gasto.restaCompra)
-            subTotalCalc = subTotalCalc * -1
-        if(orden.tipoOrden==TipoOrden.VENTA && gasto.restaVenta)
-            subTotalCalc = subTotalCalc * -1
+        if(orden.tipoOrden==TipoOrden.VENTA)
+            subTotalCalc = subTotalCalc * (-1)
 
         return subTotalCalc
     }

@@ -11,6 +11,8 @@ class Orden {
     Cliente cliente
     Orden ordenVenta
     static belongsTo = [ordenVenta:Orden]
+    
+    Especie especie
 
     
     //-------------------datos el cliente que se persisten-----------
@@ -35,9 +37,9 @@ class Orden {
     Localidad procedencia
     java.sql.Date fechaOperacion
     boolean anulada = false
-    boolean regimen2daVenta = false
+    boolean cobrarIva = true //no se cobra iva por venta segunda venta(Es para el caso de los )
 
-    public getSubTotal(){//a esto le llaman total bruto, calculado sin los gastos
+    BigDecimal getSubTotal(){//a esto le llaman total bruto, calculado sin los gastos
         def sumatoria=0
         detalle.each{
             sumatoria+=it.subTotal
@@ -45,11 +47,11 @@ class Orden {
         return sumatoria
     }
 
-    public getTotal(){
+    BigDecimal getTotal(){
        def totalGastos=0
        def totalNotas=0
        detallegastos.each{
-           totalGastos+=it.subTotal
+            totalGastos+=it.subTotal
        }
        notas.each {
            if (it.tipo==TipoNotaDC.CREDITO)
@@ -57,11 +59,47 @@ class Orden {
            else
               totalNotas+=it.monto
        }
-       return subTotal+totalGastos+totalNotas
+       return subTotal+totalGastos+totalNotas+iva-ganancias
     }
 
+    BigDecimal getIva(){
+        def retencion=0
+        def porcentaje = especie.porcentajeIVA
+        if(especie.regimen2daVenta==false || (especie.regimen2daVenta==true && cobrarIva==true)){
+            retencion = baseImponible * porcentaje /100
+        }
+        return retencion
+    }
 
-    static transients = ['subTotal','total']
+    BigDecimal getBaseImponible(){
+        def base = subTotal
+        def gastoDeducible=0
+        //todo VERIFICAR SI EN LA ORDEN DE COMPRA SE RESTA AL BRUTO LA COMISION PARA OBTENER LA BASE IMPONIBLE POR AHORA LO TOMO COMO QUE SI
+        detallegastos.each {
+            if(it.gasto.restaBaseImponible){
+                gastoDeducible+=it.subTotal
+            }
+        }
+        base-=gastoDeducible
+    }
+    
+    BigDecimal getGanancias(){
+        def totalGanancias = 0
+        if(tipoOrden == TipoOrden.VENTA){
+            def porcentaje
+            RegimenGanancia regimenGanancia = RegimenGanancia.list().get(0)
+            if(cliente.situacionIVA==SituacionIVA.IVA)
+                porcentaje = regimenGanancia.porcentajeRI
+            else
+                porcentaje = regimenGanancia.porcentajeRNI
+            // todo REVISAR EL CALCULO DE GANANCIAS
+            totalGanancias = subTotal - regimenGanancia.montoImponible
+            totalGanancias = totalGanancias*2/100
+        }
+        return totalGanancias
+    }
+
+    static transients = ['ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
 
     static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 

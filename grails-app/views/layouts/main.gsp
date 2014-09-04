@@ -34,7 +34,8 @@
                         {
                             xtype:'button',
                             text:'Ordenes',
-                            menu:[{
+                            menu:[
+                                {
                                     text:'Alta Orden de Venta',
                                     listeners:{
                                         click:function(menu, item, e, eOpts){
@@ -55,21 +56,65 @@
                             xtype:'button',
                             text:'Configuración',
                             menu:[
-                            {
-                                text:'Condiciones de Operación',
-                                listeners:{
-                                    click:function(menu, item, e, eOpts){
-                                        window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
+                                {
+                                    text:'Años Exposición',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'anioExposicion',action:'create')%>'
+                                        }
                                     }
-                                }
-                            },{
-                                    text:'Numeradores de Comprobantes',
+                                },{
+                                    text:'Condiciones de Operación (Formas de Pago)',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
+                                        }
+                                    }
+                                },{
+                                    text:'Destino',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'destino',action:'list')%>'
+                                        }
+                                    }
+                                },{
+                                    text:'Exposición',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'exposicion',action:'list')%>'
+                                        }
+                                    }
+
+                                },{
+                                        text:'Formas de Pago o Condiciones de Operación',
+                                        listeners:{
+                                            click:function(menu, item, e, eOpts){
+                                                window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
+                                            }
+                                        }
+                                },{
+                                        text:'Numeradores de Comprobantes',
+                                        listeners:{
+                                            click: function(menu,item,e,eOpts){
+                                                window.location = '<%out << createLink(controller:'numerador',action:'list')%>';
+                                            }
+                                        }
+                                },{
+                                        text:'Operaciones',
+                                        listeners:{
+                                            click: function(menu,item,e,eOpts){
+                                                window.location = '<%out << createLink(controller:'operacion',action:'list')%>';
+                                            }
+                                        }
+                                },{
+                                    text:'Régimen de Ganancias',
                                     listeners:{
                                         click: function(menu,item,e,eOpts){
-                                            window.location = '<%out << createLink(controller:'numerador',action:'list')%>';
+                                            window.location = '<%out << createLink(controller:'regimenGanancia',action:'list')%>';
                                         }
                                     }
                                 }
+
                             ]
                         },{
                             xtype:'button',

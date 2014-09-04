@@ -569,6 +569,8 @@ Ext.onReady(function(){
                 'cliente.direccion':fieldValuesFormGanadero.direccion,
                 'cliente.localidad.id':fieldValuesFormGanadero.localidad,
                 'exposicion.id':fieldValuesFormDatosExposicion.exposicion,
+                'especie.id':fieldValuesFormDatosExposicion.especie,
+                'cobrarIva':fieldValuesFormDatosExposicion.regimen2daVenta,
                 'anioExposicion.id':fieldValuesFormDatosExposicion.anioExposicion,
                 'operacion.id':fieldValuesFormDatosExposicion.operacion,
                 'destino.id': fieldValuesFormDatosExposicion.destino,

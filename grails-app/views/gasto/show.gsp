@@ -32,20 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${gastoInstance?.restaCompra}">
+				<g:if test="${gastoInstance?.restaBaseImponible}">
 				<li class="fieldcontain">
-					<span id="restaCompra-label" class="property-label"><g:message code="gasto.restaCompra.label" default="Resta Compra" /></span>
+					<span id="restaBaseImponible-label" class="property-label"><g:message code="gasto.restaBaseImponible.label" default="Resta Base Imponible" /></span>
 					
-						<span class="property-value" aria-labelledby="restaCompra-label"><g:formatBoolean boolean="${gastoInstance?.restaCompra}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${gastoInstance?.restaVenta}">
-				<li class="fieldcontain">
-					<span id="restaVenta-label" class="property-label"><g:message code="gasto.restaVenta.label" default="Resta Venta" /></span>
-					
-						<span class="property-value" aria-labelledby="restaVenta-label"><g:formatBoolean boolean="${gastoInstance?.restaVenta}" /></span>
+						<span class="property-value" aria-labelledby="restaBaseImponible-label"><g:formatBoolean boolean="${gastoInstance?.restaBaseImponible}" /></span>
 					
 				</li>
 				</g:if>

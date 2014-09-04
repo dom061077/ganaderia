@@ -11,7 +11,8 @@ public enum TipoNumerador {
     ORDEN_COMPRA("Orden de Compra"),
     ORDEN_VENTA("Orden de Venta"),
     NOTA_DEBITO("Nota de Débito"),
-    NOTA_CREDITO("Nota de Crédito")
+    NOTA_CREDITO("Nota de Crédito"),
+    OPERACION("Nº de Operación")
     String name
     public TipoNumerador(String name){
         this.name = name
