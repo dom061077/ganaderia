@@ -115,23 +115,20 @@ class OrdenController {
         Orden ordenCompraInstance
         def listCompras=[]
         def detalleOrdenInstance
-        ordenVenta.detalle.each{det
-            ordenCompraInstance = listCompras.findAll { c
+        ordenVenta.detalle.each{det->
+            ordenCompraInstance = listCompras.findAll { c ->
                 c.id==det.cliente.id
             }
-            if (ordenCompraInstance){
-                
-            }else{
+            if (!ordenCompraInstance){
                 ordenCompraInstance = new Orden(tipoOrden: TipoOrden.COMPRA)
+                ordenCompraInstance.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
                 ordenCompraInstance.cliente = det.cliente
-
                 ordenCompraInstance.razonSocial = ordenVenta.cliente.razonSocial
                 ordenCompraInstance.localidad = ordenVenta.cliente.localidad
                 ordenCompraInstance.direccion = ordenVenta.cliente.direccion
                 ordenCompraInstance.situacionIVA = ordenVenta.cliente.situacionIVA
                 ordenCompraInstance.cuit = ordenVenta.cliente.cuit
                 ordenCompraInstance.ingresosBrutos = ordenVenta.cliente.ingresosBrutos
-
                 ordenCompraInstance.anioExposicion = ordenVenta.anioExposicion
                 ordenCompraInstance.exposicion = ordenVenta.exposicion
                 ordenCompraInstance.especie = ordenVenta.especie
@@ -145,9 +142,10 @@ class OrdenController {
             detalleOrdenInstance.precio = det.precio
             detalleOrdenInstance.raza = det.raza
             ordenCompraInstance.addToDetalle(detalleOrdenInstance)
-            
         }
-
+        listCompras.each {
+            ordenVenta.addToDetalle(it)
+        }
     }
 
 
@@ -269,9 +267,22 @@ class OrdenController {
                                                  ,monto: totalDescuento,tipo: TipoNotaDC.CREDITO)
                          orden.addToNotas(notaDCInstance)
                     }
-                    //
-                    objJson.idOrden = orden.id
-                    objJson.errors = null
+                    generarOrdenesdeCompra(orden)
+                    if(!orden.save()){
+                        status.setRollbackOnly()
+                        orden.errors.allErrors.each{
+                            it.getCodes().each{
+                                log.debug "Código error: "+it
+                            }
+                            errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
+                            objJson.idOrden = null
+                            objJson.errors = errorList
+                        }
+
+                    }else{
+                         objJson.idOrden = orden.id
+                         objJson.errors = null
+                    }
             }
 
         }

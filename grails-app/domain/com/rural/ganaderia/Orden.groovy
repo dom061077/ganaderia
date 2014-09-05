@@ -28,7 +28,6 @@ class Orden {
     java.sql.Date fechaAlta = new java.sql.Date(new java.util.Date().getTime())
     Exposicion exposicion
     AnioExposicion anioExposicion
-    CondicionOperacion condicionOperacion
     Operacion operacion
     FormasdePago formasdePago
     int numeroOperacion

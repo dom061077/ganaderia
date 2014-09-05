@@ -7,7 +7,6 @@ import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.Exposicion
 import com.rural.ganaderia.AnioExposicion
 import com.rural.ganaderia.Cliente
-import com.rural.ganaderia.CondicionOperacion
 import com.rural.ganaderia.Operacion
 import com.rural.ganaderia.Numerador
 import com.rural.ganaderia.enums.TipoNumerador
