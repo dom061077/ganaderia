@@ -13,6 +13,9 @@ import com.rural.ganaderia.enums.TipoNumerador
 import com.rural.ganaderia.Categoria
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.Destino
+import com.rural.ganaderia.FormasdePago
+import com.rural.ganaderia.Gasto
+import com.rural.ganaderia.RegimenGanancia
 
 class BootStrap {
 
@@ -177,6 +180,18 @@ class BootStrap {
                 new Destino(descripcion:"Reproductores").save()
                 new Destino(descripcion:"Reventa").save()
                 new Destino(descripcion:"Tambo").save()
+                
+                new Exposicion(nombre:"EXPO TUCUMAN 2014").save()
+                new FormasdePago(descripcion:"CONTADO",porcentajeDescuento: 10).save()
+                new FormasdePago(descripcion: "A Plazos",tieneVencimientos: true).save()
+                
+                new Gasto(descripcion: "Comision",restaBaseImponible: true).save()
+                new Gasto(descripcion: "Asociacion Brangus").save()
+                new Gasto(descripcion:"Sellado").save()
+
+                new RegimenGanancia(descripcion: "Retención Bienes Muebles",montoImponible: 12000,porcentajeRI: 2
+                        ,porcentajeRNI: 10).save()
+                
 
                 new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
                           ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'

@@ -116,10 +116,13 @@ class OrdenController {
         def listCompras=[]
         def detalleOrdenInstance
         ordenVenta.detalle.each{det->
+            log.debug "*************ingresando a la iteracion de detalle para agregar ordenes de compra"
             ordenCompraInstance = listCompras.findAll { c ->
-                c.id==det.cliente.id
+                c.cliente.id==det.cliente.id
             }
-            if (!ordenCompraInstance){
+            log.debug "**************ORDENCOMPRAINSTANCE CLASS: "+ordenCompraInstance.class +" "+ordenCompraInstance
+            if (ordenCompraInstance!=null){
+                
                 ordenCompraInstance = new Orden(tipoOrden: TipoOrden.COMPRA)
                 ordenCompraInstance.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
                 ordenCompraInstance.cliente = det.cliente
@@ -133,6 +136,8 @@ class OrdenController {
                 ordenCompraInstance.exposicion = ordenVenta.exposicion
                 ordenCompraInstance.especie = ordenVenta.especie
                 ordenCompraInstance.situacionIVA = ordenVenta.situacionIVA
+                listCompras.add(ordenCompraInstance)
+                log.debug "***************SE AGREGO A LA LISTA DE ORDENES DECOMPRA"
             }
             detalleOrdenInstance = new DetalleOrden()
             detalleOrdenInstance.cantidad = det.cantidad
@@ -144,7 +149,7 @@ class OrdenController {
             ordenCompraInstance.addToDetalle(detalleOrdenInstance)
         }
         listCompras.each {
-            ordenVenta.addToDetalle(it)
+            ordenVenta.addToOrdenescompra(it)
         }
     }
 
@@ -185,7 +190,10 @@ class OrdenController {
             orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
         }
         detalleGastosJson.each{
-            orden.addToDetallegastos(new Gasto(descripcion:it.descripcion,porcentaje: it.porcentaje,monto: it.monto))
+            orden.addToDetallegastos(
+                    new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
+            )
+            
         }
 
         detalleVencimientosJson.each{

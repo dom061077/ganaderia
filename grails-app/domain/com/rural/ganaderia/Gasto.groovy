@@ -4,7 +4,7 @@ class Gasto {
     //los gastos en las compras siempre suman en las ventas restan
 
     String descripcion
-    boolean restaBaseImponible //si es true significa que hay que restar el monto al bruto y de ahi calcular el IVA
+    boolean restaBaseImponible=false //si es true significa que hay que restar el monto al bruto y de ahi calcular el IVA
 
     static constraints = {
     }
