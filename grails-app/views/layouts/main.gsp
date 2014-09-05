@@ -23,6 +23,7 @@
 		<g:layoutHead/>
 		<r:layoutResources />
         <script type="text/javascript">
+            var imgPrint = '<% out << resource(dir:'images',file:'Print.png')%>';
             Ext.onReady(function(){
                 Ext.widget({
                     xtype:'panel',
@@ -61,13 +62,6 @@
                                     listeners:{
                                         click:function(menu, item, e, eOpts){
                                             window.location = '<%out << createLink(controller:'anioExposicion',action:'create')%>'
-                                        }
-                                    }
-                                },{
-                                    text:'Condiciones de Operación (Formas de Pago)',
-                                    listeners:{
-                                        click:function(menu, item, e, eOpts){
-                                            window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
                                         }
                                     }
                                 },{

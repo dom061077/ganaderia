@@ -115,6 +115,7 @@ class OrdenController {
         Orden ordenCompraInstance
         def listCompras=[]
         def detalleOrdenInstance
+        def clienteInstance
         ordenVenta.detalle.each{det->
             log.debug "*************ingresando a la iteracion de detalle para agregar ordenes de compra"
             ordenCompraInstance = listCompras.findAll { c ->
@@ -125,17 +126,25 @@ class OrdenController {
                 
                 ordenCompraInstance = new Orden(tipoOrden: TipoOrden.COMPRA)
                 ordenCompraInstance.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
-                ordenCompraInstance.cliente = det.cliente
-                ordenCompraInstance.razonSocial = ordenVenta.cliente.razonSocial
-                ordenCompraInstance.localidad = ordenVenta.cliente.localidad
-                ordenCompraInstance.direccion = ordenVenta.cliente.direccion
-                ordenCompraInstance.situacionIVA = ordenVenta.cliente.situacionIVA
-                ordenCompraInstance.cuit = ordenVenta.cliente.cuit
-                ordenCompraInstance.ingresosBrutos = ordenVenta.cliente.ingresosBrutos
+                ordenCompraInstance.cliente = Cliente.load(det.cliente.id)
+
+                ordenCompraInstance.razonSocial = ordenCompraInstance.cliente.razonSocial
+                ordenCompraInstance.localidad = ordenCompraInstance.cliente.localidad
+                ordenCompraInstance.direccion = ordenCompraInstance.cliente.direccion
+                ordenCompraInstance.situacionIVA = ordenCompraInstance.cliente.situacionIVA
+                ordenCompraInstance.cuit = ordenCompraInstance.cliente.cuit
+                ordenCompraInstance.ingresosBrutos = ordenCompraInstance.cliente.ingresosBrutos
                 ordenCompraInstance.anioExposicion = ordenVenta.anioExposicion
                 ordenCompraInstance.exposicion = ordenVenta.exposicion
                 ordenCompraInstance.especie = ordenVenta.especie
                 ordenCompraInstance.situacionIVA = ordenVenta.situacionIVA
+                ordenCompraInstance.cobrarIva = ordenVenta.cobrarIva
+                ordenCompraInstance.destino = ordenVenta.destino
+                ordenCompraInstance.fechaOperacion = ordenVenta.fechaOperacion
+                ordenCompraInstance.formasdePago = ordenVenta.formasdePago
+                ordenCompraInstance.guias = ordenVenta.guias
+                ordenCompraInstance.operacion = ordenVenta.operacion
+                ordenCompraInstance.procedencia = ordenVenta.procedencia
                 listCompras.add(ordenCompraInstance)
                 log.debug "***************SE AGREGO A LA LISTA DE ORDENES DECOMPRA"
             }
@@ -290,6 +299,26 @@ class OrdenController {
                     }else{
                          objJson.idOrden = orden.id
                          objJson.errors = null
+                         String html="<table>"
+                         html += "<tr><td>Tipo Comprobante</td><td>Número</td><td>Imprimir</td></tr>"
+
+                         html+="""<tr> <td>${orden.tipoOrden.name}</td> <td>${orden.numero}</td>
+                                        <td><a href='${createLink(controller: 'orden',action: 'imprimircomprobante')+"/"+orden.id}'><img src = '${resource(dir: 'images',file:'Print.png')}' /> </a></td>
+                                     </tr>
+                                   """
+
+
+                         orden.ordenescompra.each{
+                             html+="""<tr> <td>${it.tipoOrden.name}</td> <td>${it.numero}</td>
+                                        <td><a href='${createLink(controller: 'orden',action: 'imprimircomprobante')+"/"+it.id+"?target=_blank"}'><img src = '${resource(dir: 'images',file:'Print.png')}' /> </a></td>
+                                     </tr>
+                                   """
+
+                         }
+                         orden.notas.each{
+                         }
+                         html+="</table>"
+                         objJson.html = html
                     }
             }
 
@@ -363,6 +392,11 @@ class OrdenController {
         log.debug ordenInstance.situacionIVA.name
         log.debug ordenInstance.cliente.localidad
         log.debug ordenInstance.cliente.localidad.provincia.id
+        log.debug ordenInstance.formasdePago.id
+        log.debug ordenInstance.localidad.nombre
+        log.debug ordenInstance.localidad.provincia.nombre
+        log.debug ordenInstance.destino.descripcion
+
 
         String reportsDirPath = servletContext.getRealPath("/reports/");
         params.put("reportsDirPath", reportsDirPath);

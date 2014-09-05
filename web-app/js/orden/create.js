@@ -19,11 +19,12 @@ Ext.onReady(function(){
 
                         success: function(response, opts) {
                             var objJson = Ext.decode(response.responseText);
+                            var rec;
                             if (objJson.id != null) {
                                 tempCuit = objJson.cuit;
                                 storeProvincia.load();
                                 storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
-                                var rec = new ganaderia.model.ClienteGanadero({
+                                rec = new ganaderia.model.ClienteGanadero({
                                     id : objJson.id,
                                     clienteId: objJson.id,
                                     cuit : objJson.cuit,
@@ -37,9 +38,12 @@ Ext.onReady(function(){
                                     localidad :(objJson.localidad!=null?objJson.localidad.id:null),
                                     direccion : objJson.direccion
                                 });
-                                var wizard = Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
-
+                                Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+                            }else{
+                                Ext.getCmp('clienteId').setValue('Cliente Nueva');
                             }
+
+
 
                         }, // end-function
 
@@ -457,7 +461,7 @@ Ext.onReady(function(){
                                     icon:Ext.MessageBox.ERROR,
                                     buttons:Ext.MessageBox.OK,
                                     fn:function(){
-                                        winClienteDetalle.close();
+                                        //winClienteDetalle.close();
                                     }
                                 });
                             }
@@ -597,33 +601,62 @@ Ext.onReady(function(){
                     Ext.Msg.show({
                         title:'Error',
                         msg:msgError,
-                        icon:Ext.MessageBox.ERROR,
-                        buttons:Ext.MessageBox.OK
+                        buttons:Est.Msg.OK,
+                        icon:Ext.Msg.ERROR
                     });
                     return;
-                }
-                //----limpiar datos-----
-                storeGridDetalle.removeAll();
-                Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
-                Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
-                Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
-                var t = new Ext.ToolTip({
-                    anchor: 'bottom',
-                    anchorToTarget: false,
-                    targetXY: [ Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getWidth()-200,
-                        Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getHeight()+200],
-                    title: 'Mensaje',
-                    html: 'La orden se Genero correctamente',
-                    hideDelay: 15000,
-                    closable: true
-                });
-                t.show();
+                }else{
+                    var wincomprobantes = Ext.create('Ext.window.Window',{
+                        modal:true,
+                        width:600,
+                        x:400,
+                        y:200,
+                        title:'Impresión de Comprobantes',
+                        items:[
+                            { xtype:'panel',
+                                html:jsonObj.html
+                                ,buttons:[
+                                {
+                                    text:'Cerrar',
+                                    handler: function(){
+                                        //----limpiar datos-----
+                                        /*storeGridDetalle.removeAll();
+                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
+                                         Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
+                                         Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
+                                         var t = new Ext.ToolTip({
+                                         anchor: 'bottom',
+                                         anchorToTarget: false,
+                                         targetXY: [ Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getWidth()-200,
+                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getHeight()+200],
+                                         title: 'Mensaje',
+                                         html: 'La orden se Genero correctamente',
+                                         hideDelay: 15000,
+                                         closable: true
+                                         });
+                                         t.show();
 
-                window.location=comprobanteUrl+'/'+jsonObj.idOrden+'?target=_blank';
+                                         window.location=comprobanteUrl+'/'+jsonObj.idOrden+'?target=_blank';
+                                         */
+                                    }
+                                }
+                            ]
+                            }
+                        ]
+                    });
+                    wincomprobantes.show();
+
+                }
 
             },
             failure: function(xhr){
                 loadMask.hide();
+                Ext.Msg.show({
+                    title:'Error',
+                    msg:'Error: '+xhr.statusText,
+                    buttons:Ext.Msg.OK,
+                    icon:Ext.Msg.ERROR
+                });
                 console.log("Error: "+xhr.statusText);
             }
         });
@@ -1099,7 +1132,9 @@ Ext.onReady(function(){
                       xtype:'hidden'
                   },{
                       name:'clienteId',
+                      id: 'clienteId',
                       xtype:'displayfield',
+                      value:'Cliente Nuevo',
                       fieldLabel:'Código de Cliente'
                   },{
                                    fieldLabel:'C.U.I.T o D.N.I',
@@ -1350,7 +1385,8 @@ Ext.onReady(function(){
                               xtype:'checkboxfield',
                               id:'regimen2daVentaId',
                               fieldLabel:'Se cobra I.V.A',
-                              name:'regimen2daVenta'
+                              name:'regimen2daVenta',
+                              checked:true
 
                           }
                       ],

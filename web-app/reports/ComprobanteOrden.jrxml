@@ -3,21 +3,18 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<field name="cliente.cuit" class="java.lang.String"/>
-	<field name="cliente.razonSocial" class="java.lang.String"/>
-	<field name="cliente.direccion" class="java.lang.String"/>
-	<field name="cliente.email" class="java.lang.String"/>
-	<field name="cliente.telefono1" class="java.lang.String"/>
-	<field name="cliente.telefono2" class="java.lang.String"/>
-	<field name="cliente.localidad.nombre" class="java.lang.String"/>
-	<field name="cliente.localidad.provincia.nombre" class="java.lang.String"/>
+	<field name="cuit" class="java.lang.String"/>
+	<field name="razonSocial" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="localidad.nombre" class="java.lang.String"/>
+	<field name="localidad.provincia.nombre" class="java.lang.String"/>
 	<field name="cliente.id" class="java.lang.Long"/>
 	<field name="situacionIVA.name" class="java.lang.String"/>
-	<field name="condicionOperacion.nombre" class="java.lang.String"/>
+	<field name="formasdePago.descripcion" class="java.lang.String"/>
 	<field name="operacion.nombre" class="java.lang.String"/>
 	<field name="numeroOperacion" class="java.lang.Integer"/>
 	<field name="fechaOperacion" class="java.sql.Date"/>
-	<field name="destino" class="java.lang.String"/>
+	<field name="destino.descripcion" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -28,28 +25,28 @@
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente.razonSocial}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9" x="12" y="116" width="129" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente.direccion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="408f5c89-b243-49e6-ad5a-acca33be5619" x="12" y="147" width="100" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente.localidad.nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{localidad.nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923" x="125" y="147" width="100" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cliente.localidad.provincia.nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{localidad.provincia.nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23" x="12" y="178" width="129" height="20"/>
@@ -68,7 +65,7 @@
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{condicionOperacion.nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{formasdePago.descripcion}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="022c14e0-0ec4-4629-b3f3-3e9391f47c24" x="319" y="117" width="59" height="20"/>
@@ -94,7 +91,7 @@
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{destino.descripcion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

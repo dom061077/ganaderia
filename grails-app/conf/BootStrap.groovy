@@ -191,6 +191,11 @@ class BootStrap {
 
                 new RegimenGanancia(descripcion: "Retención Bienes Muebles",montoImponible: 12000,porcentajeRI: 2
                         ,porcentajeRNI: 10).save()
+
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.NOTA_CREDITO,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.OPERACION,maximoNumero: 1).save()
                 
 
                 new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
