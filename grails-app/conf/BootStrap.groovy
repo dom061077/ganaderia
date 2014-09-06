@@ -192,8 +192,10 @@ class BootStrap {
                 new RegimenGanancia(descripcion: "Retención Bienes Muebles",montoImponible: 12000,porcentajeRI: 2
                         ,porcentajeRNI: 10).save()
 
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA_A,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA_A,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA_B,maximoNumero: 1).save()
+                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA_B,maximoNumero: 1).save()
                 new Numerador(tipoNumerador: TipoNumerador.NOTA_CREDITO,maximoNumero: 1).save()
                 new Numerador(tipoNumerador: TipoNumerador.OPERACION,maximoNumero: 1).save()
                 

@@ -1,11 +1,11 @@
 package com.rural.ganaderia.enums
 
 public enum SituacionIVA {
-    IVA("I.V.A"),
-    IVARNI("I.V.A RNI"),
-    EXENTO("EXENTO"),
-    CONSUMIDOR_FINAL("CONSUMIDOR FINAL"),
-    MONOTRIBUTO("MONOTRIBUTO")
+    IVA("I.V.A Resp. Inscripto"),
+    IVARNI("I.V.A Resp.no Ins."),
+    EXENTO("Exento"),
+    CONSUMIDOR_FINAL("Consumidor Final"),
+    MONOTRIBUTO("Monotributo")
     /*
     * HACER MARCA EN IVA PARA INDICAR EL PORCENTAJE DE GANACIAS
     *

@@ -111,6 +111,21 @@ class OrdenController {
         }
     }
     //----------------------------------------
+
+    private def getNumeradorPorIvaTipodeOrden(Cliente clienteParm,def tipoOrden){
+        //todo Verificar el numero de orden de compra de acuerdo a la situacion de IVA inscripto o cualquiera de las otras
+        if (clienteParm.situacionIVA.IVA && tipoOrden==TipoOrden.COMPRAA)
+            return Numerador.sigNumero(TipoNumerador.ORDEN_COMPRAA)
+        if (clienteParm.situacionIVA.IVARNI && tipoOrden==TipoOrden.COMPRAB)
+            return Numerador.sigNumero(TipoNumerador.ORDEN_COMPRAB)
+        if (clienteParm.situacionIVA.IVA && tipoOrden==TipoOrden.VENTAA)
+            return Numerador.sigNumero(TipoNumerador.ORDEN_VENTAA)
+        if (clienteParm.situacionIVA.IVARNI && tipoOrden==TipoOrden.VENTAB)
+            return Numerador.sigNumero(TipoNumerador.ORDEN_VENTAB)
+
+        
+    }
+    
     def generarOrdenesdeCompra(Orden ordenVenta){
         Orden ordenCompraInstance
         def listCompras=[]
@@ -123,11 +138,14 @@ class OrdenController {
             }
             log.debug "**************ORDENCOMPRAINSTANCE CLASS: "+ordenCompraInstance.class +" "+ordenCompraInstance
             if (ordenCompraInstance!=null){
-                
-                ordenCompraInstance = new Orden(tipoOrden: TipoOrden.COMPRA)
+                ordenCompraInstance = new Orden()
                 ordenCompraInstance.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
                 ordenCompraInstance.cliente = Cliente.load(det.cliente.id)
-
+                if (ordenCompraInstance.cliente.situacionIVA==SituacionIVA.IVA)
+                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRAA
+                else
+                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRAB
+                
                 ordenCompraInstance.razonSocial = ordenCompraInstance.cliente.razonSocial
                 ordenCompraInstance.localidad = ordenCompraInstance.cliente.localidad
                 ordenCompraInstance.direccion = ordenCompraInstance.cliente.direccion
@@ -206,16 +224,19 @@ class OrdenController {
         }
 
         detalleVencimientosJson.each{
-            try{
-                fecha = df.parse(it.vencimiento.substring(0,10))
-            }catch(ParseException e){
+            //try{
+            //    fecha = df.parse(it.vencimiento.substring(0,10))
+            //}catch(ParseException e){
                 
-            }
-            orden.addToDetallevencimientos(new Vencimiento(vencimiento: new java.sql.Date(fecha.getTime()),monto: it.monto ))
+            //}
+            orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias, vencimiento: new java.sql.Date(fecha.getTime()),monto: it.monto ))
         }
 
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
-        orden.tipoOrden = TipoOrden.VENTA
+        if (orden.cliente.situacionIVA == SituacionIVA.IVA)
+            orden.tipoOrden = TipoOrden.COMPRA_A
+        else
+            orden.tipoOrden = TipoOrden.COMPRA_B
         Orden.withTransaction{TransactionStatus status->
             if (!orden.cliente.id){
                if(!orden.cliente.save()){
@@ -235,7 +256,7 @@ class OrdenController {
 
             }
             try{
-                orden.numero = Numerador.sigNumero(TipoNumerador.ORDEN_VENTA)
+                orden.numero = Numerador.sigNumero(orden.tipoOrden)
             }catch(Exception e){
                 status.setRollbackOnly()
                 errorList << [msg: e.getMessage()]
@@ -244,16 +265,15 @@ class OrdenController {
                 render objJson as JSON
                 return
             }
-            try{
-                orden.numeroOperacion = Numerador.sigNumero(TipoNumerador.OPERACION)
-            }catch(Exception e){
-                status.setRollbackOnly()
-                errorList << [msg: e.getMessage()]
-                objJson.idOrden = null
-                objJson.errors = errorList
-                render objJson as JSON
-                return
+
+            orden.numeroOperacion = Orden.createCriteria().get {
+                eq("anulada",false)
+                projections {
+                       max("numeroOperacion")
+                }
             }
+
+
             orden.razonSocial = orden.cliente.razonSocial
             orden.localidad = orden.cliente.localidad
             orden.direccion = orden.cliente.direccion
