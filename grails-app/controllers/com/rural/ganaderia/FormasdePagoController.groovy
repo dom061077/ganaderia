@@ -54,6 +54,7 @@ class FormasdePagoController {
     }
 
     def update(Long id, Long version) {
+        log.debug "Parametros: $params"
         def formasdePagoInstance = FormasdePago.get(id)
         if (!formasdePagoInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'formasdePago.label', default: 'FormasdePago'), id])

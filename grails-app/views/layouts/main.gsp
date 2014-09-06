@@ -83,7 +83,7 @@
                                         text:'Formas de Pago o Condiciones de Operación',
                                         listeners:{
                                             click:function(menu, item, e, eOpts){
-                                                window.location = '<%out << createLink(controller:'condicionOperacion',action:'list')%>'
+                                                window.location = '<%out << createLink(controller:'formasdePago',action:'list')%>'
                                             }
                                         }
                                 },{

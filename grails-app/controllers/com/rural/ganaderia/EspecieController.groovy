@@ -54,6 +54,7 @@ class EspecieController {
     }
 
     def update(Long id, Long version) {
+        log.debug "Parametros: $params"
         def especieInstance = Especie.get(id)
         if (!especieInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'especie.label', default: 'Especie'), id])
@@ -107,7 +108,7 @@ class EspecieController {
         def returnList = []
         def especies = Especie.list()
         especies.each {
-            returnList << [id: it.id,nombre:it.nombre,regimen2daVenta:it.regimen2daVenta]
+            returnList << [id: it.id,nombre:it.nombre,regimen2daVenta:it.evaluaIvaen2daVenta]
         }
         returnMap.rows = returnList
         returnMap.success = true

@@ -27,19 +27,19 @@
 
 </div>
 
+<div class="fieldcontain ${hasErrors(bean: especieInstance, field: 'evaluaIvaen2daVenta', 'error')} ">
+	<label for="evaluaIvaen2daVenta">
+		<g:message code="especie.evaluaIvaen2daVenta.label" default="Evalua Ivaen2da Venta" />
+		
+	</label>
+	<g:checkBox name="evaluaIvaen2daVenta" value="${especieInstance?.evaluaIvaen2daVenta}" />
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: especieInstance, field: 'porcentajeIVA', 'error')} required">
 	<label for="porcentajeIVA">
 		<g:message code="especie.porcentajeIVA.label" default="Porcentaje IVA" />
 		<span class="required-indicator">*</span>
 	</label>
 	<g:field name="porcentajeIVA" value="${fieldValue(bean: especieInstance, field: 'porcentajeIVA')}" required=""/>
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: especieInstance, field: 'regimen2daVenta', 'error')} ">
-	<label for="regimen2daVenta">
-		<g:message code="especie.regimen2daVenta.label" default="Regimen2da Venta" />
-		
-	</label>
-	<g:checkBox name="regimen2daVenta" value="${especieInstance?.regimen2daVenta}" />
 </div>
 

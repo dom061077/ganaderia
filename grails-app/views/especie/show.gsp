@@ -43,20 +43,20 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${especieInstance?.evaluaIvaen2daVenta}">
+				<li class="fieldcontain">
+					<span id="evaluaIvaen2daVenta-label" class="property-label"><g:message code="especie.evaluaIvaen2daVenta.label" default="Evalua Ivaen2da Venta" /></span>
+					
+						<span class="property-value" aria-labelledby="evaluaIvaen2daVenta-label"><g:formatBoolean boolean="${especieInstance?.evaluaIvaen2daVenta}" /></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${especieInstance?.porcentajeIVA}">
 				<li class="fieldcontain">
 					<span id="porcentajeIVA-label" class="property-label"><g:message code="especie.porcentajeIVA.label" default="Porcentaje IVA" /></span>
 					
 						<span class="property-value" aria-labelledby="porcentajeIVA-label"><g:fieldValue bean="${especieInstance}" field="porcentajeIVA"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${especieInstance?.regimen2daVenta}">
-				<li class="fieldcontain">
-					<span id="regimen2daVenta-label" class="property-label"><g:message code="especie.regimen2daVenta.label" default="Regimen2da Venta" /></span>
-					
-						<span class="property-value" aria-labelledby="regimen2daVenta-label"><g:formatBoolean boolean="${especieInstance?.regimen2daVenta}" /></span>
 					
 				</li>
 				</g:if>

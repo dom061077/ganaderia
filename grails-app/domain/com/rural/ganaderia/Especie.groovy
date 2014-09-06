@@ -2,7 +2,7 @@ package com.rural.ganaderia
 
 class Especie {
     String nombre
-    boolean regimen2daVenta = false
+    boolean evaluaIvaen2daVenta = false
     BigDecimal porcentajeIVA
     static hasMany = [categorias:Categoria]
 

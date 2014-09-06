@@ -64,7 +64,7 @@ class Orden {
     BigDecimal getIva(){
         def retencion=0
         def porcentaje = especie.porcentajeIVA
-        if(especie.regimen2daVenta==false || (especie.regimen2daVenta==true && cobrarIva==true)){
+        if(especie.evaluaIvaen2daVenta==false || (especie.evaluaIvaen2daVenta==true && cobrarIva==true)){
             retencion = baseImponible * porcentaje /100
         }
         return retencion

@@ -26,9 +26,9 @@
 					
 						<g:sortableColumn property="nombre" title="${message(code: 'especie.nombre.label', default: 'Nombre')}" />
 					
-						<g:sortableColumn property="porcentajeIVA" title="${message(code: 'especie.porcentajeIVA.label', default: 'Porcentaje IVA')}" />
+						<g:sortableColumn property="evaluaIvaen2daVenta" title="${message(code: 'especie.evaluaIvaen2daVenta.label', default: 'Evalua Ivaen2da Venta')}" />
 					
-						<g:sortableColumn property="regimen2daVenta" title="${message(code: 'especie.regimen2daVenta.label', default: 'Regimen2da Venta')}" />
+						<g:sortableColumn property="porcentajeIVA" title="${message(code: 'especie.porcentajeIVA.label', default: 'Porcentaje IVA')}" />
 					
 					</tr>
 				</thead>
@@ -38,9 +38,9 @@
 					
 						<td><g:link action="show" id="${especieInstance.id}">${fieldValue(bean: especieInstance, field: "nombre")}</g:link></td>
 					
-						<td>${fieldValue(bean: especieInstance, field: "porcentajeIVA")}</td>
+						<td><g:formatBoolean boolean="${especieInstance.evaluaIvaen2daVenta}" /></td>
 					
-						<td><g:formatBoolean boolean="${especieInstance.regimen2daVenta}" /></td>
+						<td>${fieldValue(bean: especieInstance, field: "porcentajeIVA")}</td>
 					
 					</tr>
 				</g:each>

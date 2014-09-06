@@ -722,8 +722,10 @@ Ext.onReady(function(){
     Ext.define('ganaderia.model.grid.Vencimientos',{
         extend:'Ext.data.Model',
         fields:[
-            {name:'vencimiento',type:'date'},
-            {name:'monto',type:'float'}
+            {name:'dias',type:'int'},
+            {name:'bruto',type:'float'},
+            {name:'gastos',type:'float'},
+            {name:'iva',type:'float'}
         ]
     });
 
@@ -1052,12 +1054,62 @@ Ext.onReady(function(){
   }
 
   function onAddVencimientoClick(){
+      var totaliva=0,totalbruto=0,totalgastos=0;
+      storeGridVencimientos.data.each(function(row){
+          totaliva+=row.data.iva;
+          totalbruto+=row.data.bruto;
+          totalgastos+=row.data.gastos
+      });
+      totaliva+=fieldValues.iva;
+      totalbruto+=fieldValues.bruto;
+      totalgastos+=fieldValues.gastos;
+      if(totalbruto>100){
+           Ext.Msg.show({
+              title:'Error',
+              msg:'El porcentaje total del pago del bruto no puede ser superior al 100%',
+              icon:Ext.MessageBox.ERROR,
+               buttons:Ext.MessageBox.OK,
+               fn:function(){
+
+               }
+           });
+           return;
+      }
+      if(totaliva>100){
+          Ext.Msg.show({
+              title:'Error',
+              msg:'El porcentaje total del pago de I.V.A no puede ser superior al 100%',
+              icon:Ext.MessageBox.ERROR,
+              buttons:Ext.MessageBox.OK,
+              fn:function(){
+
+              }
+          });
+          return;
+
+      }
+      if(totalgastos>100){
+          Ext.Msg.show({
+              title:'Error',
+              msg:'El porcentaje total del pago de gastos no puede ser superior al 100%',
+              icon:Ext.MessageBox.ERROR,
+              buttons:Ext.MessageBox.OK,
+              fn:function(){
+
+              }
+          });
+          return;
+
+      }
+
       if(this.up('form').getForm().isValid()){
           var form = this.up('form').getForm();
           var fieldValues = form.getFieldValues();
           var rec = new ganaderia.model.grid.Vencimientos({
-              vencimiento: fieldValues.vencimiento,
-              monto: fieldValues.monto
+              dias: fieldValues.dias,
+              bruto: fieldValues.bruto,
+              gastos: fieldValues.gastos,
+              iva : fieldValues.iva
           });
           form.reset();
           storeGridVencimientos.add(rec);
@@ -1234,7 +1286,8 @@ Ext.onReady(function(){
                   handler: function() {
                       var wizard = this.up('#wizardId');
                       if(this.up('form').getForm().isValid())
-                        wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
+                        //wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
+                          wizard.getLayout().setActiveItem('stepFormVencimientosId');
                   }
               }]
           },{
@@ -1349,8 +1402,7 @@ Ext.onReady(function(){
                               valueField:'id',
                               displayField:'nombre',
                               selectOnTab: true,
-                              name:'procedencia',
-                              allowBlank:false
+                              name:'procedencia'
                           },{
                               xtype:'datefield',
                               name:'fechaOperacion',
@@ -1360,7 +1412,7 @@ Ext.onReady(function(){
                               xtype:'combo',
                               name:'especie',
                               fieldLabel:'Especie',
-                              allowBlank:false,
+                              //allowBlank:false,
                               width:300,
                               queryMode:'remote',
                               emptyText:'',
@@ -1798,13 +1850,28 @@ Ext.onReady(function(){
                               defaultType:'textfield',
                               items:[
                                   {
-                                      xtype:'datefield',
-                                      fieldLabel:'Vencimiento',
-                                      name: 'vencimiento'
+                                      xtype:'numberfield',
+                                      fieldLabel:'Cantidad días',
+                                      name: 'dias',
+                                      minValue:5
                                   },{
                                       xtype:'numberfield',
-                                      fieldLabel:'Monto',
-                                      name: 'monto'
+                                      fieldLabel:'% Bruto',
+                                      minValue:10,
+                                      maxValue:100,
+                                      name: 'bruto'
+                                  },{
+                                     xtype:'numberfield',
+                                     fieldLabel:'% Gastos',
+                                     minValue:10,
+                                     maxValue:100,
+                                     name: 'gastos'
+                                  },{
+                                      xtype:'numberfield',
+                                      fieldLabel:'% I.V.A',
+                                      minValue:10,
+                                      maxValue:100,
+                                      name: 'iva'
                                   }
                               ],
                               buttons:[
@@ -1824,15 +1891,24 @@ Ext.onReady(function(){
                               store: storeGridVencimientos,
                               columns:[
                                   {
-                                      header: 'Vencimiento',
-                                      dataIndex:'vencimiento',
-                                      xtype: 'datecolumn',   format:'d/m/Y',
+                                      header: 'Días',
+                                      dataIndex:'dias',
+                                      //xtype: 'numericfield',
                                       width:100,
                                       align:'right'
                                   },{
-                                      header: 'Monto',
+                                      header: '% Bruto',
                                       align:'right',
-                                      dataIndex:'monto'
+                                      dataIndex:'bruto'
+                                  },{
+                                      header: '% Gastos',
+                                      align:'right',
+                                      dataIndex:'gastos'
+
+                                  },{
+                                      header: '% IVA',
+                                      align:'right',
+                                      dataIndex:'iva'
                                   },{
 
                                       xtype:'actioncolumn',
@@ -1844,7 +1920,7 @@ Ext.onReady(function(){
                                               icon:deleteImg,
                                               tooltip:'Eliminar Línea',
                                               handler: function(grid,rowIndex){
-                                                  Ext.getCmp('gridDetalleImpuestosId').getStore().removeAt(rowIndex);
+                                                  Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
                                               }
                                           }
                                       ]
