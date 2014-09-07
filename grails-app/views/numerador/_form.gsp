@@ -15,6 +15,6 @@
 		<g:message code="numerador.tipoNumerador.label" default="Tipo Numerador" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="tipoNumerador" from="${com.rural.ganaderia.enums.TipoNumerador?.values()}" keys="${com.rural.ganaderia.enums.TipoNumerador.values()*.name()}" required="" value="${numeradorInstance?.tipoNumerador?.name()}"/>
+	<g:select name="tipoOrden" from="${com.rural.ganaderia.enums.TipoOrden?.values()}" keys="${com.rural.ganaderia.enums.TipoOrden.values()*.name()}" required="" value="${numeradorInstance?.tipoOrden?.name()}"/>
 </div>
 

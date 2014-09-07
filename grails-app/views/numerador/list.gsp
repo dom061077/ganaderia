@@ -26,7 +26,7 @@
 					
 						<g:sortableColumn property="maximoNumero" title="${message(code: 'numerador.maximoNumero.label', default: 'Maximo Numero')}" />
 					
-						<g:sortableColumn property="tipoNumerador" title="${message(code: 'numerador.tipoNumerador.label', default: 'Tipo Numerador')}" />
+						<g:sortableColumn property="tipoOrden" title="${message(code: 'numerador.tipoOrden.label', default: 'Tipo Numerador')}" />
 					
 					</tr>
 				</thead>
@@ -36,7 +36,7 @@
 					
 						<td><g:link action="show" id="${numeradorInstance.id}">${fieldValue(bean: numeradorInstance, field: "maximoNumero")}</g:link></td>
 					
-						<td>${fieldValue(bean: numeradorInstance, field: "tipoNumerador")}</td>
+						<td>${fieldValue(bean: numeradorInstance, field: "tipoOrden")}</td>
 					
 					</tr>
 				</g:each>

@@ -6,8 +6,8 @@ Ext.define('ganaderia.model.grid.Orden',{
         {name:'cliente', type:'string'},
         {name:'exposicion', type:'string'},
         {name:'anio', type:'int'},
+        {name:'numeroOperacion',type:'int'},
         {name:'fechacarga', type:'date'},
-        {name:'anulada', type:'boolean'},
         {name:'total' , type:'numeric'}
     ]
 });
@@ -54,9 +54,20 @@ Ext.onReady(function(){
             {header:'Cliente', dataIndex:'cliente', width:250},
             {header:'Exposición', dataIndex:'exposicion', width:250},
             {header:'Año', dataIndex:'anio',width:50},
+            {text:'Nº de Operación',width:100,dataIndex:'numeroOperacion'},
             {header:'Fecha Carga',dataIndex:'fechacarga',width:100, xtype: 'datecolumn',   format:'d/m/Y'},
             {header:'Total',dataIndex:'total',width:100, xtype: 'numbercolumn'},
-            {header:'Anulada', dataIndex:'anulada',width:70,xtype:'booleancolumn',trueText:'Si',falseText:'No'}
+            {text:'Ver',xtype:'actioncolumn',sortable:'false',menuDisabled:true,
+                  items:[
+                      {
+                          icon:selectImg,
+                          tooltip:'Seleccionar',
+                          handler: function(grid,rowIndex){
+                              var orden = storeGrid.getAt(rowIndex);
+                              window.location='show/'+orden.data.id;
+                          }
+                      }
+                  ]}
         ]
     });
 

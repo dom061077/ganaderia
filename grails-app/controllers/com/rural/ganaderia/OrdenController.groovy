@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.text.ParseException
 import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.enums.TipoOrden
-import com.rural.ganaderia.enums.TipoNotaDC
+import com.rural.ganaderia.enums.EstadoDocumento
 
 class OrdenController {
     MessageSource  messageSource
@@ -139,13 +139,13 @@ class OrdenController {
             log.debug "**************ORDENCOMPRAINSTANCE CLASS: "+ordenCompraInstance.class +" "+ordenCompraInstance
             if (ordenCompraInstance!=null){
                 ordenCompraInstance = new Orden()
-                ordenCompraInstance.numero = Numerador.sigNumero(TipoNumerador.ORDEN_COMPRA)
+
                 ordenCompraInstance.cliente = Cliente.load(det.cliente.id)
                 if (ordenCompraInstance.cliente.situacionIVA==SituacionIVA.IVA)
-                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRAA
+                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRA_A
                 else
-                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRAB
-                
+                    ordenCompraInstance.tipoOrden = TipoOrden.COMPRA_B
+                ordenCompraInstance.numero = Numerador.sigNumero(ordenCompraInstance.tipoOrden)
                 ordenCompraInstance.razonSocial = ordenCompraInstance.cliente.razonSocial
                 ordenCompraInstance.localidad = ordenCompraInstance.cliente.localidad
                 ordenCompraInstance.direccion = ordenCompraInstance.cliente.direccion
@@ -175,6 +175,19 @@ class OrdenController {
             detalleOrdenInstance.raza = det.raza
             ordenCompraInstance.addToDetalle(detalleOrdenInstance)
         }
+        listCompras.each{itorden->
+           ordenVenta.detallegastos.each{det->
+              if(det.gasto.restaBaseImponible)
+                  itorden.addToDetallegastos(new GastoOrden(gasto:det.gasto,porcentaje:det.porcentaje,monto:det.monto))
+           }
+           ordenVenta.detallevencimientos.each{itvenc->
+               itorden.addToDetalleVencimientos(new Vencimiento(vencimiento:itvenc.vencimiento
+                       ,cantidadDias:itvenc.cantidadDias,porcentajeBruto:itvenc.porcentajeBruto
+                       ,porcentajeGastos:itvenc.porcentajeGastos,porcentajeIva: itvenc.porcentajeIva))
+
+           }
+        }
+
         listCompras.each {
             ordenVenta.addToOrdenescompra(it)
         }
@@ -222,21 +235,25 @@ class OrdenController {
             )
             
         }
-
+        def cal = Calendar.getInstance()
         detalleVencimientosJson.each{
             //try{
             //    fecha = df.parse(it.vencimiento.substring(0,10))
             //}catch(ParseException e){
                 
             //}
-            orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias, vencimiento: new java.sql.Date(fecha.getTime()),monto: it.monto ))
+            cal.setTime(fecha)
+            cal.add(Calendar.DATE,it.dias)
+            orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
+                    , porcentajeGastos:it.gastos,porcentajeIva: it.iva
+                    , vencimiento: new java.sql.Date(cal.getTime()) ))
         }
 
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
         if (orden.cliente.situacionIVA == SituacionIVA.IVA)
-            orden.tipoOrden = TipoOrden.COMPRA_A
+            orden.tipoOrden = TipoOrden.VENTA_A
         else
-            orden.tipoOrden = TipoOrden.COMPRA_B
+            orden.tipoOrden = TipoOrden.VENTA_B
         Orden.withTransaction{TransactionStatus status->
             if (!orden.cliente.id){
                if(!orden.cliente.save()){
@@ -266,13 +283,15 @@ class OrdenController {
                 return
             }
 
-            orden.numeroOperacion = Orden.createCriteria().get {
-                eq("anulada",false)
-                projections {
+           /* def retorno = Orden.createCriteria().get() {
+                //ne("estado",EstadoDocumento.ANULADO)
+               projections {
                        max("numeroOperacion")
                 }
-            }
+            } as Integer
 
+            log.debug "Retorno de numero de operacion: "+retorno
+             */
 
             orden.razonSocial = orden.cliente.razonSocial
             orden.localidad = orden.cliente.localidad
@@ -301,8 +320,9 @@ class OrdenController {
                          //todo confirmar donde se aplica el descuento el subtotal o bruto o en el total 
                          def totalDescuento = orden.subTotal * orden.formasdePago.porcentajeDescuento/100
                          def notaDCInstance = new NotaDC(descripcion:"Descuento pago "+orden.formasdePago.descripcion+" "+orden.formasdePago.porcentajeDescuento+"%"
-                                                 ,monto: totalDescuento,tipo: TipoNotaDC.CREDITO)
-                         orden.addToNotas(notaDCInstance)
+                                                 ,monto: totalDescuento,tipo: (orden.situacionIVA==SituacionIVA.IVA?TipoOrden.NOTA_CREDITO_A:TipoOrden.NOTA_CREDITO_B))
+                        notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
+                        orden.addToNotas(notaDCInstance)
                     }
                     generarOrdenesdeCompra(orden)
                     if(!orden.save()){
@@ -372,17 +392,20 @@ class OrdenController {
         render hashJson as JSON
     }
 
-    def listcomprajson(){
+    def listjson(){
         def returnMap = [:]
         def recordList = []
         def pagingConfig = [max: params.limit as Integer ?:10, offset: params.start as Integer ?:0]
 
         def ordenes = Orden.createCriteria().list(pagingConfig){
-            
+            or{
+              eq("tipoOrden",TipoOrden.VENTA_A)
+              eq("tipoOrden",TipoOrden.VENTA_B)
+            }
         }
         ordenes.each {
-            recordList << [id: it.id,numero:it.numero,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
-                    ,anio:it.anioExposicion.anio,fechacarga:it.fechaAlta,total:0,anulada:it.anulada]
+            recordList << [id: it.id,numero:it.numero,mumeroOperacion:it.numeroOperacion,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
+                    ,anio:it.anioExposicion.anio,fechacarga:it.fechaAlta,total:it.total,estado:it.estado]
         }
         
         def totalOrdenes = Orden.createCriteria().count(){
@@ -422,10 +445,13 @@ class OrdenController {
         params.put("reportsDirPath", reportsDirPath);
         //open('ordenreservareporte?tipo=ORIGINAL&_format=PDF&_name=ordenReservaInstance&_file=OrdenReserva&id='+sel.data.ordenId
         params.put("_format","PDF")
-        params.put("_name","OrdendeCompra")
+        params.put("_name","Orden de "+ordenInstance.tipoOrden.name+" Nro "+ordenInstance.numero)
         params.put("_file","ComprobanteOrden")
         log.debug("Parametros: $params")
         chain(controller:'jasper',action:'index',model:[data:ordenList],params:params)
 
     }
+
+
+
 }

@@ -32,11 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${numeradorInstance?.tipoNumerador}">
+				<g:if test="${numeradorInstance?.tipoOrden}">
 				<li class="fieldcontain">
-					<span id="tipoNumerador-label" class="property-label"><g:message code="numerador.tipoNumerador.label" default="Tipo Numerador" /></span>
+					<span id="tipoNumerador-label" class="property-label"><g:message code="numerador.tipoOrden.label" default="Tipo Comprobante" /></span>
 					
-						<span class="property-value" aria-labelledby="tipoNumerador-label"><g:fieldValue bean="${numeradorInstance}" field="tipoNumerador"/></span>
+						<span class="property-value" aria-labelledby="tipoOrden-label"><g:fieldValue bean="${numeradorInstance}" field="tipoOrden"/></span>
 					
 				</li>
 				</g:if>

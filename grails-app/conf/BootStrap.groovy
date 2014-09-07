@@ -16,6 +16,7 @@ import com.rural.ganaderia.Destino
 import com.rural.ganaderia.FormasdePago
 import com.rural.ganaderia.Gasto
 import com.rural.ganaderia.RegimenGanancia
+import com.rural.ganaderia.enums.TipoOrden
 
 class BootStrap {
 
@@ -192,13 +193,15 @@ class BootStrap {
                 new RegimenGanancia(descripcion: "Retención Bienes Muebles",montoImponible: 12000,porcentajeRI: 2
                         ,porcentajeRNI: 10).save()
 
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA_A,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA_A,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_COMPRA_B,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.ORDEN_VENTA_B,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.NOTA_CREDITO,maximoNumero: 1).save()
-                new Numerador(tipoNumerador: TipoNumerador.OPERACION,maximoNumero: 1).save()
-                
+                new Numerador(tipoOrden: TipoOrden.COMPRA_A,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.COMPRA_B,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.VENTA_A,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.VENTA_B,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.NOTA_CREDITO_A,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.NOTA_CREDITO_B,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_A,maximoNumero: 1).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_B,maximoNumero: 1).save(failOnError: true)
+
 
                 new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
                           ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'

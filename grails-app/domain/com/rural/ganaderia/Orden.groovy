@@ -3,7 +3,7 @@ package com.rural.ganaderia
 import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.enums.TipoOrden
 import com.rural.ganaderia.localizacion.Localidad
-import com.rural.ganaderia.enums.TipoNotaDC
+import com.rural.ganaderia.enums.EstadoDocumento
 
 class Orden {
     long numero
@@ -13,6 +13,8 @@ class Orden {
     static belongsTo = [ordenVenta:Orden]
     
     Especie especie
+
+    EstadoDocumento estado = EstadoDocumento.GENERADO
 
     
     //-------------------datos el cliente que se persisten-----------
@@ -53,7 +55,7 @@ class Orden {
             totalGastos+=it.subTotal
        }
        notas.each {
-           if (it.tipo==TipoNotaDC.CREDITO)
+           if (it.tipo==TipoOrden.NOTA_CREDITO_A || it.tipo==TipoOrden.NOTA_CREDITO_B)
               totalNotas-=it.monto
            else
               totalNotas+=it.monto
@@ -79,12 +81,12 @@ class Orden {
                 gastoDeducible+=it.subTotal
             }
         }
-        base-=gastoDeducible
+        base+=gastoDeducible
     }
     
     BigDecimal getGanancias(){
         def totalGanancias = 0
-        if(tipoOrden == TipoOrden.VENTA){
+        if(tipoOrden == TipoOrden.VENTA_A || tipoOrden == TipoOrden.VENTA_B){
             def porcentaje
             RegimenGanancia regimenGanancia = RegimenGanancia.list().get(0)
             if(cliente.situacionIVA==SituacionIVA.IVA)
@@ -98,7 +100,15 @@ class Orden {
         return totalGanancias
     }
 
-    static transients = ['ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
+    BigDecimal getTotalGastos(){
+        def sumtotal = 0
+        detallegastos.each {
+            sumtotal+=it.subTotal
+        }
+        return sumtotal*(-1)
+    }
+
+    static transients = ['totalGastos','ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
 
     static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 

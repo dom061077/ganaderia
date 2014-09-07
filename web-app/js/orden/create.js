@@ -601,7 +601,7 @@ Ext.onReady(function(){
                     Ext.Msg.show({
                         title:'Error',
                         msg:msgError,
-                        buttons:Est.Msg.OK,
+                        buttons:Ext.Msg.OK,
                         icon:Ext.Msg.ERROR
                     });
                     return;
@@ -1286,8 +1286,8 @@ Ext.onReady(function(){
                   handler: function() {
                       var wizard = this.up('#wizardId');
                       if(this.up('form').getForm().isValid())
-                        //wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
-                          wizard.getLayout().setActiveItem('stepFormVencimientosId');
+                        wizard.getLayout().setActiveItem('stepFormDatosExposicionId');
+                        //  wizard.getLayout().setActiveItem('stepFormVencimientosId');
                   }
               }]
           },{
