@@ -484,7 +484,7 @@ Ext.onReady(function(){
     function loadOrden(){
         Ext.Ajax.request(
             {
-                url: getDatosClientesByIdUrl,
+                url: loadordenUrl,
                 method: 'POST',
                 async:false,
                 //params : {
@@ -503,13 +503,36 @@ Ext.onReady(function(){
                             }
                         });
                         return;
-
                     }
+                    //------datos del form del cliente de venta---
+                        storeProvincia.load();
+                        storeLocalidad.proxy.extraParams={provinciaId:(objJson.cliente.localidad!=null?objJson.cliente.localidad.provincia.id:null)};
+                        storeLocalidad.load();
+
+                        rec = new ganaderia.model.ClienteGanadero({
+                            id : objJson.cliente.id,
+                            clienteId: objJson.cliente.id,
+                            cuit : objJson.cliente.cuit,
+                            ingresosBrutos: objJson.cliente.ingresosBrutos,
+                            razonSocial: objJson.cliente.razonSocial,
+                            telefono1 : objJson.cliente.telefono1,
+                            telefono2 : objJson.cliente.telefono2,
+                            email : objJson.cliente.email,
+                            situacionIVA: objJson.cliente.situacionIVA.name,
+                            provincia: (objJson.cliente.localidad!=null? objJson.cliente.localidad.provincia.id:null),
+                            localidad :(objJson.cliente.localidad!=null? objJson.cliente.localidad.id:null),
+                            direccion : objJson.cliente.direccion
+                        });
+                        Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+
+                    ///------------------------------------------
+
+
                 }, // end-function
                 failure: function (response, options) {
                     Ext.Msg.show({
                         title:'Error',
-                        msg:'Se produjo un error de comunicación',
+                        msg:'Se produjo un error de comunicación: '+response.responseText,
                         icon:Ext.MessageBox.ERROR,
                         buttons:Ext.MessageBox.OK,
                         fn:function(btn){

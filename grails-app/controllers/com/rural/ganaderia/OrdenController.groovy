@@ -458,7 +458,8 @@ class OrdenController {
 
     }
 
-    def getordenjson(){
+    def getordenjson(long id){
+        log.debug "Parametros: $params"
         def ordenInstance = Orden.get(id)
         def errorJson=[:]
         if (!ordenInstance){

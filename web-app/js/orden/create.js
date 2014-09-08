@@ -33,7 +33,7 @@ Ext.onReady(function(){
                                     telefono1 : objJson.telefono1,
                                     telefono2 : objJson.telefono2,
                                     email : objJson.email,
-                                    situacionIVA: objJson.situacionIVA.name,
+                                    situacionIVA: objJson.cliente.situacionIVA.name,
                                     provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
                                     localidad :(objJson.localidad!=null?objJson.localidad.id:null),
                                     direccion : objJson.direccion

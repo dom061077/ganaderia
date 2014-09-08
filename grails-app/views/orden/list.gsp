@@ -13,6 +13,10 @@
         <script type="text/javascript" src="${resource(dir:'js/orden',file:'list.js')}"></script>
 	</head>
 	<body>
+        <g:if test="${flash.message}">
+            <div class="message" role="status">${flash.message}</div>
+        </g:if>
+
         <div id="gridordencompraId"> </div>
 	</body>
 </html>
