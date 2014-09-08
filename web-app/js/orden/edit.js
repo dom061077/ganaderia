@@ -526,6 +526,9 @@ Ext.onReady(function(){
                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
 
                     ///------------------------------------------
+                    //--------------------------load del segundo paso datos de exposicion-----------------
+
+                    //------------------------------------------------------
 
 
                 }, // end-function
@@ -730,6 +733,17 @@ Ext.onReady(function(){
         });
 
     }
+
+    Ext.define('ganaderia.model.DatosExposicion',{
+        extend:'Ext.data.Model',
+        fields:[
+            {name:'exposicion',type:'int'},
+            {name:'anioExposicion',type:'int'},
+            {name:'operacion',type:'int'},
+            {name:'guias'}
+        ]
+
+    });
 
     Ext.define('ganaderia.model.ClienteGanadero',{
         extend:'Ext.data.Model',
