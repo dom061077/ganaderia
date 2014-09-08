@@ -211,8 +211,8 @@
                                         <td><g:formatNumber number="${oc?.numero}" format="00000000"/> </td>
                                         <td>${oc?.cliente?.razonSocial}</td>
                                         <td> <g:formatNumber number="${oc?.total}" type="currency" locale="es_AR"/></td>
-                                        <td><g:link class="edit" action="edit" id="${ordenInstance?.id}">Editar</g:link></td>
-                                        <td><g:link class="edit" action="edit" id="${ordenInstance?.id}">Imprimir</g:link></td>
+                                        <td><g:link class="edit" action="edit" id="${oc?.id}">Editar</g:link></td>
+                                        <td><g:link class="edit" action="imprimircomprobante" id="${oc?.id}">Imprimir</g:link></td>
                                     </tr>
                                 </g:each>
                             </table>

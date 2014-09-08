@@ -187,7 +187,7 @@ class OrdenController {
                   itorden.addToDetallegastos(new GastoOrden(gasto:det.gasto,porcentaje:det.porcentaje,monto:det.monto))
            }
            ordenVenta.detallevencimientos.each{itvenc->
-               itorden.addToDetalleVencimientos(new Vencimiento(vencimiento:itvenc.vencimiento
+               itorden.addToDetallevencimientos(new Vencimiento(vencimiento:itvenc.vencimiento
                        ,cantidadDias:itvenc.cantidadDias,porcentajeBruto:itvenc.porcentajeBruto
                        ,porcentajeGastos:itvenc.porcentajeGastos,porcentajeIva: itvenc.porcentajeIva))
 
@@ -201,6 +201,7 @@ class OrdenController {
 
 
     def savejson(){
+        log.debug ("SITUACION IVA: "+params.cliente.situacionIVA)
         log.debug("Parametros: $params")
         def orden = new Orden(params)
         def errorList = []
@@ -242,17 +243,22 @@ class OrdenController {
             
         }
         def cal = Calendar.getInstance()
-        detalleVencimientosJson.each{
-            //try{
-            //    fecha = df.parse(it.vencimiento.substring(0,10))
-            //}catch(ParseException e){
-                
-            //}
-            cal.setTime(fecha)
-            cal.add(Calendar.DATE,it.dias)
-            orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
-                    , porcentajeGastos:it.gastos,porcentajeIva: it.iva
-                    , vencimiento: new java.sql.Date(cal.getTime()) ))
+        def vencimiento
+        def formadePagoInstance = FormasdePago.load(orden.formasdePago.id)
+        if (formadePagoInstance.tieneVencimientos){
+            detalleVencimientosJson.each{
+                //try{
+                //    fecha = df.parse(it.vencimiento.substring(0,10))
+                //}catch(ParseException e){
+
+                //}
+                cal.setTime(fecha)
+                cal.add(Calendar.DATE,it.dias)
+                vencimiento = new java.sql.Date(cal.getTime().getTime())
+                orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
+                        , porcentajeGastos:it.gastos,porcentajeIva: it.iva
+                        , vencimiento: vencimiento))
+            }
         }
 
         orden.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
@@ -370,6 +376,163 @@ class OrdenController {
 
         }
         render objJson as JSON
+    }
+
+
+    def updatejson(){
+        def errorList = []
+        def objJson = [:]
+        def ordenInstance = Orden.get(params.id)
+        if (!ordenInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'orden.label', default: 'Orden'), id])
+            redirect(action: "list")
+            return
+        }
+
+
+        def detalleJson = JSON.parse(params.detalleJson)
+        def detalleGastosJson = JSON.parse(params.detalleGastosJson)
+        def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
+        java.util.Date fecha
+        try{
+            fecha = df.parse(params.fechaoperacion.substring(0,9))
+        }catch(Exception e){
+            log.debug "ERROR PARSEANDO LA FECHA DE OPERACION"
+
+        }
+
+        if (!fecha){
+            objJson.idOrden = null
+            errorList << [msg: "Ingrese una Fecha de Operación Valida"]
+            objJson.errors = errorList
+            render objJson as JSON
+            return
+        }
+
+        ordenInstance.fechaOperacion = new java.sql.Date(fecha?.getTime())
+        //log.debug "FECHA DE OPERACION ASIGNADA: "+orden.fechaOperacion
+
+
+
+        def cal = Calendar.getInstance()
+        def vencimiento
+        def formadePagoInstance = FormasdePago.load(ordenInstance.formasdePago.id)
+
+
+        ordenInstance.fechaAlta = new java.sql.Date(new java.util.Date().getTime())
+        if (ordenInstance.cliente.situacionIVA == SituacionIVA.IVA)
+            ordenInstance.tipoOrden = TipoOrden.VENTA_A
+        else
+            ordenInstance.tipoOrden = TipoOrden.VENTA_B
+        Orden.withTransaction{TransactionStatus status->
+            ordenInstance.cliente.properties = params.cliente
+            ordenInstance.razonSocial = ordenInstance.cliente.razonSocial
+            ordenInstance.localidad = ordenInstance.cliente.localidad
+            ordenInstance.direccion = ordenInstance.cliente.direccion
+            ordenInstance.situacionIVA = ordenInstance.cliente.situacionIVA
+            ordenInstance.cuit = ordenInstance.cliente.cuit
+            ordenInstance.ingresosBrutos = ordenInstance.cliente.ingresosBrutos
+
+            //--------modificación de los detalles--------
+            def arrayObj = []
+            ordenInstance.detallegastos.each{
+                arrayObj.add(it.id)
+            }
+            def objDetalle
+            arrayObj.each{
+                objDetalle = GastoOrden.load(it)
+                ordenInstance.removeFromDetallegastos(objDetalle)
+                objDetalle.delete()
+            }
+            detalleGastosJson.each{
+                ordenInstance.addToDetallegastos(
+                        new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
+                )
+            }
+            arrayObj.clear()
+            arrayObj = []
+            ordenInstance.detallevencimientos.each{
+                arrayObj.add(it.id)
+            }
+            arrayObj.each {
+                objDetalle = Vencimiento.load(it)
+                ordenInstance.removeFromDetallevencimientos(objDetalle)
+                objDetalle.delete()
+            }
+            if (formadePagoInstance.tieneVencimientos){
+                
+                detalleVencimientosJson.each{
+                    //try{
+                    //    fecha = df.parse(it.vencimiento.substring(0,10))
+                    //}catch(ParseException e){
+
+                    //}
+                    cal.setTime(fecha)
+                    cal.add(Calendar.DATE,it.dias)
+                    vencimiento = new java.sql.Date(cal.getTime().getTime())
+                    ordenInstance.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
+                            , porcentajeGastos:it.gastos,porcentajeIva: it.iva
+                            , vencimiento: vencimiento))
+                }
+            }
+
+            //--------------------------------------------
+
+
+            if (!ordenInstance.validate()){
+                log.debug (ordenInstance.errors)
+                status.setRollbackOnly()
+                ordenInstance.errors.allErrors.each{
+                    it.getCodes().each{
+                        log.debug "Código error: "+it
+                    }
+                    errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
+                    objJson.idOrden = null
+                    objJson.errors = errorList
+                }
+
+            }else{
+
+                //-----------Aplicar descuentos por el tipo de pago con descuentos-----
+                if (ordenInstance.formasdePago.porcentajeDescuento>0){
+                    //todo confirmar donde se aplica el descuento el subtotal o bruto o en el total
+                    def totalDescuento = ordenInstance.subTotal * ordenInstance.formasdePago.porcentajeDescuento/100
+                    //todo agregar a NotaDC una propiedad que indique si la nota fue generada por el sistema o por un usuario
+                    //si fue generada por el sistema anularla para que generar de nuevo todo lo que sea automatico del sistema
+                    ordenInstance.notas.each{
+                        it.estado = EstadoDocumento.ANULADO
+                    }
+                    def notaDCInstance = new NotaDC(descripcion:"Descuento pago "+orden.formasdePago.descripcion+" "+ordenInstance.formasdePago.porcentajeDescuento+"%"
+                            ,monto: totalDescuento,tipo: (ordenInstance.situacionIVA==SituacionIVA.IVA?TipoOrden.NOTA_CREDITO_A:TipoOrden.NOTA_CREDITO_B))
+                    notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
+                    ordenInstance.addToNotas(notaDCInstance)
+                }
+                if(!ordenInstance.save()){
+                    status.setRollbackOnly()
+                    ordenInstance.errors.allErrors.each{
+                        it.getCodes().each{
+                            log.debug "Código error: "+it
+                        }
+                        errorList << [msg:messageSource.getMessage(it, LocaleContextHolder.locale)]
+                        objJson.idOrden = null
+                        objJson.errors = errorList
+                    }
+
+                }else{
+                    objJson.idOrden = ordenInstance.id
+                    objJson.errors = null
+
+
+                }
+            }
+
+        }
+
+
+        render objJson as JSON
+
     }
 
     def situacionIVAjson(){

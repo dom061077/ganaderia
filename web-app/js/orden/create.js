@@ -23,7 +23,8 @@ Ext.onReady(function(){
                             if (objJson.id != null) {
                                 tempCuit = objJson.cuit;
                                 storeProvincia.load();
-                                storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
+                                storeLocalidad.proxy.extraParams={provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)};
+                                storeLocalidad.load();
                                 rec = new ganaderia.model.ClienteGanadero({
                                     id : objJson.id,
                                     clienteId: objJson.id,
@@ -40,7 +41,7 @@ Ext.onReady(function(){
                                 });
                                 Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
                             }else{
-                                Ext.getCmp('clienteId').setValue('Cliente Nueva');
+                                Ext.getCmp('clienteId').setValue('Cliente Nuevo');
                             }
 
 
@@ -565,6 +566,7 @@ Ext.onReady(function(){
             params:{
                 'cliente.id' : fieldValuesFormGanadero.id,
                 'cliente.cuit' :fieldValuesFormGanadero.cuit,
+                'cliente.situacionIVA':fieldValuesFormGanadero.situacionIVA,
                 'cliente.ingresosBrutos' : fieldValuesFormGanadero.ingresosBrutos,
                 'cliente.razonSocial':fieldValuesFormGanadero.razonSocial,
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
@@ -606,6 +608,7 @@ Ext.onReady(function(){
                     });
                     return;
                 }else{
+                    /*
                     var wincomprobantes = Ext.create('Ext.window.Window',{
                         modal:true,
                         width:600,
@@ -619,25 +622,6 @@ Ext.onReady(function(){
                                 {
                                     text:'Cerrar',
                                     handler: function(){
-                                        //----limpiar datos-----
-                                        /*storeGridDetalle.removeAll();
-                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
-                                         Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
-                                         Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
-                                         var t = new Ext.ToolTip({
-                                         anchor: 'bottom',
-                                         anchorToTarget: false,
-                                         targetXY: [ Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getWidth()-200,
-                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getHeight()+200],
-                                         title: 'Mensaje',
-                                         html: 'La orden se Genero correctamente',
-                                         hideDelay: 15000,
-                                         closable: true
-                                         });
-                                         t.show();
-
-                                         window.location=comprobanteUrl+'/'+jsonObj.idOrden+'?target=_blank';
-                                         */
                                     }
                                 }
                             ]
@@ -645,7 +629,8 @@ Ext.onReady(function(){
                         ]
                     });
                     wincomprobantes.show();
-
+                    */
+                   window.location = 'show/'+jsonObj.idOrden;
                 }
 
             },
@@ -1055,6 +1040,7 @@ Ext.onReady(function(){
 
   function onAddVencimientoClick(){
       var totaliva=0,totalbruto=0,totalgastos=0;
+      var fieldValues = Ext.getCmp('formPagosVencimientosId').getForm().getFieldValues();
       storeGridVencimientos.data.each(function(row){
           totaliva+=row.data.iva;
           totalbruto+=row.data.bruto;
@@ -1666,6 +1652,7 @@ Ext.onReady(function(){
                 },{
                   text:'siguiente',
                   handler: function(){
+                      /*reactivar luego estas lineas
                       if (storeGridDetalle.count()==0){
                           Ext.Msg.show({
                               title:'Error',
@@ -1674,7 +1661,7 @@ Ext.onReady(function(){
                               icon: Ext.Msg.ERROR
                           });
                           return;
-                      }
+                      } */
                       var wizard = this.up('#wizardId');
                       wizard.getLayout().setActiveItem('stepFormGastosVentaId');
 
@@ -1844,6 +1831,7 @@ Ext.onReady(function(){
                           {
                               xtype:'form',
                               //height:300,
+                              id:'formPagosVencimientosId',
                               border:false,
                               layout:'anchor',
                               defaults:{msgTarget:'under'},

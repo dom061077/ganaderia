@@ -13,7 +13,7 @@
             var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
             var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
             var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
-            var saveOrdenUrl = '${createLink(controller:'orden',action:'savejson')}';
+            var updateOrdenUrl = '${createLink(controller:'orden',action:'updatejson')}';
             var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
             var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';

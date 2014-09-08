@@ -381,6 +381,7 @@ Ext.onReady(function(){
                             fieldLabel:'Situación I.V.A',
                             forceSelection: true,
                             name:'situacionIVA',
+                            id:'situacionIVAId',
                             allowBlank:false,
                             editable:false,
                             queryMode:'remote',
@@ -505,12 +506,24 @@ Ext.onReady(function(){
                         return;
                     }
                     //------datos del form del cliente de venta---
+
+                        storeSituacionIVA.load();
                         storeProvincia.load();
                         storeLocalidad.proxy.extraParams={provinciaId:(objJson.cliente.localidad!=null?objJson.cliente.localidad.provincia.id:null)};
                         storeLocalidad.load();
+                        storeExposicion.load();
+                        storeAnioExposicion.load();
+                        storeOperacion.load();
+                        storeDestino.load();
+                        storeEspecie.load();
+                        storeClienteDetalle.load();
+                        storeRaza.load();
+                        storeGasto.load();
+
 
                         rec = new ganaderia.model.ClienteGanadero({
                             id : objJson.cliente.id,
+                            ordenId : objJson.id,
                             clienteId: objJson.cliente.id,
                             cuit : objJson.cliente.cuit,
                             ingresosBrutos: objJson.cliente.ingresosBrutos,
@@ -527,9 +540,72 @@ Ext.onReady(function(){
 
                     ///------------------------------------------
                     //--------------------------load del segundo paso datos de exposicion-----------------
+                    storeProvinciaRemitente.load();
+                    storeLocalidadRemitente.proxy.extraParams={tipo:'carga procedencia',provinciaId:objJson.procedencia.provincia.id}
+                    storeLocalidadRemitente.load();
+                    storeFormasdePago.load();
 
+                    rec = new ganaderia.model.DatosExposicion({
+                         exposicion: objJson.exposicion.id,
+                        anioExposicion: objJson.anioExposicion.id,
+                        operacion: objJson.operacion.id,
+                        guias: objJson.guias,
+                        destino: objJson.destino.id,
+                        provincia: (objJson.procedencia!=null? objJson.procedencia.provincia.id:null),
+                        localidad :(objJson.procedencia!=null? objJson.procedencia.id:null),
+                        fechaOperacion: objJson.fechaOperacion,
+                        especie:objJson.especie.id,
+                        regiment2daVenta: objJson.cobrarIva
+                    });
+
+                    Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').loadRecord(rec);
+                    Ext.getCmp('localidadRemitenteId').setValue(objJson.procedencia.id);
                     //------------------------------------------------------
+                    //-------------load grilla de detalle de animales------------
+                    var det;
+                    for(var i=0;i<objJson.detalle.length;i++){
+                        det = objJson.detalle[i];
+                        rec = new ganaderia.model.grid.DetalleOrden({
+                            cliente: det.cliente.id,
+                            raza: det.raza.id,
+                            corral: det.datosCorral,
+                            cantidad: det.cantidad,
+                            peso: det.peso,
+                            preciounitario: det.preciounitario,
+                            subtotal:(det.cantidad>0?det.cantidad:det.peso) * det.precio
+                        });
+                        storeGridDetalle.add(rec);
+                    }
+                    for(var i = 0;i<objJson.detallegastos.length;i++){
+                        det = objJson.detallegastos[i];
+                        rec = new ganaderia.model.grid.Gastos({
+                            gasto:det.gasto.id,
+                            porcentaje:det.porcentaje,
+                            monto:det.monto,
+                            //subtotal:det.subTotal*(-1)
+                            subtotal:(det.porcentaje>0?subTotal()*det.porcentaje/100:det.monto)
+                        });
+                        storeGridGastos.add(rec);
+                    }
 
+                    for(var i = 0;i<objJson.detallevencimientos.length;i++){
+                        det = objJson.detallevencimientos[i];
+                        rec = new ganaderia.model.grid.Vencimientos({
+                            dias: det.cantidadDias,
+                            bruto: det.porcentajeBruto,
+                            gastos: det.porcentajeGastos,
+                            iva : det.porcentajeIva
+                        });
+                        storeGridVencimientos.add(rec);
+                    }
+
+                    Ext.getCmp('formadePagoId').setValue(objJson.formasdePago.id);
+                    if(objJson.formasdePago.tieneVencimientos==true)
+                        Ext.getCmp('panelPagosVencimientosId').setDisabled(false);
+                    else
+                        Ext.getCmp('panelPagosVencimientosId').setDisabled(true);
+
+                    Ext.getCmp('ordenIdId').setValue(objJson.id);
 
                 }, // end-function
                 failure: function (response, options) {
@@ -632,8 +708,9 @@ Ext.onReady(function(){
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
-            url:saveOrdenUrl,
+            url:updateOrdenUrl,
             params:{
+                'id' : fieldValuesFormGanadero.ordenId,
                 'cliente.id' : fieldValuesFormGanadero.id,
                 'cliente.cuit' :fieldValuesFormGanadero.cuit,
                 'cliente.ingresosBrutos' : fieldValuesFormGanadero.ingresosBrutos,
@@ -677,7 +754,7 @@ Ext.onReady(function(){
                     });
                     return;
                 }else{
-                    var wincomprobantes = Ext.create('Ext.window.Window',{
+                    /*var wincomprobantes = Ext.create('Ext.window.Window',{
                         modal:true,
                         width:600,
                         x:400,
@@ -690,25 +767,6 @@ Ext.onReady(function(){
                                 {
                                     text:'Cerrar',
                                     handler: function(){
-                                        //----limpiar datos-----
-                                        /*storeGridDetalle.removeAll();
-                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getForm().reset();
-                                         Ext.getCmp('wizardId').getComponent('stepFormDatosExposicionId').getForm().reset();
-                                         Ext.getCmp('wizardId').getLayout().setActiveItem('stepFormGanaderoId');
-                                         var t = new Ext.ToolTip({
-                                         anchor: 'bottom',
-                                         anchorToTarget: false,
-                                         targetXY: [ Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getWidth()-200,
-                                         Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').getHeight()+200],
-                                         title: 'Mensaje',
-                                         html: 'La orden se Genero correctamente',
-                                         hideDelay: 15000,
-                                         closable: true
-                                         });
-                                         t.show();
-
-                                         window.location=comprobanteUrl+'/'+jsonObj.idOrden+'?target=_blank';
-                                         */
                                     }
                                 }
                             ]
@@ -716,6 +774,8 @@ Ext.onReady(function(){
                         ]
                     });
                     wincomprobantes.show();
+                    */
+                    window.location = '../show/'+jsonObj.idOrden;
 
                 }
 
@@ -740,7 +800,14 @@ Ext.onReady(function(){
             {name:'exposicion',type:'int'},
             {name:'anioExposicion',type:'int'},
             {name:'operacion',type:'int'},
-            {name:'guias'}
+            {name:'guias',type:'string'},
+            {name:'destino', type:'int'},
+            {name:'provincia',type:'int'},
+            {name:'localidad',type:'int'},
+            {name:'fechaOperacion',type:'date'},
+            {name:'especie',type:'int'},
+            {name:'regimen2daVenta', type:'boolean'}
+
         ]
 
     });
@@ -1250,6 +1317,10 @@ Ext.onReady(function(){
                         name:'id',
                         xtype:'hidden'
                     },{
+                        name: 'ordenId',
+                        id:'ordenIdId',
+                        xtype:'hidden'
+                    },{
                         name:'clienteId',
                         id: 'clienteId',
                         xtype:'displayfield',
@@ -1446,7 +1517,7 @@ Ext.onReady(function(){
                         selectOnTab:true,
                         listeners:{
                             'select':function(combo,records,options){
-                                storeLocalidadRemitente.proxy.extraParams={provinciaId:records[0].data.id};
+                                storeLocalidadRemitente.proxy.extraParams={tipo:'proce del combo',provinciaId:records[0].data.id};
                                 storeLocalidadRemitente.load();
                                 Ext.getCmp('localidadRemitenteId').clearValue();
                             }
@@ -1455,6 +1526,7 @@ Ext.onReady(function(){
                         fieldLabel:'Localidad Proc./Remitente',
                         xtype:'combo',
                         id:'localidadRemitenteId',
+                        name:'localidad',
                         //allowBlank:false,
                         store:storeLocalidadRemitente,
                         forceSelection:true,
@@ -1492,8 +1564,8 @@ Ext.onReady(function(){
                                     Ext.getCmp('regimen2daVentaId').show();
                                 }else
                                     Ext.getCmp('regimen2daVentaId').hide();
-                                storeCategoria.proxy.extraParams={especieId:records[0].data.id};
-                                storeCategoria.load();
+                                //storeCategoria.proxy.extraParams={especieId:records[0].data.id};
+                               // storeCategoria.load();
 
                             }
                         }
@@ -1590,7 +1662,8 @@ Ext.onReady(function(){
                                 header: 'Subtotal',
                                 align:'right',
                                 dataIndex:'subtotal'
-                            },{
+                            }/*,
+                            {
 
                                 xtype:'actioncolumn',
                                 width:30,
@@ -1605,7 +1678,7 @@ Ext.onReady(function(){
                                         }
                                     }
                                 ]
-                            }
+                            }*/
                         ]
 
                     }
@@ -1908,6 +1981,7 @@ Ext.onReady(function(){
         ]
     });
     loadOrden();
+    Ext.getCmp('regimen2daVentaId').hide();
     //storeRaza.load();
     //Ext.getCmp('regimen2daVentaId').hide();
 

@@ -107,8 +107,16 @@ class Orden {
         }
         return sumtotal*(-1)
     }
+    int getCantidadVenc(){
+       def contador=0
+       detallevencimientos.each {
+            if(it.cantidadDias>0)
+                contador++
+       }
+       return contador
+    }
 
-    static transients = ['totalGastos','ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
+    static transients = ['cantidadVenc','totalGastos','ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
 
     static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 
