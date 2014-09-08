@@ -1,5 +1,6 @@
 
 Ext.onReady(function(){
+    /*
     Ext.apply(Ext.form.VTypes,{
         //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
 
@@ -70,6 +71,7 @@ Ext.onReady(function(){
             // return true;//true determina que la validacion pase false indica error en la validacion
         }
     });
+    */
 
     Ext.QuickTips.init();
     var tempCuit;
@@ -479,6 +481,49 @@ Ext.onReady(function(){
 
     }
 
+    function loadOrden(){
+        Ext.Ajax.request(
+            {
+                url: getDatosClientesByIdUrl,
+                method: 'POST',
+                async:false,
+                //params : {
+                //    id: idOrden
+                //},  // end-params
+
+                success: function(response, opts) {
+                    var objJson = Ext.decode(response.responseText);
+                    if (objJson.msg) {
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg:objJson.msg,
+                            icon:Ext.MessageBox.ERROR,
+                            fn:function(btn){
+                                window.location='list';
+                            }
+                        });
+                        return;
+
+                    }
+                }, // end-function
+                failure: function (response, options) {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg:'Se produjo un error de comunicación',
+                        icon:Ext.MessageBox.ERROR,
+                        buttons:Ext.MessageBox.OK,
+                        fn:function(btn){
+                            //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                            console.log("Error al traer datos del cliente ganadero");
+                        }
+                    });
+                }
+
+            } // end-ajax
+        );
+
+    }
+
     function loadCliente(idCliente){
         Ext.Ajax.request(
             {
@@ -733,7 +778,7 @@ Ext.onReady(function(){
     //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
     Ext.define('ganaderia.model.combo.RazaStore',{
         extend:'Ext.data.Store',
-        autoLoad:true,
+        //autoLoad:true,
         root:'rows',
         proxy: {
             type:'ajax',
@@ -991,22 +1036,7 @@ Ext.onReady(function(){
     var storeDestino = Ext.create('ganaderia.model.combo.Destino');
     var storeFormasdePago = Ext.create('ganaderia.model.combo.FormasdePago');
 
-    var plugin = new Ext.grid.plugin.CellEditing({
-        clicksToEdit: 1,
-        listeners:{
-            'edit':function( editor, e){
-                var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
-                var rowSel = selModel.getLastSelected();
 
-                //storeRaza.load({params:{especieId:records[0].data.id}});
-                storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
-
-                storeRaza.load();
-                e.record.commit();
-            }
-
-        }
-    });
 
 
 
@@ -1154,7 +1184,7 @@ Ext.onReady(function(){
     }
 
     Ext.widget('panel',{
-        title:'Registro de Orden de Venta',
+        title:titulo,
         itemId:'wizardId',
         id:'wizardId',
         renderTo:'formpanelId',
@@ -1193,12 +1223,7 @@ Ext.onReady(function(){
                         name:'cuit',
                         id:'cuitclienteId',
                         //vtype:'cuit',
-                        xtype:'triggerfield',
-                        triggerCls:'x-form-search-trigger',
-                        onTriggerClick: function() {
-                            buscarClienteVenta();
-                        },
-                        vtype:'numdocexists',
+                        xtype:'displayfield',
                         allowBlank:false
                     },{
                         fieldLabel:'Ingresos Brutos',
@@ -1290,7 +1315,9 @@ Ext.onReady(function(){
                         //  wizard.getLayout().setActiveItem('stepFormVencimientosId');
                     }
                 }]
-            },{
+            }
+
+            ,{
                 xtype:'form',
                 itemId:'stepFormDatosExposicionId',
                 layout:'anchor',
@@ -1467,116 +1494,6 @@ Ext.onReady(function(){
                 title:'Paso 3 - Confección del Detalle',
                 items:[
                     {
-                        xtype:'form',
-
-                        tools:[
-                            {
-                                type:'gear',
-                                tooltip:'Permite modificar datos del cliente seleccionado',
-                                handler: function(event, toolEl, panelHeader){
-                                    showEditCliente(Ext.getCmp('comboClienteDetalleId').getValue());
-                                }
-                            },{
-                                type:'plus',
-                                tooltipType:'title',
-                                tooltip:'Permite agregar un cliente',
-                                handler: function(event, toolEl, panelHeader) {
-                                    showAddCliente();
-                                }
-                            }
-                        ],
-                        defaults:{
-                            msgTarget:'under'
-                        },
-                        items:[
-                            {
-                                xtype:'combo',
-                                id:'comboClienteDetalleId',
-                                name:'clienteDetalle',
-                                fieldLabel:'Cliente',
-                                allowBlank:false,
-                                width:300,
-                                queryMode:'remote',
-                                emptyText:'',
-                                typeAhead: true,
-                                triggerAction:'all',
-                                valueField:'id',
-                                displayField:'nombre',
-                                selectOnTab:true,
-                                store:storeClienteDetalle,
-                                listeners:{
-                                    'select':function(combo,records,options){
-
-                                    }
-                                }
-                            },{
-                                xtype:'combo',
-                                name:'categoria',
-                                fieldLabel:'Categoría',
-                                allowBlank:false ,
-                                width:300,
-                                queryMode:'remote',
-                                emptyText:'',
-                                typeAhead: true,
-                                triggerAction:'all',
-                                valueField:'id',
-                                displayField:'nombre',
-                                selectOnTab: true,
-                                store: storeCategoria,
-                                listeners:{
-                                    'select':function(combo,records,options){
-                                        storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
-                                        storeRaza.load();
-                                    }
-                                }
-
-                            },{
-                                xtype:'combo',
-                                name:'raza',
-                                fieldLabel:'Raza',
-                                allowBlank:false ,
-                                width:300,
-                                queryMode:'remote',
-                                emptyText:'',
-                                typeAhead: true,
-                                forceSelection:true,
-                                triggerAction:'all',
-                                valueField:'id',
-                                displayField:'nombre',
-                                selectOnTab: true,
-                                store: storeRaza
-                            },{
-                                xtype:'textfield',
-                                fieldLabel:'Leyenda',
-                                name:'corral',
-
-                                width:300
-                            },{
-                                xtype:'numberfield',
-                                name:'cantidad',
-                                allowBlank:false,
-                                value:0,
-                                fieldLabel:'Cantidad'
-                            },{
-                                xtype:'numberfield',
-                                name:'peso',
-                                value:0,
-                                fieldLabel:'Peso'
-                            },{
-                                xtype:'numberfield',
-                                name:'preciounitario',
-                                allowBlank:false,
-                                fieldLabel:'Precio Unitario'
-                            }
-                        ],
-                        buttons:[
-                            {
-                                text:'Agregar Línea',
-                                handler: onAddClick
-                            }
-                        ]
-                    },
-                    {
                         xtype:'grid',
                         id:'griddetalleId',
                         title:'Detalle Confeccionado',
@@ -1584,7 +1501,7 @@ Ext.onReady(function(){
                         width:900,
                         selType: 'cellmodel',
                         frame:false,
-                        plugins:[plugin],
+                        //plugins:[plugin],
                         store: storeGridDetalle,
                         columns:[
                             {
@@ -1681,7 +1598,9 @@ Ext.onReady(function(){
                         }
                     }
                 ]
-            },{
+            }
+
+            ,{
                 xtype:'panel',
                 margin:'10 10 10 10',
                 itemId:'stepFormGastosVentaId',
@@ -1804,7 +1723,9 @@ Ext.onReady(function(){
                         }
                     }
                 ]
-            },{
+            }
+
+            ,{
                 xtype:'form',
                 margin:'10 10 10 10',
                 itemId:'stepFormVencimientosId',
@@ -1949,8 +1870,9 @@ Ext.onReady(function(){
             }
         ]
     });
-    storeRaza.load();
-    Ext.getCmp('regimen2daVentaId').hide();
+    loadOrden();
+    //storeRaza.load();
+    //Ext.getCmp('regimen2daVentaId').hide();
 
 
 });

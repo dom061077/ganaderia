@@ -24,6 +24,24 @@
             <fieldset style="border: solid">
                 <legend>Datos de Orden de Venta</legend>
 			<ol class="property-list orden">
+                <li class="fieldcontain">
+                    <span id="orden-numeroOperacion-label" class="property-label"><g:message code="orden.numeroOperacion.label" default="Nº de Operación" /></span>
+                    <span class="property-value" aria-labelledby="orden-numeroOperacion-label">
+                        ${ordenInstance?.numeroOperacion}
+                    </span>
+
+                </li>
+                <li class="fieldcontain">
+                    <span id="orden-fechaOperacion-label" class="property-label"><g:message code="orden.fechaOperacion.label" default="Fecha Operación" /></span>
+
+                    <%--span class="property-value" aria-labelledby="cliente-label"><g:link controller="cliente" action="show" id="${ordenInstance?.cliente?.id}">${ordenInstance?.cliente?.encodeAsHTML()}</g:link></span--%>
+                    <span class="property-value" aria-labelledby="orden-fechaOperacion-label">
+                        <g:formatDate format="dd/MM/yyyy" date="${ordenInstance?.fechaOperacion}"/>
+
+                    </span>
+
+                </li>
+
 			
 				<g:if test="${ordenInstance?.cliente}">
 				<li class="fieldcontain">
@@ -74,41 +92,78 @@
 
                 </li>
 
+
+
                 <g:if test="${ordenInstance?.detallegastos}">
+                        <li class="fieldcontain">
+                            <span id="gasto-descripcion-label" class="property-label"><g:message code="gasto.descripcion.label" default="Detalle del Gasto" /></span>
+
+                            <span class="property-value" aria-labelledby="gasto-descripcion-label">
+                            <table border="0">
+                                <tr><td>Descripcion</td><td>Monto o porcentaje</td><td>Subtotal</td></tr>
+                            <g:each in="${ordenInstance.detallegastos}" var="d">
+                                <tr>
+                                    <td>${d?.gasto?.descripcion}</td>
+                                    <g:if test="${d?.porcentaje>0}">
+                                      <td><g:formatNumber number="${d?.porcentaje}" locale="es_AR"/>%</td>
+                                    </g:if>
+                                    <g:if test="${d?.porcentaje==0}">
+                                      <td><g:formatNumber number="${d?.monto}" type="currency" locale="es_AR"/></td>
+                                    </g:if>
+
+                                    <td> <g:formatNumber number="${d.subTotal*-1}" type="currency" locale="es_AR"/></td>
+                                </tr>
+                            </g:each>
+                            </table>
+                            </span>
+                        </li>
+
+
+                </g:if>
+
+                <g:if test="${ordenInstance?.notas}">
                         <li class="fieldcontain">
                             <span id="gasto-descripcion-label" class="property-label"><g:message code="gasto.descripcion.label" default="Descripción Gasto" /></span>
 
-                            <g:each in="${ordenInstance.detallegastos}" var="d">
-                                <span class="property-value" aria-labelledby="gasto-descripcion-label">
-                                    ${d?.gasto?.descripcion}
-                                    <g:if test="${(d?.porcentaje)}">
-                                      <g:formatNumber number="${d?.porcentaje>0}" locale="es_AR"/>
-                                    </g:if>
-                                    <g:if test="${!(d?.porcentaje)}">
-                                        <g:formatNumber number="${d?.monto}" type="currency" locale="es_AR"/>
-                                    </g:if>
-
-                                    <g:formatNumber number="${d.subTotal}" type="currency" locale="es_AR"/>
-                                </span>
-
-
-                            </g:each>
-
+                            <span class="property-value" aria-labelledby="gasto-descripcion-label">
+                                <table border="0">
+                                    <tr><td>Tipo de Nota</td><td>Descripción Nota</td><td>Monto Bruto</td><td>Subtotal</td></tr>
+                                    <g:each in="${ordenInstance.notas}" var="n">
+                                        <tr>
+                                            <td>${n?.tipo.name}</td>
+                                            <td>${n?.descripcion}</td>
+                                            <td><g:formatNumber number="${n?.monto}" type="currency" locale="es_AR"/></td>
+                                            <td> <g:formatNumber number="${n?.monto}" type="currency" locale="es_AR"/></td>
+                                        </tr>
+                                    </g:each>
+                                </table>
+                            </span>
                         </li>
+
+
                 </g:if>
 
-
                 <li class="fieldcontain">
-                        <span id="orden-totalGastos-label" class="property-label"><g:message code="orden.totalGastos.label" default="Total Gastos" /></span>
+                        <span id="orden-ganancias-label" class="property-label"><g:message code="orden.ganancias.label" default="Total Ganancias" /></span>
 
                         <%--span class="property-value" aria-labelledby="cliente-label"><g:link controller="cliente" action="show" id="${ordenInstance?.cliente?.id}">${ordenInstance?.cliente?.encodeAsHTML()}</g:link></span--%>
-                        <span class="property-value" aria-labelledby="orden-totalGastos-label">
-                            <g:formatNumber number="${ordenInstance?.totalGastos}" type="currency" locale="es_AR" />
+                        <span class="property-value" aria-labelledby="orden-gananciaslabel">
+                            <g:formatNumber number="${ordenInstance?.ganancias}" type="currency" locale="es_AR" />
 
                         </span>
 
                 </li>
 
+                    <li class="fieldcontain">
+                        <span id="orden-baseImponible-label" class="property-label"><g:message code="orden.baseImponible.label" default="Base" /></span>
+
+                        <%--span class="property-value" aria-labelledby="cliente-label"><g:link controller="cliente" action="show" id="${ordenInstance?.cliente?.id}">${ordenInstance?.cliente?.encodeAsHTML()}</g:link></span--%>
+                        <span class="property-value" aria-labelledby="orden-baseImponible-label">
+                            <g:formatNumber number="${ordenInstance?.baseImponible}" type="currency" locale="es_AR" />
+
+                        </span>
+
+                    </li>
 
                 <li class="fieldcontain">
                         <span id="orden-baseImponible-label" class="property-label"><g:message code="orden.baseImponible.label" default="Base" /></span>
@@ -140,39 +195,41 @@
                             <g:formatNumber number="${ordenInstance?.total}" type="currency" locale="es_AR" />
 
                         </span>
-
                 </li>
+				</g:if>
+
+                <g:if test="${ordenInstance?.ordenescompra}">
+                    <li class="fieldcontain">
+                        <span id="ordenescompra-label" class="property-label"><g:message code="orden.ordenescompra.label" default="Ordenes de Compra Generadas" /></span>
+
+                        <span class="property-value" aria-labelledby="ordenescompra-label">
+                            <table border="0">
+                                <tr><td>Tipo de Orden</td><td>Número</td><td>Cliente</td><td>Total</td><td></td><td></td></tr>
+                                <g:each in="${ordenInstance.ordenescompra}" var="oc">
+                                    <tr>
+                                        <td>${oc?.tipoOrden.name}</td>
+                                        <td><g:formatNumber number="${oc?.numero}" format="00000000"/> </td>
+                                        <td>${oc?.cliente?.razonSocial}</td>
+                                        <td> <g:formatNumber number="${oc?.total}" type="currency" locale="es_AR"/></td>
+                                        <td><g:link class="edit" action="edit" id="${ordenInstance?.id}">Editar</g:link></td>
+                                        <td><g:link class="edit" action="edit" id="${ordenInstance?.id}">Imprimir</g:link></td>
+                                    </tr>
+                                </g:each>
+                            </table>
+                        </span>
+                    </li>
 
 
-				</g:if>
-			
-				<g:if test="${ordenInstance?.detalle}">
-				<li class="fieldcontain">
-					<span id="detalle-label" class="property-label"><g:message code="orden.detalle.label" default="Detalle" /></span>
-					
-						<g:each in="${ordenInstance.detalle}" var="d">
-						<span class="property-value" aria-labelledby="detalle-label"><g:link controller="detalleOrden" action="show" id="${d.id}">${d?.encodeAsHTML()}</g:link></span>
-						</g:each>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${ordenInstance?.fechaAlta}">
-				<li class="fieldcontain">
-					<span id="fechaAlta-label" class="property-label"><g:message code="orden.fechaAlta.label" default="Fecha Alta" /></span>
-					
-						<span class="property-value" aria-labelledby="fechaAlta-label"><g:formatDate date="${ordenInstance?.fechaAlta}" /></span>
-					
-				</li>
-				</g:if>
-			
+                </g:if>
+
+
+
 			</ol>
             </fieldset>
 			<g:form>
 				<fieldset class="buttons">
 					<g:hiddenField name="id" value="${ordenInstance?.id}" />
 					<g:link class="edit" action="edit" id="${ordenInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>
 			</g:form>
 		</div>

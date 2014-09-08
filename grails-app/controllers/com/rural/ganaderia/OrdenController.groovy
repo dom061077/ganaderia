@@ -60,7 +60,13 @@ class OrdenController {
             return
         }
 
-        [ordenInstance: ordenInstance]
+        def titulo
+        if (ordenInstance.tipoOrden==TipoOrden.COMPRA_A || ordenInstance.tipoOrden==TipoOrden.COMPRA_B)
+            titulo="Modificación de Orden de Compra"
+        else
+            titulo="Modificación de Orden de Venta"
+
+        [ordenInstance: ordenInstance,titulo: titulo]
     }
 
     def update(Long id, Long version) {
@@ -450,6 +456,19 @@ class OrdenController {
         log.debug("Parametros: $params")
         chain(controller:'jasper',action:'index',model:[data:ordenList],params:params)
 
+    }
+
+    def getordenjson(){
+        def ordenInstance = Orden.get(id)
+        def errorJson=[:]
+        if (!ordenInstance){
+            errorJson.msg = "No se encontró la orden con el Identificador $id"
+            render errorJson as JSON
+            return
+        }
+        JSON.use("deep"){
+            render ordenInstance as JSON
+        }
     }
 
 
