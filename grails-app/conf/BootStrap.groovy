@@ -47,7 +47,7 @@ class BootStrap {
 
     void datosprueba(){
             if(ApplicationHolder.application.config.dataSource.dbCreate == "create-drop"){
-                def especie = new Especie(nombre: "BOVINO",porcentajeIVA: 10.5)
+                /*def especie = new Especie(nombre: "BOVINO",porcentajeIVA: 10.5)
                 def categoria = new Categoria(nombre: "CATEGORIA 1 - BOVINO")
                 categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - BOVINO"))
                 categoria.addToRazas(new Raza(nombre: "RAZA 2- CATEGORIA 1 - BOVINO"))
@@ -193,6 +193,15 @@ class BootStrap {
                 new RegimenGanancia(descripcion: "Retención Bienes Muebles",montoImponible: 12000,porcentajeRI: 2
                         ,porcentajeRNI: 10).save()
 
+                new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
+                          ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
+                          ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
+                        ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'
+                        ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3'
+                        ,ingresosBrutos: '123456'
+                        ,situacionIVA: SituacionIVA.IVA).save(failOnError: true)
+                */
+
                 new Numerador(tipoOrden: TipoOrden.COMPRA_A,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.COMPRA_B,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.VENTA_A,maximoNumero: 1).save(failOnError: true)
@@ -201,15 +210,7 @@ class BootStrap {
                 new Numerador(tipoOrden: TipoOrden.NOTA_CREDITO_B,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_A,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_B,maximoNumero: 1).save(failOnError: true)
-
-
-                new Cliente(cuit: '23',fechaAlta: new java.sql.Date(new java.util.Date().getTime())
-                          ,razonSocial: 'PROBANDO CLIENTE',telefono1: 'telefono1',telefono2: 'telefono2',email:'correo@mail.com'
-                          ,localidad: Localidad.load(1),direccion: 'DIRECCION',nombreRepresentante: 'NOMBRE REPRESENTANTE'
-                        ,apellidoRepresentante: 'APELLIDO REPRESENTANTE',telefonoRepresentante1: 'tel.rep1'
-                        ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3'
-                        ,ingresosBrutos: '123456'
-                        ,situacionIVA: SituacionIVA.IVA).save(failOnError: true)
+                new Numerador(tipoOrden: TipoOrden.NUMERO_OPERACION).save(failOnError: true)
 
 
             }

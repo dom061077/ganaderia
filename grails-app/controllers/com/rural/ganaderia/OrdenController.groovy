@@ -305,6 +305,7 @@ class OrdenController {
             log.debug "Retorno de numero de operacion: "+retorno
              */
 
+            orden.numeroOperacion = Numerador.sigNumero(TipoOrden.NUMERO_OPERACION)
             orden.razonSocial = orden.cliente.razonSocial
             orden.localidad = orden.cliente.localidad
             orden.direccion = orden.cliente.direccion
