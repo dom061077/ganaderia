@@ -47,12 +47,34 @@
       <library name="Grails User Library (ganaderia)">
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.liquibase/liquibase-core/jars/liquibase-core-2.0.5.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.bouncycastle/bcmail-jdk14/jars/bcmail-jdk14-1.38.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.bouncycastle/bcprov-jdk14/jars/bcprov-jdk14-1.38.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.bouncycastle/bctsp-jdk14/jars/bctsp-jdk14-1.38.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/bouncycastle/bcprov-jdk14/jars/bcprov-jdk14-138.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/com.lowagie/itext/jars/itext-2.1.7.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/jakarta-regexp/jakarta-regexp/jars/jakarta-regexp-1.4.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.lucene/lucene-sandbox/jars/lucene-sandbox-4.5.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.lucene/lucene-queries/jars/lucene-queries-4.5.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.lucene/lucene-queryparser/jars/lucene-queryparser-4.5.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.lucene/lucene-analyzers-common/jars/lucene-analyzers-common-4.5.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.lucene/lucene-core/jars/lucene-core-4.5.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/com.fasterxml.jackson.core/jackson-annotations/jars/jackson-annotations-2.1.4.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/com.fasterxml.jackson.core/jackson-databind/jars/jackson-databind-2.1.4.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/com.fasterxml.jackson.core/jackson-core/jars/jackson-core-2.1.4.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.codehaus.castor/castor/jars/castor-1.2.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/jfree/jfreechart/jars/jfreechart-1.0.12.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/jfree/jcommon/jars/jcommon-1.0.15.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/commons-digester/commons-digester/jars/commons-digester-2.1.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/net.sf.jasperreports/jasperreports/jars/jasperreports-5.6.0.jar!/" />
+          <root url="jar://$USER_HOME$/.grails/ivy-cache/org.apache.poi/poi/jars/poi-3.10-FINAL.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="ganaderia-grailsPlugins" />
   </component>
 </module>
 

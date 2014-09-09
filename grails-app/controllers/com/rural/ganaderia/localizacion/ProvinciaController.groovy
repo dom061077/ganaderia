@@ -106,6 +106,10 @@ class ProvinciaController {
         def hashJson = [:]
         def listRows = []
         def provincias = Provincia.createCriteria().list{
+            if(params.query){
+                ilike("nombre",'%'+params.query+'%')
+            }
+                
             order("nombre","asc")
         }
         provincias.each{

@@ -108,6 +108,9 @@ class LocalidadController {
             provincia{
                 eq("id",provinciaId)
             }
+            if (params.query){
+                ilike("nombre",'%'+params.query+'%')
+            }
             order("nombre","asc")
         }
         localidades.each{

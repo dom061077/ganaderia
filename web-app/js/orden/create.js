@@ -944,6 +944,15 @@ Ext.onReady(function(){
           type:'memory'
       }
   });
+
+  var storeGridGastosCompra = new Ext.data.Store({
+        model: ganaderia.model.grid.Gastos,
+        proxy:{
+            type:'memory'
+        }
+    });
+
+
   var storeGridImpuestos = new Ext.data.Store({
       model: ganaderia.model.grid.Impuestos,
       proxy:{
@@ -1021,6 +1030,32 @@ Ext.onReady(function(){
           storeGridGastos.add(rec);
       }
   }
+
+    function onAddGastoCompraClick(){
+        var form = this.up('form').getForm();
+        var fieldValues = form.getFieldValues();
+        if(this.up('form').getForm().isValid()){
+            if(fieldValues.porcentaje!=0 && fieldValues.monto!=0){
+                Ext.Msg.show({
+                    title:'Error',
+                    msg:'Solo puede ser mayor a cero el porcentaje o el monto no los dos al mismo tiempo',
+                    icon:Ext.MessageBox.ERROR,
+                    buttons: Ext.MessageBox.OK,
+                    fn:function(){
+                    }
+                });
+                return;
+            }
+            var rec = new ganaderia.model.grid.Gastos({
+                gasto: fieldValues.gasto,
+                porcentaje: fieldValues.porcentaje,
+                monto: fieldValues.monto,
+                subtotal: (fieldValues.porcentaje>0?subTotal()*fieldValues.porcentaje/100:fieldValues.monto)
+            });
+            form.reset();
+            storeGridGastosCompra.add(rec);
+        }
+    }
 
   function onAddImpuestoClick(){
       if(this.up('form').getForm().isValid()){
@@ -1157,7 +1192,7 @@ Ext.onReady(function(){
               width:700,
               margin: '10 10 10 10',
               title:'Paso 1 - Registro de datos del Cliente',
-              layout:'anchor',
+              //layout:'anchor',
               defaultType: 'textfield',
               defaults:{
                     autoScroll : true,
@@ -1194,6 +1229,7 @@ Ext.onReady(function(){
                       fieldLabel:'Situación I.V.A',
                       forceSelection: true,
                       name:'situacionIVA',
+                      width:400,
                       //allowBlank:false,
                       editable:false,
                       queryMode:'remote',
@@ -1207,6 +1243,8 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Razon Social/Apellido y Nombre',
                       name:'razonSocial',
+                      style:{textTransform: 'uppercase'},
+                      width:400,
                       maxLengthText:60,
                       allowBlank:false
                   },{
@@ -1224,6 +1262,7 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Provincia',
                       xtype:'combo',
+                      width:500,
                       store:storeProvincia,
                       forceSelection : true,
                       name:'provincia',
@@ -1246,6 +1285,7 @@ Ext.onReady(function(){
                   },{
                       fieldLabel:'Localidad',
                       xtype:'combo',
+                      width:500,
                       id:'localidadId',
                       allowBlank:false,
                       store:storeLocalidad,
@@ -1262,6 +1302,7 @@ Ext.onReady(function(){
                       allowBlank:false
                   },{
                       fieldLabel:'Direccion',
+                      width:400,
                       name:'direccion',
                       maxLengthText:60,
                       allowBlank:false
@@ -1353,6 +1394,7 @@ Ext.onReady(function(){
                               store:storeDestino
                           },{
                               fieldLabel:'Provincia Proc./Remitente',
+                              width:500,
                               xtype:'combo',
                               store:storeProvinciaRemitente,
                               forceSelection : true,
@@ -1375,6 +1417,7 @@ Ext.onReady(function(){
                               }
                           },{
                               fieldLabel:'Localidad Proc./Remitente',
+                              width:500,
                               xtype:'combo',
                               id:'localidadRemitenteId',
                               //allowBlank:false,
@@ -1611,13 +1654,13 @@ Ext.onReady(function(){
                              width:80,
                              align:'right'
                          },{
-                             header: '$ x Unidad',
-                             dataIndex:'preciounitario',
-                             align:'right'
-                         },{
                              header: 'Peso',
                              width:80,
                              dataIndex:'peso'
+                         },{
+                             header: '$ x Unidad',
+                             dataIndex:'preciounitario',
+                             align:'right'
                          },{
                              header: 'Subtotal',
                              align:'right',
@@ -1672,109 +1715,227 @@ Ext.onReady(function(){
                 xtype:'panel',
                 margin:'10 10 10 10',
                 itemId:'stepFormGastosVentaId',
-                title:'Paso 4 - Gastos de Venta',
+                title:'Paso 4 - Gastos',
 
                 items:[
                     {
-                        xtype:'form',
-                        //height:300,
-                        border:false,
-                        layout:'anchor',
-                        defaults:{msgTarget:'under'},
-                        defaultType:'textfield',
+                        xtype:'panel',
+                        layout:'column',
                         items:[
-                            {
-                                xtype:'combo',
-                                name:'gasto',
-                                fieldLabel:'Gasto',
-                                allowBlank:false ,
-                                width:300,
-                                queryMode:'remote',
-                                emptyText:'',
-                                typeAhead: true,
-                                forceSelection:true,
-                                triggerAction:'all',
-                                valueField:'id',
-                                displayField:'descripcion',
-                                selectOnTab: true,
-                                store: storeGasto
 
-                            },{
-                              xtype:'numberfield',
-                              fieldLabel:'Porcentaje',
-                              value:0,
-                              name: 'porcentaje'
-                            },{
-                              xtype:'numberfield',
-                              fieldLabel:'Monto',
-                              value:0,
-                              name: 'monto'
-                            }
-                        ],
-                        buttons:[
-                            {
-                                text:'Agregar Linea',
-                                handler: onAddGastoClick
-                            }
+                                {
+                                    xtype:'form',
+                                    //height:300,
+                                    border:false,
+                                    layout:'anchor',
+                                    defaults:{msgTarget:'under'},
+                                    defaultType:'textfield',
+                                    items:[
+                                        {
+                                            xtype:'combo',
+                                            name:'gasto',
+                                            fieldLabel:'Gasto',
+                                            allowBlank:false ,
+                                            width:300,
+                                            queryMode:'remote',
+                                            emptyText:'',
+                                            typeAhead: true,
+                                            forceSelection:true,
+                                            triggerAction:'all',
+                                            valueField:'id',
+                                            displayField:'descripcion',
+                                            selectOnTab: true,
+                                            store: storeGasto
+
+                                        },{
+                                          xtype:'numberfield',
+                                          fieldLabel:'Porcentaje',
+                                          value:0,
+                                          name: 'porcentaje'
+                                        },{
+                                          xtype:'numberfield',
+                                          fieldLabel:'Monto',
+                                          value:0,
+                                          name: 'monto'
+                                        }
+                                    ],
+                                    buttons:[
+                                        {
+                                            text:'Agregar Gasto Venta',
+                                            handler: onAddGastoClick
+                                        }
+                                    ]
+                                }
+                                ,
+                                {
+                                    xtype:'form',
+                                    margin: '0 0 0 150',
+                                    border:false,
+                                    layout:'anchor',
+                                    defaults:{msgTarget:'under'},
+                                    defaultType:'textfield',
+                                    items:[
+                                        {
+                                            xtype:'combo',
+                                            name:'gasto',
+                                            fieldLabel:'Gasto',
+                                            allowBlank:false ,
+                                            width:300,
+                                            queryMode:'remote',
+                                            emptyText:'',
+                                            typeAhead: true,
+                                            forceSelection:true,
+                                            triggerAction:'all',
+                                            valueField:'id',
+                                            displayField:'descripcion',
+                                            selectOnTab: true,
+                                            store: storeGasto
+
+                                        },{
+                                            xtype:'numberfield',
+                                            fieldLabel:'Porcentaje',
+                                            value:0,
+                                            name: 'porcentaje'
+                                        },{
+                                            xtype:'numberfield',
+                                            fieldLabel:'Monto',
+                                            value:0,
+                                            name: 'monto'
+                                        }
+                                    ],
+                                    buttons:[
+                                        {
+                                            text:'Agregar Gasto Compra',
+                                            handler: onAddGastoCompraClick
+                                        }
+                                    ]
+                                }
                         ]
                     },
                     {
-                        xtype:'grid',
-                        id:'gridDetalleGastosId',
-                        title:'Detalle de Gastos Confeccionado',
-                        height:250,
-                        width:700,
-                        //selType: 'cellmodel',
-                        frame:false,
-                        store: storeGridGastos,
-                        columns:[
-                            {
-                                header: 'Descripción',
-                                dataIndex: 'gasto',
-                                width: 150,
-                                renderer: function(value) {
-                                    var rec = storeGasto.getById(value);
+                        xtype:'panel',
+                        layout:'column',
+                        items:[
+                                {
+                                    xtype:'grid',
+                                    id:'gridDetalleGastosId',
+                                    title:'Detalle de Gastos de Venta',
+                                    height:250,
+                                    width:430,
+                                    //selType: 'cellmodel',
+                                    frame:false,
+                                    store: storeGridGastos,
+                                    columns:[
+                                        {
+                                            header: 'Descripción',
+                                            dataIndex: 'gasto',
+                                            width: 150,
+                                            renderer: function(value) {
+                                                var rec = storeGasto.getById(value);
 
-                                    if (rec)
-                                    {
-                                        return rec.data.descripcion;
-                                    }
+                                                if (rec)
+                                                {
+                                                    return rec.data.descripcion;
+                                                }
 
-                                    return '';
+                                                return '';
+                                            }
+
+                                        },{
+                                            header: 'Porcentaje',
+                                            width:80,
+                                            dataIndex:'porcentaje'
+                                        },{
+                                            header: '$ Monto',
+                                            dataIndex:'monto',
+                                            width:80,
+                                            align:'right'
+                                        },{
+                                            header: 'Subtotal',
+                                            width:80,
+                                            align:'right',
+                                            dataIndex:'subtotal'
+                                        },{
+
+                                            xtype:'actioncolumn',
+                                            width:30,
+                                            sortable:false,
+                                            menuDisabled:true,
+                                            items:[
+                                                {
+                                                    icon:deleteImg,
+                                                    tooltip:'Eliminar Línea',
+                                                    handler: function(grid,rowIndex){
+                                                        Ext.getCmp('gridDetalleGastosId').getStore().removeAt(rowIndex);
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+
+                                }
+                                ,{
+                                    xtype:'grid',
+                                    margin: '0 0 0 10',
+                                    id:'gridDetalleGastosCompradorId',
+                                    title:'Detalle de Gastos de Compra',
+                                    height:250,
+                                    width:430,
+                                    //selType: 'cellmodel',
+                                    frame:false,
+                                    store: storeGridGastosCompra,
+                                    columns:[
+                                        {
+                                            header: 'Descripción',
+                                            dataIndex: 'gasto',
+                                            width: 150,
+                                            renderer: function(value) {
+                                                var rec = storeGasto.getById(value);
+
+                                                if (rec)
+                                                {
+                                                    return rec.data.descripcion;
+                                                }
+
+                                                return '';
+                                            }
+
+                                        },{
+                                            header: 'Porcentaje',
+                                            width: 80,
+                                            dataIndex:'porcentaje'
+                                        },{
+                                            header: '$ Monto',
+                                            dataIndex:'monto',
+                                            width:80,
+                                            align:'right'
+                                        },{
+                                            header: 'Subtotal',
+                                            align:'right',
+                                            width:80,
+                                            dataIndex:'subtotal'
+                                        },{
+
+                                            xtype:'actioncolumn',
+                                            width:30,
+                                            sortable:false,
+                                            menuDisabled:true,
+                                            items:[
+                                                {
+                                                    icon:deleteImg,
+                                                    tooltip:'Eliminar Línea',
+                                                    handler: function(grid,rowIndex){
+                                                        Ext.getCmp('gridDetalleGastosCompradorId').getStore().removeAt(rowIndex);
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+
                                 }
 
-                            },{
-                                header: 'Porcentaje',
-                                dataIndex:'porcentaje'
-                            },{
-                                header: '$ Monto',
-                                dataIndex:'monto',
-                                width:80,
-                                align:'right'
-                            },{
-                                header: 'Subtotal',
-                                align:'right',
-                                dataIndex:'subtotal'
-                            },{
-
-                                xtype:'actioncolumn',
-                                width:30,
-                                sortable:false,
-                                menuDisabled:true,
-                                items:[
-                                    {
-                                        icon:deleteImg,
-                                        tooltip:'Eliminar Línea',
-                                        handler: function(grid,rowIndex){
-                                            Ext.getCmp('gridDetalleGastosId').getStore().removeAt(rowIndex);
-                                        }
-                                    }
-                                ]
-                            }
                         ]
-
                     }
-
                 ],
                 buttons:[
                     {
