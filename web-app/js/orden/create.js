@@ -1959,6 +1959,7 @@ Ext.onReady(function(){
               title:'Paso 5 - Pago',
               defaults:{msgTarget:'under'},
               items:[
+
                    {
                       xtype:'combo',
                       fieldLabel:'Condición de Operación',
@@ -1990,95 +1991,200 @@ Ext.onReady(function(){
                       disabled:true,
                       items:[
                           {
-                              xtype:'form',
-                              //height:300,
-                              id:'formPagosVencimientosId',
-                              border:false,
-                              layout:'anchor',
-                              defaults:{msgTarget:'under'},
-                              defaultType:'textfield',
+                              xtype:'panel',
+                              layout:'column',
                               items:[
                                   {
-                                      xtype:'numberfield',
-                                      fieldLabel:'Cantidad días',
-                                      name: 'dias',
-                                      minValue:5
-                                  },{
-                                      xtype:'numberfield',
-                                      fieldLabel:'% Bruto',
-                                      minValue:10,
-                                      maxValue:100,
-                                      name: 'bruto'
-                                  },{
-                                     xtype:'numberfield',
-                                     fieldLabel:'% Gastos',
-                                     minValue:10,
-                                     maxValue:100,
-                                     name: 'gastos'
-                                  },{
-                                      xtype:'numberfield',
-                                      fieldLabel:'% I.V.A',
-                                      minValue:10,
-                                      maxValue:100,
-                                      name: 'iva'
-                                  }
-                              ],
-                              buttons:[
-                                  {
-                                      text:'Agregar Linea',
-                                      handler: onAddVencimientoClick
-                                  }
-                              ]
-                          },{
-                              xtype:'grid',
-                              id:'gridDetalleVencimientosId',
-                              title:'Detalle Confeccionado',
-                              height:250,
-                              width:700,
-                              //selType: 'cellmodel',
-                              frame:false,
-                              store: storeGridVencimientos,
-                              columns:[
-                                  {
-                                      header: 'Días',
-                                      dataIndex:'dias',
-                                      //xtype: 'numericfield',
-                                      width:100,
-                                      align:'right'
-                                  },{
-                                      header: '% Bruto',
-                                      align:'right',
-                                      dataIndex:'bruto'
-                                  },{
-                                      header: '% Gastos',
-                                      align:'right',
-                                      dataIndex:'gastos'
-
-                                  },{
-                                      header: '% IVA',
-                                      align:'right',
-                                      dataIndex:'iva'
-                                  },{
-
-                                      xtype:'actioncolumn',
-                                      width:30,
-                                      sortable:false,
-                                      menuDisabled:true,
+                                      xtype:'form',
+                                      //height:300,
+                                      id:'formPagosVencimientosVentaId',
+                                      border:false,
+                                      layout:'anchor',
+                                      defaults:{msgTarget:'under'},
+                                      defaultType:'textfield',
                                       items:[
                                           {
-                                              icon:deleteImg,
-                                              tooltip:'Eliminar Línea',
-                                              handler: function(grid,rowIndex){
-                                                  Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
-                                              }
+                                              xtype:'numberfield',
+                                              fieldLabel:'Cantidad días',
+                                              name: 'dias',
+                                              minValue:5
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'% Bruto',
+                                              minValue:10,
+                                              maxValue:100,
+                                              name: 'bruto'
+                                          },{
+                                             xtype:'numberfield',
+                                             fieldLabel:'% Gastos',
+                                             minValue:10,
+                                             maxValue:100,
+                                             name: 'gastos'
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'% I.V.A',
+                                              minValue:10,
+                                              maxValue:100,
+                                              name: 'iva'
+                                          }
+                                      ],
+                                      buttons:[
+                                          {
+                                              text:'Agregar Linea',
+                                              handler: onAddVencimientoClick
+                                          }
+                                      ]
+                                  }
+                                  ,{
+                                      xtype:'form',
+                                      //height:300,
+                                      id:'formPagosVencimientosCompraId',
+                                      border:false,
+                                      layout:'anchor',
+                                      defaults:{msgTarget:'under'},
+                                      defaultType:'textfield',
+                                      items:[
+                                          {
+                                              xtype:'numberfield',
+                                              fieldLabel:'Cantidad días',
+                                              name: 'dias',
+                                              minValue:5
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'% Bruto',
+                                              minValue:10,
+                                              maxValue:100,
+                                              name: 'bruto'
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'% Gastos',
+                                              minValue:10,
+                                              maxValue:100,
+                                              name: 'gastos'
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'% I.V.A',
+                                              minValue:10,
+                                              maxValue:100,
+                                              name: 'iva'
+                                          }
+                                      ],
+                                      buttons:[
+                                          {
+                                              text:'Agregar Linea',
+                                              handler: onAddVencimientoClick
                                           }
                                       ]
                                   }
                               ]
+                            }
+                              ]
+                          },{
+                              xtype:'panel',
+                              layout:'column',
+                              items:[
+//----------------
 
-                          }
 
-                      ]
+                                  {
+                                      xtype:'grid',
+                                      id:'gridDetalleVencimientosVentaId',
+                                      title:'Detalle Confeccionado',
+                                      height:250,
+                                      width:400,
+                                      //selType: 'cellmodel',
+                                      frame:false,
+                                      store: storeGridVencimientos,
+                                      columns:[
+                                          {
+                                              header: 'Días',
+                                              dataIndex:'dias',
+                                              //xtype: 'numericfield',
+                                              width:100,
+                                              align:'right'
+                                          },{
+                                              header: '% Bruto',
+                                              align:'right',
+                                              dataIndex:'bruto'
+                                          },{
+                                              header: '% Gastos',
+                                              align:'right',
+                                              dataIndex:'gastos'
+
+                                          },{
+                                              header: '% IVA',
+                                              align:'right',
+                                              dataIndex:'iva'
+                                          },{
+
+                                              xtype:'actioncolumn',
+                                              width:30,
+                                              sortable:false,
+                                              menuDisabled:true,
+                                              items:[
+                                                  {
+                                                      icon:deleteImg,
+                                                      tooltip:'Eliminar Línea',
+                                                      handler: function(grid,rowIndex){
+                                                          Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      ]
+
+                                  }
+                                  ,{
+                                      xtype:'grid',
+                                      id:'gridDetalleVencimientosCompraId',
+                                      title:'Detalle Confeccionado',
+                                      height:250,
+                                      width:400,
+                                      //selType: 'cellmodel',
+                                      frame:false,
+                                      store: storeGridVencimientos,
+                                      columns:[
+                                          {
+                                              header: 'Días',
+                                              dataIndex:'dias',
+                                              //xtype: 'numericfield',
+                                              width:100,
+                                              align:'right'
+                                          },{
+                                              header: '% Bruto',
+                                              align:'right',
+                                              dataIndex:'bruto'
+                                          },{
+                                              header: '% Gastos',
+                                              align:'right',
+                                              dataIndex:'gastos'
+
+                                          },{
+                                              header: '% IVA',
+                                              align:'right',
+                                              dataIndex:'iva'
+                                          },{
+
+                                              xtype:'actioncolumn',
+                                              width:30,
+                                              sortable:false,
+                                              menuDisabled:true,
+                                              items:[
+                                                  {
+                                                      icon:deleteImg,
+                                                      tooltip:'Eliminar Línea',
+                                                      handler: function(grid,rowIndex){
+                                                          Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
+                                                      }
+                                                  }
+                                              ]
+                                          }
+                                      ]
+
+                                  }
+
+//-------------------
+                              ]
                    }
               ],
               buttons:[
