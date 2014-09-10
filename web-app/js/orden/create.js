@@ -245,7 +245,7 @@ Ext.onReady(function(){
                             name:'situacionIVA',
                             id:'situacionIVAEditClienteId',
                             allowBlank:false,
-                            editable:false,
+                            //editable:false,
                             queryMode:'remote',
                             emptyText:'',
                             typeAhead: true,
@@ -381,7 +381,7 @@ Ext.onReady(function(){
                             forceSelection: true,
                             name:'situacionIVA',
                             allowBlank:false,
-                            editable:false,
+                            //editable:false,
                             queryMode:'remote',
                             emptyText:'',
                             typeAhead: true,
@@ -545,16 +545,21 @@ Ext.onReady(function(){
         storeGridImpuestos.data.each(function(row){
             detalleImpuestosArr.push(row.data);
         });
-        var detalleVencimientosArr = [];
-        storeGridVencimientos.data.each(function(row){
-            detalleVencimientosArr.push(row.data);
+        var detalleVencVentasArr = [];
+        storeGridVencVentas.data.each(function(row){
+            detalleVencVentasArr.push(row.data);
+        });
+        var detalleVencComprasArr = [];
+        storeGridVencCompras.data.each(function(row){
+            detalleVencComprasArr.push(row.data);
         });
 
         var detalle
         var detalleJson = Ext.encode(detalleArr);
         var detalleGastosJson = Ext.encode(detalleGastosArr);
         var detalleImpuestosJson = Ext.encode(detalleImpuestosJson);
-        var detalleVencimientosJson = Ext.encode(detalleVencimientosArr);
+        var detalleVencVentasJson = Ext.encode(detalleVencVentasArr);
+        var detalleVencComprasJson = Ext.encode(detalleVencComprasArr);
         var wizard = Ext.getCmp('wizardId');
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
@@ -588,7 +593,8 @@ Ext.onReady(function(){
                 'detalleJson': detalleJson,
                 'detalleGastosJson': detalleGastosJson,
                 'detalleImpuestosJson' : detalleImpuestosJson,
-                'detalleVencimientosJson' : detalleVencimientosJson
+                'detalleVencVentasJson' : detalleVencVentasJson,
+                'detalleVencComprasJson': detalleVencComprasJson
             },
             success: function(xhr){
                 loadMask.hide();
@@ -960,12 +966,20 @@ Ext.onReady(function(){
       }
   });
 
-  var storeGridVencimientos = new Ext.data.Store({
+  var storeGridVencVentas = new Ext.data.Store({
       model: ganaderia.model.grid.Vencimientos,
       proxy:{
           type:'memory'
       }
   });
+
+  var storeGridVencCompras = new Ext.data.Store({
+        model: ganaderia.model.grid.Vencimientos,
+        proxy:{
+            type:'memory'
+        }
+    });
+
 
 
   var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
@@ -1073,9 +1087,17 @@ Ext.onReady(function(){
       }
   }
 
-  function onAddVencimientoClick(){
+  function onAddVencimientoClick(button,opts){
       var totaliva=0,totalbruto=0,totalgastos=0;
-      var fieldValues = Ext.getCmp('formPagosVencimientosId').getForm().getFieldValues();
+      //Ext.getCmp('formPagosVencimientosVentaId').getForm().getFieldValues(),storeGridVencVentas
+      var fieldValues= button.up('form').getForm().getFieldValues();
+      var storeGridVencimientos;
+      var idform = button.up('form').getId();
+      if(idform =='formPagosVencimientosVentaId')
+        storeGridVencimientos = storeGridVencVentas;
+      else
+        storeGridVencimientos = storeGridVencCompras;
+
       storeGridVencimientos.data.each(function(row){
           totaliva+=row.data.iva;
           totalbruto+=row.data.bruto;
@@ -1130,7 +1152,8 @@ Ext.onReady(function(){
               dias: fieldValues.dias,
               bruto: fieldValues.bruto,
               gastos: fieldValues.gastos,
-              iva : fieldValues.iva
+              iva : fieldValues.iva,
+              anticipo: fieldValues.anticipo
           });
           form.reset();
           storeGridVencimientos.add(rec);
@@ -1231,7 +1254,7 @@ Ext.onReady(function(){
                       name:'situacionIVA',
                       width:400,
                       //allowBlank:false,
-                      editable:false,
+                      //editable:false,
                       queryMode:'remote',
                       emptyText:'',
                       typeAhead: true,
@@ -1334,7 +1357,7 @@ Ext.onReady(function(){
                               fieldLabel:'Exposición',
                               forceSelection:true,
                               name:'exposicion',
-                              editable:false,
+                              //editable:false,
                               width:300,
                               //allowBlank:false,
                               queryMode:'remote',
@@ -1351,7 +1374,7 @@ Ext.onReady(function(){
                               forceSelection: true,
                               name:'anioExposicion',
                               //allowBlank:false,
-                              editable:false,
+                              //editable:false,
                               queryMode:'remote',
                               emptyText:'',
                               typeAhead: true,
@@ -1366,7 +1389,7 @@ Ext.onReady(function(){
                               forceSelection:true,
                               name:'operacion',
                               //allowBlank:false,
-                              editable:false,
+                              //editable:false,
                               queryMode:'remote',
                               emtpytext:'',
                               typeAhead: true,
@@ -1384,7 +1407,7 @@ Ext.onReady(function(){
                               //allowBlank:false,
                               queryMode:'remote',
                               forceSelection:true,
-                              editable:false,
+                              //editable:false,
                               emptyText:'',
                               typeAhead:true,
                               triggerAction:'all',
@@ -1967,7 +1990,7 @@ Ext.onReady(function(){
                       name:'formadePago',
                       id:'formadePagoId',
                       allowBlank:false,
-                      editable:false,
+                      //editable:false,
                       queryMode:'remote',
                       emtpyText:'',
                       typeAhead:true,
@@ -2007,8 +2030,8 @@ Ext.onReady(function(){
                                           {
                                               xtype:'numberfield',
                                               fieldLabel:'Cantidad días',
-                                              name: 'dias',
-                                              minValue:5
+                                              name: 'dias'//,
+                                              //minValue:5
                                           },{
                                               xtype:'numberfield',
                                               fieldLabel:'% Bruto',
@@ -2027,12 +2050,18 @@ Ext.onReady(function(){
                                               minValue:10,
                                               maxValue:100,
                                               name: 'iva'
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'Anticipo',
+                                              name:'anticipo'
                                           }
                                       ],
                                       buttons:[
                                           {
                                               text:'Agregar Linea',
-                                              handler: onAddVencimientoClick
+                                              listeners:{
+                                                    'click':onAddVencimientoClick
+                                              }
                                           }
                                       ]
                                   }
@@ -2050,8 +2079,8 @@ Ext.onReady(function(){
                                           {
                                               xtype:'numberfield',
                                               fieldLabel:'Cantidad días',
-                                              name: 'dias',
-                                              minValue:5
+                                              name: 'dias'//,
+                                              //minValue:5
                                           },{
                                               xtype:'numberfield',
                                               fieldLabel:'% Bruto',
@@ -2070,12 +2099,19 @@ Ext.onReady(function(){
                                               minValue:10,
                                               maxValue:100,
                                               name: 'iva'
+                                          },{
+                                              xtype:'numberfield',
+                                              fieldLabel:'Anticipo',
+                                              name:'anticipo'
                                           }
+
                                       ],
                                       buttons:[
                                           {
                                               text:'Agregar Linea',
-                                              handler: onAddVencimientoClick
+                                              listeners:{
+                                                  'click':onAddVencimientoClick
+                                              }
                                           }
                                       ]
                                   }
@@ -2088,12 +2124,12 @@ Ext.onReady(function(){
                                   {
                                       xtype:'grid',
                                       id:'gridDetalleVencimientosVentaId',
-                                      title:'Detalle Confeccionado',
+                                      title:'Detalle Venc.Venta',
                                       height:250,
                                       width:400,
                                       //selType: 'cellmodel',
                                       frame:false,
-                                      store: storeGridVencimientos,
+                                      store: storeGridVencVentas,
                                       columns:[
                                           {
                                               header: 'Días',
@@ -2115,6 +2151,10 @@ Ext.onReady(function(){
                                               align:'right',
                                               dataIndex:'iva'
                                           },{
+                                              header: 'Anticipo',
+                                              align:'right',
+                                              dataIndex:'anticipo'
+                                          },{
 
                                               xtype:'actioncolumn',
                                               width:30,
@@ -2125,7 +2165,7 @@ Ext.onReady(function(){
                                                       icon:deleteImg,
                                                       tooltip:'Eliminar Línea',
                                                       handler: function(grid,rowIndex){
-                                                          Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
+                                                          storeGridVencVentas.removeAt(rowIndex);
                                                       }
                                                   }
                                               ]
@@ -2137,12 +2177,12 @@ Ext.onReady(function(){
                                       xtype:'grid',
                                       margin: '0 0 0 10',
                                       id:'gridDetalleVencimientosCompraId',
-                                      title:'Detalle Confeccionado',
+                                      title:'Detalle Venc.Compras',
                                       height:250,
                                       width:400,
                                       //selType: 'cellmodel',
                                       frame:false,
-                                      store: storeGridVencimientos,
+                                      store: storeGridVencCompras,
                                       columns:[
                                           {
                                               header: 'Días',
@@ -2164,7 +2204,10 @@ Ext.onReady(function(){
                                               align:'right',
                                               dataIndex:'iva'
                                           },{
-
+                                              header: 'Anticipo',
+                                              align:'right',
+                                              dataIndex:'anticipo'
+                                          },{
                                               xtype:'actioncolumn',
                                               width:30,
                                               sortable:false,
@@ -2174,7 +2217,7 @@ Ext.onReady(function(){
                                                       icon:deleteImg,
                                                       tooltip:'Eliminar Línea',
                                                       handler: function(grid,rowIndex){
-                                                          Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
+                                                          storeGridVencCompras.removeAt(rowIndex);
                                                       }
                                                   }
                                               ]

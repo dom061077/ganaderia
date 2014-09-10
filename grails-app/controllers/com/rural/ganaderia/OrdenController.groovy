@@ -132,7 +132,7 @@ class OrdenController {
         
     }
     
-    def generarOrdenesdeCompra(Orden ordenVenta){
+    def generarOrdenesdeCompra(Orden ordenVenta,def detalleVencComprasJson){
         Orden ordenCompraInstance
         def listCompras=[]
         def detalleOrdenInstance
@@ -181,15 +181,20 @@ class OrdenController {
             detalleOrdenInstance.raza = det.raza
             ordenCompraInstance.addToDetalle(detalleOrdenInstance)
         }
+        def cal = Calendar.getInstance()
+        def vencimiento
         listCompras.each{itorden->
            ordenVenta.detallegastos.each{det->
               if(det.gasto.restaBaseImponible)
                   itorden.addToDetallegastos(new GastoOrden(gasto:det.gasto,porcentaje:det.porcentaje,monto:det.monto))
            }
-           ordenVenta.detallevencimientos.each{itvenc->
-               itorden.addToDetallevencimientos(new Vencimiento(vencimiento:itvenc.vencimiento
+           detalleVencComprasJson.each{itvenc->
+               cal.setTime(ordenVenta.fechaOperacion.getTime())
+               cal.add(Calendar.DATE,itvenc.dias)
+               vencimiento = new java.sql.Date(cal.getTime().getTime())
+               itorden.addToDetallevencimientos(new Vencimiento(vencimiento:vencimiento
                        ,cantidadDias:itvenc.cantidadDias,porcentajeBruto:itvenc.porcentajeBruto
-                       ,porcentajeGastos:itvenc.porcentajeGastos,porcentajeIva: itvenc.porcentajeIva))
+                       ,porcentajeGastos:itvenc.porcentajeGastos,porcentajeIva: itvenc.porcentajeIva,anticipo:itvenc.anticipo))
 
            }
         }
@@ -210,7 +215,8 @@ class OrdenController {
 
         def detalleJson = JSON.parse(params.detalleJson)
         def detalleGastosJson = JSON.parse(params.detalleGastosJson)
-        def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
+        def detalleVencVentasJson = JSON.parse(params.detalleVencVentasJson)
+        def detalleVencComprasJson = JSON.parse(params.detalleVencComprasJson);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
         java.util.Date fecha
@@ -244,9 +250,9 @@ class OrdenController {
         }
         def cal = Calendar.getInstance()
         def vencimiento
-        def formadePagoInstance = FormasdePago.load(orden.formasdePago.id)
-        if (formadePagoInstance.tieneVencimientos){
-            detalleVencimientosJson.each{
+        def formadePagoInstance = FormasdePago.load(orden.formasdePago?.id)
+        if (formadePagoInstance?.tieneVencimientos){
+            detalleVencVentasJson.each{
                 //try{
                 //    fecha = df.parse(it.vencimiento.substring(0,10))
                 //}catch(ParseException e){
@@ -257,7 +263,7 @@ class OrdenController {
                 vencimiento = new java.sql.Date(cal.getTime().getTime())
                 orden.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
                         , porcentajeGastos:it.gastos,porcentajeIva: it.iva
-                        , vencimiento: vencimiento))
+                        , vencimiento: vencimiento,anticipo: it.anticipo))
             }
         }
 
@@ -307,12 +313,12 @@ class OrdenController {
 
             orden.numeroOperacion = Numerador.sigNumero(TipoOrden.NUMERO_OPERACION)
             orden.razonSocial = orden.cliente.razonSocial
-            orden.localidad = orden.cliente.localidad
+            orden.localidad = Localidad.load(22987)
             orden.direccion = orden.cliente.direccion
             orden.situacionIVA = orden.cliente.situacionIVA
             orden.cuit = orden.cliente.cuit
             orden.ingresosBrutos = orden.cliente.ingresosBrutos
-
+            log.debug "Localidad ingresada para la orden de venta desde params: "+params.cliente.localidad.id
 
             if (!orden.validate()){
                     log.debug (orden.errors)
@@ -337,7 +343,7 @@ class OrdenController {
                         notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
                         orden.addToNotas(notaDCInstance)
                     }
-                    generarOrdenesdeCompra(orden)
+                    generarOrdenesdeCompra(orden,detalleVencComprasJson)
                     if(!orden.save()){
                         status.setRollbackOnly()
                         orden.errors.allErrors.each{

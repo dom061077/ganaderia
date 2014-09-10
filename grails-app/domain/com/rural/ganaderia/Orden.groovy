@@ -90,9 +90,9 @@ class Orden {
             def porcentaje
             RegimenGanancia regimenGanancia = RegimenGanancia.list().get(0)
             if(cliente.situacionIVA==SituacionIVA.IVA)
-                porcentaje = regimenGanancia.porcentajeRI
+                porcentaje = regimenGanancia?.porcentajeRI
             else
-                porcentaje = regimenGanancia.porcentajeRNI
+                porcentaje = regimenGanancia?.porcentajeRNI
             // todo REVISAR EL CALCULO DE GANANCIAS
             totalGanancias = subTotal - regimenGanancia.montoImponible
             totalGanancias = totalGanancias*2/100
