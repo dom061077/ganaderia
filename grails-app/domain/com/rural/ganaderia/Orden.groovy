@@ -120,6 +120,8 @@ class Orden {
 
     static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 
+
+
     static constraints = {
         exposicion(nullable: false,blank:false)
         cliente(nullable: false,blank:false)
@@ -129,6 +131,7 @@ class Orden {
 
     static mapping = {
         cliente(cascade: 'save-update')
+        detallevencimientos sort : 'vencimiento',order: 'asc'
     }
 
 }

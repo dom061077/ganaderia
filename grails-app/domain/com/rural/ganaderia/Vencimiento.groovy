@@ -1,6 +1,7 @@
 package com.rural.ganaderia
 
 import com.rural.ganaderia.enums.SituacionIVA
+import com.rural.ganaderia.enums.TipoOrden
 
 class Vencimiento {
     java.sql.Date vencimiento
@@ -18,12 +19,19 @@ class Vencimiento {
         def totalGanancias
         //def cantPagos = orden.cantidadVenc
         //return totalGanancias/cantPagos
-        if(importe>12000){
-            if(orden.situacionIVA==SituacionIVA.IVA){
-                RegimenGanancia
-            }else{
+        RegimenGanancia regimenGananciaInstance = RegimenGanancia.getInstance()
+        if(importe>regimenGananciaInstance.montoImponible){
+
+            if(orden.situacionIVA==SituacionIVA.IVA  && orden.tipoOrden == TipoOrden.VENTA_A){
+                  totalGanancias = regimenGananciaInstance.porcentajeRI * (importe-regimenGananciaInstance.montoImponible)/100
 
             }
+            if(orden.situacionIVA!=SituacionIVA.IVA  && orden.tipoOrden == TipoOrden.VENTA_B){
+                  totalGanancias = regimenGananciaInstance.porcentajeRNI * (importe-regimenGananciaInstance.montoImponible)/100
+
+            }
+
+
         }
     }
 
