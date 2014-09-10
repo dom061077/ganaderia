@@ -200,7 +200,7 @@ class BootStrap {
                         ,telefonoRepresentante2: 'TEL.REP2',telefonoRepresentante3: 'TEL.REP3'
                         ,ingresosBrutos: '123456'
                         ,situacionIVA: SituacionIVA.IVA).save(failOnError: true)
-                */
+
 
                 new Numerador(tipoOrden: TipoOrden.COMPRA_A,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.COMPRA_B,maximoNumero: 1).save(failOnError: true)
@@ -211,7 +211,7 @@ class BootStrap {
                 new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_A,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.NOTA_DEBITO_B,maximoNumero: 1).save(failOnError: true)
                 new Numerador(tipoOrden: TipoOrden.NUMERO_OPERACION).save(failOnError: true)
-
+                */
 
             }
 

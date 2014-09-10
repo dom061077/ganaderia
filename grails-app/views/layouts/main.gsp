@@ -87,6 +87,14 @@
                                             }
                                         }
                                 },{
+                                    text:'Gastos',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'gasto',action:'list')%>'
+                                        }
+                                    }
+
+                                },{
                                         text:'Numeradores de Comprobantes',
                                         listeners:{
                                             click: function(menu,item,e,eOpts){

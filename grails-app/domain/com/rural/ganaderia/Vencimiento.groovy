@@ -1,22 +1,46 @@
 package com.rural.ganaderia
 
+import com.rural.ganaderia.enums.SituacionIVA
+
 class Vencimiento {
     java.sql.Date vencimiento
     int cantidadDias
     BigDecimal porcentajeBruto
     BigDecimal porcentajeGastos
     BigDecimal porcentajeIva
+    BigDecimal anticipo
+
 
     //BigDecimal importePagoGanacias
     Orden orden
     
     BigDecimal getImportePagoGanancias(){
-        def totalGanancias = orden.ganancias
-        def cantPagos = orden.cantidadVenc
-        return totalGanancias/cantPagos
+        def totalGanancias
+        //def cantPagos = orden.cantidadVenc
+        //return totalGanancias/cantPagos
+        if(importe>12000){
+            if(orden.situacionIVA==SituacionIVA.IVA){
+                RegimenGanancia
+            }else{
+
+            }
+        }
+    }
+
+    BigDecimal getImporte(){
+        def importeRetornado=0
+        if(porcentajeBruto>0)
+            importeRetornado+=orden.subTotal*porcentajeBruto/100
+        if(porcentajeGastos>0)
+            importeRetornado+=orden.totalGastos*porcentajeGastos/100
+        if(porcentajeIva>0)
+            importeRetornado+=orden.iva*porcentajeIva/100
+        if(anticipo>0)
+            importeRetornado+=anticipo
+        return importeRetornado
     }
     
-    static transients = ['importePagoGanancias']
+    static transients = ['importePagoGanancias','importe']
     static belongsTo = [orden:Orden]
     
     static constraints = {

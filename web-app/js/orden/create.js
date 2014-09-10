@@ -1990,7 +1990,7 @@ Ext.onReady(function(){
                       border:false,
                       disabled:true,
                       items:[
-                          {
+                            {
                               xtype:'panel',
                               layout:'column',
                               items:[
@@ -1998,6 +1998,7 @@ Ext.onReady(function(){
                                       xtype:'form',
                                       //height:300,
                                       id:'formPagosVencimientosVentaId',
+
                                       border:false,
                                       layout:'anchor',
                                       defaults:{msgTarget:'under'},
@@ -2038,6 +2039,8 @@ Ext.onReady(function(){
                                   ,{
                                       xtype:'form',
                                       //height:300,
+                                      title:'',
+                                      margin: '0 0 0 200',
                                       id:'formPagosVencimientosCompraId',
                                       border:false,
                                       layout:'anchor',
@@ -2078,14 +2081,10 @@ Ext.onReady(function(){
                                   }
                               ]
                             }
-                              ]
-                          },{
+                          ,{
                               xtype:'panel',
                               layout:'column',
                               items:[
-//----------------
-
-
                                   {
                                       xtype:'grid',
                                       id:'gridDetalleVencimientosVentaId',
@@ -2136,6 +2135,7 @@ Ext.onReady(function(){
                                   }
                                   ,{
                                       xtype:'grid',
+                                      margin: '0 0 0 10',
                                       id:'gridDetalleVencimientosCompraId',
                                       title:'Detalle Confeccionado',
                                       height:250,
@@ -2182,9 +2182,10 @@ Ext.onReady(function(){
                                       ]
 
                                   }
-
-//-------------------
                               ]
+                          }
+///--------------------------
+                            ]
                    }
               ],
               buttons:[
