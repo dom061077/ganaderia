@@ -628,6 +628,7 @@ class OrdenController {
         params.put("_format","PDF")
         params.put("_name","Orden de "+ordenInstance.tipoOrden.name+" Nro "+ordenInstance.numero)
         params.put("_file","ComprobanteOrden")
+        params.put("reportsDirPath","")
         log.debug("Parametros: $params")
         chain(controller:'jasper',action:'index',model:[data:ordenList],params:params)
 

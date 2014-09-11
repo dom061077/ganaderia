@@ -2162,11 +2162,12 @@ Ext.onReady(function(){
                                               header: 'Días',
                                               dataIndex:'dias',
                                               //xtype: 'numericfield',
-                                              width:100,
+                                              width:60,
                                               align:'right'
                                           },{
                                               header: '% Bruto',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'bruto'
                                           },{
                                               header: '% Gastos',
@@ -2176,10 +2177,12 @@ Ext.onReady(function(){
                                           },{
                                               header: '% IVA',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'iva'
                                           },{
                                               header: 'Anticipo',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'anticipo'
                                           },{
 
@@ -2215,24 +2218,28 @@ Ext.onReady(function(){
                                               header: 'Días',
                                               dataIndex:'dias',
                                               //xtype: 'numericfield',
-                                              width:100,
+                                              width:60,
                                               align:'right'
                                           },{
                                               header: '% Bruto',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'bruto'
                                           },{
                                               header: '% Gastos',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'gastos'
 
                                           },{
                                               header: '% IVA',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'iva'
                                           },{
                                               header: 'Anticipo',
                                               align:'right',
+                                              width:60,
                                               dataIndex:'anticipo'
                                           },{
                                               xtype:'actioncolumn',
