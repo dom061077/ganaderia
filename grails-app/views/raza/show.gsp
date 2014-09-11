@@ -32,11 +32,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${razaInstance?.categoria}">
+				<g:if test="${razaInstance?.especie}">
 				<li class="fieldcontain">
-					<span id="categoria-label" class="property-label"><g:message code="raza.categoria.label" default="Categoria" /></span>
+					<span id="especie-label" class="property-label"><g:message code="raza.especie.label" default="Especie" /></span>
 					
-						<span class="property-value" aria-labelledby="categoria-label"><g:link controller="categoria" action="show" id="${razaInstance?.categoria?.id}">${razaInstance?.categoria?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="especie-label"><g:link controller="especie" action="show" id="${razaInstance?.especie?.id}">${razaInstance?.especie?.encodeAsHTML()}</g:link></span>
 					
 				</li>
 				</g:if>

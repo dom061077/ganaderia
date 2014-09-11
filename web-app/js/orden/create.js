@@ -537,10 +537,15 @@ Ext.onReady(function(){
         storeGridDetalle.data.each(function(row){
              detalleArr.push(row.data);
         });
-        var detalleGastosArr = [];
+        var detalleGastosVentaArr = [];
         storeGridGastos.data.each(function(row){
-            detalleGastosArr.push(row.data);
+            detalleGastosVentaArr.push(row.data);
         });
+        var detalleGastosCompraArr = [];
+        storeGridGastosCompra.data.each(function(row){
+            detalleGastosCompraArr.push(row.data);
+        });
+
         var detalleImpuestosArr = [];
         storeGridImpuestos.data.each(function(row){
             detalleImpuestosArr.push(row.data);
@@ -556,10 +561,10 @@ Ext.onReady(function(){
 
         var detalle
         var detalleJson = Ext.encode(detalleArr);
-        var detalleGastosJson = Ext.encode(detalleGastosArr);
-        var detalleImpuestosJson = Ext.encode(detalleImpuestosJson);
         var detalleVencVentasJson = Ext.encode(detalleVencVentasArr);
         var detalleVencComprasJson = Ext.encode(detalleVencComprasArr);
+        var detalleGastosVentaJson = Ext.encode(detalleGastosVentaArr);
+        var detalleGastosCompraJson = Ext.encode(detalleGastosCompraArr);
         var wizard = Ext.getCmp('wizardId');
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
@@ -591,8 +596,8 @@ Ext.onReady(function(){
                 //'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'formasdePago.id' : fieldValuesFormDatosPagos.formadePago,
                 'detalleJson': detalleJson,
-                'detalleGastosJson': detalleGastosJson,
-                'detalleImpuestosJson' : detalleImpuestosJson,
+                'detalleGastosVenta':detalleGastosVentaJson,
+                'detalleGastosCompra':detalleGastosCompraJson,
                 'detalleVencVentasJson' : detalleVencVentasJson,
                 'detalleVencComprasJson': detalleVencComprasJson
             },
@@ -681,6 +686,7 @@ Ext.onReady(function(){
             // the 'name' below matches the tag name to read, except 'availDate'
             // which is mapped to the tag 'availability'
             {name: 'cliente', type: 'int'},
+            {name: 'categoria', type: 'int'},
             {name: 'raza', type: 'int'},
             {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
@@ -716,7 +722,8 @@ Ext.onReady(function(){
             {name:'dias',type:'int'},
             {name:'bruto',type:'float'},
             {name:'gastos',type:'float'},
-            {name:'iva',type:'float'}
+            {name:'iva',type:'float'},
+            {name:'anticipo',type:'float'}
         ]
     });
 
@@ -968,6 +975,7 @@ Ext.onReady(function(){
 
   var storeGridVencVentas = new Ext.data.Store({
       model: ganaderia.model.grid.Vencimientos,
+      sortInfo:{field:'dias',direction:'ASC'},
       proxy:{
           type:'memory'
       }
@@ -1090,9 +1098,10 @@ Ext.onReady(function(){
   function onAddVencimientoClick(button,opts){
       var totaliva=0,totalbruto=0,totalgastos=0;
       //Ext.getCmp('formPagosVencimientosVentaId').getForm().getFieldValues(),storeGridVencVentas
-      var fieldValues= button.up('form').getForm().getFieldValues();
-      var storeGridVencimientos;
       var idform = button.up('form').getId();
+      var fieldValues= Ext.getCmp(idform).getForm().getFieldValues();
+      var storeGridVencimientos;
+
       if(idform =='formPagosVencimientosVentaId')
         storeGridVencimientos = storeGridVencVentas;
       else
@@ -1145,9 +1154,9 @@ Ext.onReady(function(){
 
       }
 
-      if(this.up('form').getForm().isValid()){
-          var form = this.up('form').getForm();
-          var fieldValues = form.getFieldValues();
+      if(button.up('form').getForm().isValid()){
+          //var form = this.up('form').getForm();
+          //var fieldValues = form.getFieldValues();
           var rec = new ganaderia.model.grid.Vencimientos({
               dias: fieldValues.dias,
               bruto: fieldValues.bruto,
@@ -1155,7 +1164,7 @@ Ext.onReady(function(){
               iva : fieldValues.iva,
               anticipo: fieldValues.anticipo
           });
-          form.reset();
+          button.up('form').getForm().reset();
           storeGridVencimientos.add(rec);
       }
     }
@@ -1185,6 +1194,7 @@ Ext.onReady(function(){
 
           var rec = new ganaderia.model.grid.DetalleOrden({
              cliente: fieldValues.clienteDetalle,
+             categoria: fieldValues.categoria,
              raza: fieldValues.raza,
              corral: fieldValues.corral,
              cantidad: fieldValues.cantidad,
@@ -1482,6 +1492,8 @@ Ext.onReady(function(){
                                           Ext.getCmp('regimen2daVentaId').hide();
                                       storeCategoria.proxy.extraParams={especieId:records[0].data.id};
                                       storeCategoria.load();
+                                      storeRaza.proxy.extraParams= {especieId:records[0].data.id};
+                                      storeRaza.load();
 
                                   }
                               }
@@ -1577,8 +1589,8 @@ Ext.onReady(function(){
                               store: storeCategoria,
                               listeners:{
                                   'select':function(combo,records,options){
-                                      storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
-                                      storeRaza.load();
+                                      //storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
+                                      //storeRaza.load();
                                   }
                               }
 
@@ -1653,11 +1665,26 @@ Ext.onReady(function(){
 
                                  return '';
                              }
+                         },{
+                             header: 'Categoría',
+                             dataIndex: 'categoria',
+                             width: 100,
+                             renderer: function(value) {
+                                 var rec = storeCategoria.getById(value);
+
+                                 if (rec)
+                                 {
+                                     return rec.data.nombre;
+                                 }
+
+                                 return '';
+                             }
+
 
                          },{
                              header: 'Raza',
                              dataIndex: 'raza',
-                             width: 200,
+                             width: 150,
                              renderer: function(value) {
                                  var rec = storeRaza.getById(value);
 
@@ -1674,11 +1701,11 @@ Ext.onReady(function(){
                          },{
                              header: 'Cantidad',
                              dataIndex:'cantidad',
-                             width:80,
+                             width:60,
                              align:'right'
                          },{
                              header: 'Peso',
-                             width:80,
+                             width:60,
                              dataIndex:'peso'
                          },{
                              header: '$ x Unidad',

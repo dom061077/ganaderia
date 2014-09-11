@@ -36,7 +36,7 @@
 					
 						<td><g:link action="show" id="${gastoInstance.id}">${fieldValue(bean: gastoInstance, field: "descripcion")}</g:link></td>
 					
-						<td><g:formatBoolean boolean="${gastoInstance.restaBaseImponible}" /></td>
+						<td><g:formatBoolean boolean="${gastoInstance.restaBaseImponible}" false="No" true="Si"  /></td>
 					
 					</tr>
 				</g:each>

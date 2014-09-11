@@ -25,8 +25,8 @@
 					<tr>
 					
 						<g:sortableColumn property="nombre" title="${message(code: 'raza.nombre.label', default: 'Nombre')}" />
-					
-						<th><g:message code="raza.categoria.label" default="Categoria" /></th>
+
+                        <g:sortableColumn property="especie.nombre" title="${message(code: 'raza.especie.label', default: 'Especie')}" />
 					
 					</tr>
 				</thead>
@@ -36,7 +36,7 @@
 					
 						<td><g:link action="show" id="${razaInstance.id}">${fieldValue(bean: razaInstance, field: "nombre")}</g:link></td>
 					
-						<td>${fieldValue(bean: razaInstance, field: "categoria")}</td>
+						<td>${fieldValue(bean: razaInstance, field: "especie.nombre")}</td>
 					
 					</tr>
 				</g:each>

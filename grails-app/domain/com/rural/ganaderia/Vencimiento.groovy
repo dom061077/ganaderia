@@ -51,6 +51,11 @@ class Vencimiento {
     static transients = ['importePagoGanancias','importe']
     static belongsTo = [orden:Orden]
     
-    static constraints = {
+    static constraints = {                
+        //porcentajeBruto(nullable:true)
+        //porcentajeGastos(nullable:true)
+        //porcentajeIva(nullable: true)
+        //anticipo(nullable: true)
+        //cantidadDias(nullable:true)
     }
 }

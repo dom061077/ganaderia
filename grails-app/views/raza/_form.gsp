@@ -10,11 +10,11 @@
 	<g:textField name="nombre" required="" value="${razaInstance?.nombre}"/>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: razaInstance, field: 'categoria', 'error')} required">
-	<label for="categoria">
-		<g:message code="raza.categoria.label" default="Categoria" />
+<div class="fieldcontain ${hasErrors(bean: razaInstance, field: 'especie', 'error')} required">
+	<label for="especie">
+		<g:message code="raza.especie.label" default="Especie" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select id="categoria" name="categoria.id" from="${com.rural.ganaderia.Categoria.list()}" optionKey="id" required="" value="${razaInstance?.categoria?.id}" class="many-to-one"/>
+	<g:select id="especie" name="especie.id" from="${com.rural.ganaderia.Especie.list()}" optionKey="id" required="" optionValue="nombre" value="${razaInstance?.especie?.id}" class="many-to-one"/>
 </div>
 

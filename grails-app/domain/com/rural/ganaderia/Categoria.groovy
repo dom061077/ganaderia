@@ -5,7 +5,6 @@ class Categoria {
     String nombre
 
     static belongsTo = [especie:Especie]
-    static hasMany = [razas : Raza]
 
     static constraints = {
         nombre(nullavalue:false,blank: false, maxSize: 50)

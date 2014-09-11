@@ -101,13 +101,13 @@ class RazaController {
         }
     }
     //--------------
-    def listjson(long categoriaId){
+    def listjson(long especieId){
         def hashJson= [:]
         def listRows = []
         def razas = Raza.createCriteria().list{
-            if(categoriaId){
-                categoria{
-                    eq("id",categoriaId)
+            if(especieId){
+                especie{
+                    eq("id",especieId)
                 }
             }
             order("nombre","asc")

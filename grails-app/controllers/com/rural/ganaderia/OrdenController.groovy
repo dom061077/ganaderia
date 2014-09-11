@@ -132,7 +132,7 @@ class OrdenController {
         
     }
     
-    def generarOrdenesdeCompra(Orden ordenVenta,def detalleVencComprasJson){
+    def generarOrdenesdeCompra(Orden ordenVenta,def detalleVencComprasJson,def detalleGastosCompra){
         Orden ordenCompraInstance
         def listCompras=[]
         def detalleOrdenInstance
@@ -178,23 +178,24 @@ class OrdenController {
             detalleOrdenInstance.datosCorral = det.datosCorral
             detalleOrdenInstance.peso = det.peso
             detalleOrdenInstance.precio = det.precio
+            detalleOrdenInstance.categoria = det.categoria
             detalleOrdenInstance.raza = det.raza
             ordenCompraInstance.addToDetalle(detalleOrdenInstance)
         }
         def cal = Calendar.getInstance()
         def vencimiento
+        log.debug "************Antes de la iteracion de las ordenes de compra*************"
         listCompras.each{itorden->
-           ordenVenta.detallegastos.each{det->
-              if(det.gasto.restaBaseImponible)
-                  itorden.addToDetallegastos(new GastoOrden(gasto:det.gasto,porcentaje:det.porcentaje,monto:det.monto))
+           detalleGastosCompra.each{det->
+               itorden.addToDetallegastos(new GastoOrden(gasto:Gasto.load(det.gasto),porcentaje:det.porcentaje,monto:det.monto))
            }
            detalleVencComprasJson.each{itvenc->
-               cal.setTime(ordenVenta.fechaOperacion.getTime())
+               cal.setTime(ordenVenta.fechaOperacion)
                cal.add(Calendar.DATE,itvenc.dias)
                vencimiento = new java.sql.Date(cal.getTime().getTime())
                itorden.addToDetallevencimientos(new Vencimiento(vencimiento:vencimiento
-                       ,cantidadDias:itvenc.cantidadDias,porcentajeBruto:itvenc.porcentajeBruto
-                       ,porcentajeGastos:itvenc.porcentajeGastos,porcentajeIva: itvenc.porcentajeIva,anticipo:itvenc.anticipo))
+                       ,cantidadDias:itvenc.dias,porcentajeBruto:itvenc.bruto
+                       ,porcentajeGastos:itvenc.gastos,porcentajeIva: itvenc.iva,anticipo:itvenc.anticipo))
 
            }
         }
@@ -214,9 +215,12 @@ class OrdenController {
         
 
         def detalleJson = JSON.parse(params.detalleJson)
-        def detalleGastosJson = JSON.parse(params.detalleGastosJson)
+        def detalleGastosVenta = JSON.parse(params.detalleGastosVenta)
+        def detalleGastosCompra = JSON.parse(params.detalleGastosCompra)
+
         def detalleVencVentasJson = JSON.parse(params.detalleVencVentasJson)
         def detalleVencComprasJson = JSON.parse(params.detalleVencComprasJson);
+
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
         java.util.Date fecha
@@ -240,9 +244,10 @@ class OrdenController {
 
 
         detalleJson.each{
-            orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),raza: Raza.load(it.raza),datosCorral:it.corral,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
+            orden.addToDetalle(new DetalleOrden(cliente:Cliente.load(it.cliente),categoria:Categoria.load(it.categoria),raza: Raza.load(it.raza),datosCorral:it.corral
+                    ,precio:it.preciounitario,cantidad:it.cantidad,peso:it.peso))
         }
-        detalleGastosJson.each{
+        detalleGastosVenta.each{
             orden.addToDetallegastos(
                     new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
             )
@@ -343,7 +348,7 @@ class OrdenController {
                         notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
                         orden.addToNotas(notaDCInstance)
                     }
-                    generarOrdenesdeCompra(orden,detalleVencComprasJson)
+                    generarOrdenesdeCompra(orden,detalleVencComprasJson,detalleGastosCompra)
                     if(!orden.save()){
                         status.setRollbackOnly()
                         orden.errors.allErrors.each{

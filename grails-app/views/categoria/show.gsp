@@ -41,17 +41,6 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${categoriaInstance?.razas}">
-				<li class="fieldcontain">
-					<span id="razas-label" class="property-label"><g:message code="categoria.razas.label" default="Razas" /></span>
-					
-						<g:each in="${categoriaInstance.razas}" var="r">
-						<span class="property-value" aria-labelledby="razas-label"><g:link controller="raza" action="show" id="${r.id}">${r?.encodeAsHTML()}</g:link></span>
-						</g:each>
-					
-				</li>
-				</g:if>
-			
 			</ol>
 			<g:form>
 				<fieldset class="buttons">

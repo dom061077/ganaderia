@@ -3,12 +3,12 @@ package com.rural.ganaderia
 class Raza {
     
     String nombre
-    Categoria categoria
+    Especie especie
 
-    static belongsTo = [categoria:Categoria]
+    static belongsTo = [especie:Especie]
 
     static constraints = {
-        nombre (blank:false,nullable:false,unique:true,maxLength:50)
-        categoria(nullable: false)
+        nombre (blank:false,nullable:false,maxLength:50)
+        especie(nullable: false)
     }
 }

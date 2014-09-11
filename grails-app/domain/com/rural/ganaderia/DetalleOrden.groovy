@@ -3,6 +3,7 @@ package com.rural.ganaderia
 class DetalleOrden {
     Orden orden
     Cliente cliente
+    Categoria categoria
     Raza raza
 
     
