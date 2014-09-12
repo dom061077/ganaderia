@@ -620,7 +620,17 @@ class OrdenController {
         log.debug ordenInstance.localidad.nombre
         log.debug ordenInstance.localidad.provincia.nombre
         log.debug ordenInstance.destino.descripcion
+        ordenInstance.especie.nombre
+        ordenInstance.procedencia.nombre
 
+        ordenInstance.detalle.each {
+            it.raza.nombre
+            it.categoria.nombre
+            it.cliente.razonSocial
+        }
+        ordenInstance.detallegastos.each{
+            it.gasto.descripcion
+        }
 
         String reportsDirPath = servletContext.getRealPath("/reports/");
         params.put("reportsDirPath", reportsDirPath);
@@ -628,7 +638,7 @@ class OrdenController {
         params.put("_format","PDF")
         params.put("_name","Orden de "+ordenInstance.tipoOrden.name+" Nro "+ordenInstance.numero)
         params.put("_file","ComprobanteOrden")
-        params.put("reportsDirPath","")
+        params.put("reportsDirPath",reportsDirPath)
         log.debug("Parametros: $params")
         chain(controller:'jasper',action:'index',model:[data:ordenList],params:params)
 

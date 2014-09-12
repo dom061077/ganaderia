@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d555633-b473-41b6-af4b-6f8eb92b31b3">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="98"/>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
 	<field name="cuit" class="java.lang.String"/>
 	<field name="razonSocial" class="java.lang.String"/>
@@ -17,6 +17,11 @@
 	<field name="fechaOperacion" class="java.sql.Date"/>
 	<field name="destino.descripcion" class="java.lang.String"/>
 	<field name="detalle" class="java.util.Collection"/>
+	<field name="ingresosBrutos" class="java.lang.String"/>
+	<field name="guias" class="java.lang.String"/>
+	<field name="procedencia.nombre" class="java.lang.String"/>
+	<field name="especie.nombre" class="java.lang.String"/>
+	<field name="detallegastos" class="java.util.Collection"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -30,28 +35,28 @@
 				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9" x="12" y="116" width="129" height="20"/>
+				<reportElement uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9" x="12" y="110" width="129" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="408f5c89-b243-49e6-ad5a-acca33be5619" x="12" y="147" width="100" height="20"/>
+				<reportElement uuid="408f5c89-b243-49e6-ad5a-acca33be5619" x="12" y="135" width="100" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{localidad.nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923" x="125" y="147" width="100" height="20"/>
+				<reportElement uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923" x="125" y="135" width="100" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{localidad.provincia.nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23" x="12" y="178" width="129" height="20"/>
+				<reportElement uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23" x="12" y="159" width="129" height="20"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
@@ -70,35 +75,95 @@
 				<textFieldExpression><![CDATA[$F{formasdePago.descripcion}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="022c14e0-0ec4-4629-b3f3-3e9391f47c24" x="319" y="117" width="59" height="20"/>
+				<reportElement uuid="022c14e0-0ec4-4629-b3f3-3e9391f47c24" x="319" y="110" width="59" height="13"/>
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Operación:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="6fe93602-6b76-49e6-bd22-3f67ee01636e" x="409" y="117" width="100" height="20"/>
+				<reportElement uuid="6fe93602-6b76-49e6-bd22-3f67ee01636e" x="409" y="110" width="100" height="13"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{operacion.nombre}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="d4181247-a472-40c4-9ef3-3aec00b72fe0" x="319" y="147" width="59" height="20"/>
+				<reportElement uuid="d4181247-a472-40c4-9ef3-3aec00b72fe0" x="319" y="128" width="59" height="17"/>
 				<textElement/>
-				<text><![CDATA[destino]]></text>
+				<text><![CDATA[Guía:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="e63ae0c3-6b10-415a-952f-ae23d1e7f4e2" x="409" y="147" width="100" height="20"/>
+				<reportElement uuid="e63ae0c3-6b10-415a-952f-ae23d1e7f4e2" x="409" y="196" width="100" height="13"/>
 				<textElement>
 					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destino.descripcion}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement uuid="1dd39a5a-d96e-4fad-8669-22e2c7413dad" x="12" y="217" width="531" height="14" isRemoveLineWhenBlank="true"/>
+				<reportElement uuid="1dd39a5a-d96e-4fad-8669-22e2c7413dad" x="12" y="238" width="531" height="14" isRemoveLineWhenBlank="true"/>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detalle})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[new File("ComprobanteDetalleOrden.jasper")]]></subreportExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"ComprobanteDetalleOrden.jasper")]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement uuid="4ae43dcc-167e-46f5-9e86-812ecc581d4a" x="82" y="184" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cuit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1f683b2d-a5c4-460a-bb8e-9a245e9b87b6" x="81" y="204" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ingresosBrutos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="13d52ed2-a69e-4bbd-afd4-356f1a2fe24e" x="319" y="196" width="59" height="13"/>
+				<textElement/>
+				<text><![CDATA[Destino:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6c24191f-4a59-4a07-bd18-b74426d3da1a" x="409" y="127" width="100" height="18"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{guias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2b6052a9-7dea-4037-a76d-57776d6ae6c5" x="319" y="149" width="80" height="20"/>
+				<textElement/>
+				<text><![CDATA[Proc.Remitente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2f4a614a-30c1-43a9-9ad4-e861f55c6001" x="409" y="148" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{procedencia.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="df1bceea-4538-47e5-bcfd-84b997aa755f" x="319" y="173" width="59" height="20"/>
+				<textElement/>
+				<text><![CDATA[Especie:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d9a05bfd-177b-4de9-8bc4-72c1e5936c3c" x="409" y="173" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{especie.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f47ae197-c60b-4fa6-92c0-273f8cbbb52c" x="319" y="213" width="106" height="18"/>
+				<textElement/>
+				<text><![CDATA[Fecha de Operación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="344487b2-7e70-451a-a72b-addc9d75d53b" x="12" y="184" width="59" height="20"/>
+				<textElement/>
+				<text><![CDATA[C.U.I.T:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3ce4da0d-5c08-4a5d-9850-b3dd3fc5b23d" x="12" y="204" width="59" height="20"/>
+				<textElement/>
+				<text><![CDATA[Ing.Brutos:]]></text>
+			</staticText>
+			<subreport>
+				<reportElement uuid="960081ae-2736-47b2-b135-5c33651040cc" x="369" y="259" width="174" height="14" isRemoveLineWhenBlank="true"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detallegastos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
