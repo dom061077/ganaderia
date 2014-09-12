@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteDetalleOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d3eb95b-44ff-44fb-843e-5c202ad34753">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="datosCorral" class="java.lang.String"/>
+	<field name="raza.nombre" class="java.lang.String"/>
+	<field name="precio" class="java.math.BigDecimal"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="cliente.razonSocial" class="java.lang.String"/>
+	<field name="categoria.nombre" class="java.lang.String"/>
+	<field name="subTotal" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="13">
+			<staticText>
+				<reportElement uuid="c158b1e2-6c50-4a9c-a63e-7192573fe3d1" x="0" y="0" width="107" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d3135872-c50d-47a4-ac43-8f2856288c58" x="108" y="0" width="68" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoría]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9cb551b0-858b-4773-b97f-35f7491bc154" x="179" y="0" width="70" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Raza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="629503b5-e179-4a37-9381-d38fc3cbcf47" x="249" y="0" width="75" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leyenda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b5992d8-207c-4245-b726-284bdf71821c" x="360" y="0" width="65" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso (en Kg.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="672a23e9-4170-43b9-9fa6-36c7f4ced946" x="430" y="0" width="58" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[$ x Unid.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b2f56e72-b351-455c-a90c-61cf90a235d0" x="484" y="0" width="70" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sub.Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3125f079-94e9-4a5a-8e5b-08e282b8cfcf" x="307" y="0" width="51" height="13"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="dfab9856-221a-4fdc-b850-3ba284bce06a" x="473" y="-1" width="71" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subTotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="24a8dcd0-3efa-494f-a43d-4ba1df59e34c" x="408" y="0" width="71" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="82faca61-5755-4c2f-af94-328c18a3e1c4" x="0" y="0" width="107" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente.razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="533d43c5-a005-4368-92d8-a3c542e1ec48" x="108" y="0" width="67" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{categoria.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a3dd79fc-53a8-4130-8e26-1dba1795cabd" x="179" y="0" width="70" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{raza.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a42965e-b5b0-45f9-b603-3a617d1de6d1" x="252" y="0" width="71" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datosCorral}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="1fd596e0-aac3-4900-b0e2-45a16576d230" x="339" y="0" width="71" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fb3736d4-fefe-4c44-a412-e52f2152c17c" x="275" y="0" width="71" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="12"/>
+	</columnFooter>
+</jasperReport>
