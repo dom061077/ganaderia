@@ -13,7 +13,7 @@
             var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
             var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
             var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
-            var updateOrdenUrl = '${createLink(controller:'orden',action:'updatejson')}';
+            var saveOrdenUrl = '${createLink(controller:'orden',action:'savejson')}';
             var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
             var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
@@ -30,6 +30,9 @@
             var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
             var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
             var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
+
+
+
             var titulo = '<%out << titulo%>';
             var loadordenUrl = '<%out << createLink(controller:'orden',action:'getordenjson')+'/'+ordenInstance?.id%>';
         </script>

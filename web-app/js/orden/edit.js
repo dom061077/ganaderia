@@ -1,77 +1,6 @@
 
 Ext.onReady(function(){
-    /*
-    Ext.apply(Ext.form.VTypes,{
-        //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
 
-        numdocexistsText:'Número de documento ya existe',
-        numdocexists :		function CPcuitValido(numdoc) {
-
-            var vec= new Array(10);
-            if( tempCuit!=numdoc ){
-                Ext.Ajax.request(
-                    {
-                        url: getDatosClientesUrl,
-                        method: 'POST',
-                        async:false,
-                        params : {
-                            cuitDni: numdoc
-                        },  // end-params
-
-                        success: function(response, opts) {
-                            var objJson = Ext.decode(response.responseText);
-                            var rec;
-                            if (objJson.id != null) {
-                                tempCuit = objJson.cuit;
-                                storeProvincia.load();
-                                storeLocalidad.load({params:{provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)}});
-                                rec = new ganaderia.model.ClienteGanadero({
-                                    id : objJson.id,
-                                    clienteId: objJson.id,
-                                    cuit : objJson.cuit,
-                                    ingresosBrutos: objJson.ingresosBrutos,
-                                    razonSocial: objJson.razonSocial,
-                                    telefono1 : objJson.telefono1,
-                                    telefono2 : objJson.telefono2,
-                                    email : objJson.email,
-                                    situacionIVA: objJson.situacionIVA.name,
-                                    provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
-                                    localidad :(objJson.localidad!=null?objJson.localidad.id:null),
-                                    direccion : objJson.direccion
-                                });
-                                Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
-                            }else{
-                                Ext.getCmp('clienteId').setValue('Cliente Nueva');
-                            }
-
-
-
-                        }, // end-function
-
-                        failure: function (response, options) {
-                            Ext.Msg.show({
-                                title:'Error',
-                                msg:'Se produjo un error de comunicación',
-                                icon:Ext.MessageBox.ERROR,
-                                buttons:Ext.MessageBox.OK,
-                                fn:function(btn){
-                                    //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
-                                    console.log("Error al traer datos del cliente ganadero");
-                                }
-                            });
-                        }
-
-                    } // end-ajax
-
-                );
-            }
-
-
-            return true;
-            // return true;//true determina que la validacion pase false indica error en la validacion
-        }
-    });
-    */
 
     Ext.QuickTips.init();
     var tempCuit;
@@ -794,23 +723,6 @@ Ext.onReady(function(){
 
     }
 
-    Ext.define('ganaderia.model.DatosExposicion',{
-        extend:'Ext.data.Model',
-        fields:[
-            {name:'exposicion',type:'int'},
-            {name:'anioExposicion',type:'int'},
-            {name:'operacion',type:'int'},
-            {name:'guias',type:'string'},
-            {name:'destino', type:'int'},
-            {name:'provincia',type:'int'},
-            {name:'localidad',type:'int'},
-            {name:'fechaOperacion',type:'date'},
-            {name:'especie',type:'int'},
-            {name:'regimen2daVenta', type:'boolean'}
-
-        ]
-
-    });
 
     Ext.define('ganaderia.model.ClienteGanadero',{
         extend:'Ext.data.Model',
@@ -839,6 +751,7 @@ Ext.onReady(function(){
             // the 'name' below matches the tag name to read, except 'availDate'
             // which is mapped to the tag 'availability'
             {name: 'cliente', type: 'int'},
+            {name: 'categoria', type: 'int'},
             {name: 'raza', type: 'int'},
             {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
@@ -874,7 +787,8 @@ Ext.onReady(function(){
             {name:'dias',type:'int'},
             {name:'bruto',type:'float'},
             {name:'gastos',type:'float'},
-            {name:'iva',type:'float'}
+            {name:'iva',type:'float'},
+            {name:'anticipo',type:'float'}
         ]
     });
 
@@ -882,7 +796,7 @@ Ext.onReady(function(){
     //http://stackoverflow.com/questions/8531538/extjs4-grid-editor-remote-combobox-displayvalue
     Ext.define('ganaderia.model.combo.RazaStore',{
         extend:'Ext.data.Store',
-        //autoLoad:true,
+        autoLoad:true,
         root:'rows',
         proxy: {
             type:'ajax',
@@ -1108,6 +1022,15 @@ Ext.onReady(function(){
             type:'memory'
         }
     });
+
+    var storeGridGastosCompra = new Ext.data.Store({
+        model: ganaderia.model.grid.Gastos,
+        proxy:{
+            type:'memory'
+        }
+    });
+
+
     var storeGridImpuestos = new Ext.data.Store({
         model: ganaderia.model.grid.Impuestos,
         proxy:{
@@ -1115,12 +1038,21 @@ Ext.onReady(function(){
         }
     });
 
-    var storeGridVencimientos = new Ext.data.Store({
+    var storeGridVencVentas = new Ext.data.Store({
+        model: ganaderia.model.grid.Vencimientos,
+        sortInfo:{field:'dias',direction:'ASC'},
+        proxy:{
+            type:'memory'
+        }
+    });
+
+    var storeGridVencCompras = new Ext.data.Store({
         model: ganaderia.model.grid.Vencimientos,
         proxy:{
             type:'memory'
         }
     });
+
 
 
     var storeEspecie = Ext.create('ganaderia.model.combo.EspecieStore');
@@ -1140,7 +1072,22 @@ Ext.onReady(function(){
     var storeDestino = Ext.create('ganaderia.model.combo.Destino');
     var storeFormasdePago = Ext.create('ganaderia.model.combo.FormasdePago');
 
+    var plugin = new Ext.grid.plugin.CellEditing({
+        clicksToEdit: 1,
+        listeners:{
+            'edit':function( editor, e){
+                var selModel = Ext.getCmp('griddetalleId').getSelectionModel();
+                var rowSel = selModel.getLastSelected();
 
+                //storeRaza.load({params:{especieId:records[0].data.id}});
+                storeRaza.proxy.extraParams = {especieId:rowSel.data.especie};
+
+                storeRaza.load();
+                e.record.commit();
+            }
+
+        }
+    });
 
 
 
@@ -1171,6 +1118,32 @@ Ext.onReady(function(){
         }
     }
 
+    function onAddGastoCompraClick(){
+        var form = this.up('form').getForm();
+        var fieldValues = form.getFieldValues();
+        if(this.up('form').getForm().isValid()){
+            if(fieldValues.porcentaje!=0 && fieldValues.monto!=0){
+                Ext.Msg.show({
+                    title:'Error',
+                    msg:'Solo puede ser mayor a cero el porcentaje o el monto no los dos al mismo tiempo',
+                    icon:Ext.MessageBox.ERROR,
+                    buttons: Ext.MessageBox.OK,
+                    fn:function(){
+                    }
+                });
+                return;
+            }
+            var rec = new ganaderia.model.grid.Gastos({
+                gasto: fieldValues.gasto,
+                porcentaje: fieldValues.porcentaje,
+                monto: fieldValues.monto,
+                subtotal: (fieldValues.porcentaje>0?subTotal()*fieldValues.porcentaje/100:fieldValues.monto)
+            });
+            form.reset();
+            storeGridGastosCompra.add(rec);
+        }
+    }
+
     function onAddImpuestoClick(){
         if(this.up('form').getForm().isValid()){
             var form = this.up('form').getForm();
@@ -1187,8 +1160,18 @@ Ext.onReady(function(){
         }
     }
 
-    function onAddVencimientoClick(){
+    function onAddVencimientoClick(button,opts){
         var totaliva=0,totalbruto=0,totalgastos=0;
+        //Ext.getCmp('formPagosVencimientosVentaId').getForm().getFieldValues(),storeGridVencVentas
+        var idform = button.up('form').getId();
+        var fieldValues= Ext.getCmp(idform).getForm().getFieldValues();
+        var storeGridVencimientos;
+
+        if(idform =='formPagosVencimientosVentaId')
+            storeGridVencimientos = storeGridVencVentas;
+        else
+            storeGridVencimientos = storeGridVencCompras;
+
         storeGridVencimientos.data.each(function(row){
             totaliva+=row.data.iva;
             totalbruto+=row.data.bruto;
@@ -1236,16 +1219,17 @@ Ext.onReady(function(){
 
         }
 
-        if(this.up('form').getForm().isValid()){
-            var form = this.up('form').getForm();
-            var fieldValues = form.getFieldValues();
+        if(button.up('form').getForm().isValid()){
+            //var form = this.up('form').getForm();
+            //var fieldValues = form.getFieldValues();
             var rec = new ganaderia.model.grid.Vencimientos({
                 dias: fieldValues.dias,
                 bruto: fieldValues.bruto,
                 gastos: fieldValues.gastos,
-                iva : fieldValues.iva
+                iva : fieldValues.iva,
+                anticipo: fieldValues.anticipo
             });
-            form.reset();
+            button.up('form').getForm().reset();
             storeGridVencimientos.add(rec);
         }
     }
@@ -1275,6 +1259,7 @@ Ext.onReady(function(){
 
             var rec = new ganaderia.model.grid.DetalleOrden({
                 cliente: fieldValues.clienteDetalle,
+                categoria: fieldValues.categoria,
                 raza: fieldValues.raza,
                 corral: fieldValues.corral,
                 cantidad: fieldValues.cantidad,
@@ -1288,7 +1273,7 @@ Ext.onReady(function(){
     }
 
     Ext.widget('panel',{
-        title:titulo,
+        title:'Registro de Orden de Venta',
         itemId:'wizardId',
         id:'wizardId',
         renderTo:'formpanelId',
@@ -1305,7 +1290,7 @@ Ext.onReady(function(){
                 width:700,
                 margin: '10 10 10 10',
                 title:'Paso 1 - Registro de datos del Cliente',
-                layout:'anchor',
+                //layout:'anchor',
                 defaultType: 'textfield',
                 defaults:{
                     autoScroll : true,
@@ -1315,10 +1300,6 @@ Ext.onReady(function(){
                 items:[
                     {
                         name:'id',
-                        xtype:'hidden'
-                    },{
-                        name: 'ordenId',
-                        id:'ordenIdId',
                         xtype:'hidden'
                     },{
                         name:'clienteId',
@@ -1331,7 +1312,12 @@ Ext.onReady(function(){
                         name:'cuit',
                         id:'cuitclienteId',
                         //vtype:'cuit',
-                        xtype:'displayfield',
+                        xtype:'triggerfield',
+                        triggerCls:'x-form-search-trigger',
+                        onTriggerClick: function() {
+                            buscarClienteVenta();
+                        },
+                        vtype:'numdocexists',
                         allowBlank:false
                     },{
                         fieldLabel:'Ingresos Brutos',
@@ -1341,8 +1327,9 @@ Ext.onReady(function(){
                         fieldLabel:'Situación I.V.A',
                         forceSelection: true,
                         name:'situacionIVA',
+                        width:400,
                         //allowBlank:false,
-                        editable:false,
+                        //editable:false,
                         queryMode:'remote',
                         emptyText:'',
                         typeAhead: true,
@@ -1354,6 +1341,8 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Razon Social/Apellido y Nombre',
                         name:'razonSocial',
+                        style:{textTransform: 'uppercase'},
+                        width:400,
                         maxLengthText:60,
                         allowBlank:false
                     },{
@@ -1371,6 +1360,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Provincia',
                         xtype:'combo',
+                        width:500,
                         store:storeProvincia,
                         forceSelection : true,
                         name:'provincia',
@@ -1393,6 +1383,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Localidad',
                         xtype:'combo',
+                        width:500,
                         id:'localidadId',
                         allowBlank:false,
                         store:storeLocalidad,
@@ -1409,6 +1400,7 @@ Ext.onReady(function(){
                         allowBlank:false
                     },{
                         fieldLabel:'Direccion',
+                        width:400,
                         name:'direccion',
                         maxLengthText:60,
                         allowBlank:false
@@ -1423,9 +1415,7 @@ Ext.onReady(function(){
                         //  wizard.getLayout().setActiveItem('stepFormVencimientosId');
                     }
                 }]
-            }
-
-            ,{
+            },{
                 xtype:'form',
                 itemId:'stepFormDatosExposicionId',
                 layout:'anchor',
@@ -1442,7 +1432,7 @@ Ext.onReady(function(){
                         fieldLabel:'Exposición',
                         forceSelection:true,
                         name:'exposicion',
-                        editable:false,
+                        //editable:false,
                         width:300,
                         //allowBlank:false,
                         queryMode:'remote',
@@ -1459,7 +1449,7 @@ Ext.onReady(function(){
                         forceSelection: true,
                         name:'anioExposicion',
                         //allowBlank:false,
-                        editable:false,
+                        //editable:false,
                         queryMode:'remote',
                         emptyText:'',
                         typeAhead: true,
@@ -1474,7 +1464,7 @@ Ext.onReady(function(){
                         forceSelection:true,
                         name:'operacion',
                         //allowBlank:false,
-                        editable:false,
+                        //editable:false,
                         queryMode:'remote',
                         emtpytext:'',
                         typeAhead: true,
@@ -1492,7 +1482,7 @@ Ext.onReady(function(){
                         //allowBlank:false,
                         queryMode:'remote',
                         forceSelection:true,
-                        editable:false,
+                        //editable:false,
                         emptyText:'',
                         typeAhead:true,
                         triggerAction:'all',
@@ -1502,6 +1492,7 @@ Ext.onReady(function(){
                         store:storeDestino
                     },{
                         fieldLabel:'Provincia Proc./Remitente',
+                        width:500,
                         xtype:'combo',
                         store:storeProvinciaRemitente,
                         forceSelection : true,
@@ -1517,16 +1508,16 @@ Ext.onReady(function(){
                         selectOnTab:true,
                         listeners:{
                             'select':function(combo,records,options){
-                                storeLocalidadRemitente.proxy.extraParams={tipo:'proce del combo',provinciaId:records[0].data.id};
+                                storeLocalidadRemitente.proxy.extraParams={provinciaId:records[0].data.id};
                                 storeLocalidadRemitente.load();
                                 Ext.getCmp('localidadRemitenteId').clearValue();
                             }
                         }
                     },{
                         fieldLabel:'Localidad Proc./Remitente',
+                        width:500,
                         xtype:'combo',
                         id:'localidadRemitenteId',
-                        name:'localidad',
                         //allowBlank:false,
                         store:storeLocalidadRemitente,
                         forceSelection:true,
@@ -1564,8 +1555,10 @@ Ext.onReady(function(){
                                     Ext.getCmp('regimen2daVentaId').show();
                                 }else
                                     Ext.getCmp('regimen2daVentaId').hide();
-                                //storeCategoria.proxy.extraParams={especieId:records[0].data.id};
-                               // storeCategoria.load();
+                                storeCategoria.proxy.extraParams={especieId:records[0].data.id};
+                                storeCategoria.load();
+                                storeRaza.proxy.extraParams= {especieId:records[0].data.id};
+                                storeRaza.load();
 
                             }
                         }
@@ -1603,6 +1596,116 @@ Ext.onReady(function(){
                 title:'Paso 3 - Confección del Detalle',
                 items:[
                     {
+                        xtype:'form',
+
+                        tools:[
+                            {
+                                type:'gear',
+                                tooltip:'Permite modificar datos del cliente seleccionado',
+                                handler: function(event, toolEl, panelHeader){
+                                    showEditCliente(Ext.getCmp('comboClienteDetalleId').getValue());
+                                }
+                            },{
+                                type:'plus',
+                                tooltipType:'title',
+                                tooltip:'Permite agregar un cliente',
+                                handler: function(event, toolEl, panelHeader) {
+                                    showAddCliente();
+                                }
+                            }
+                        ],
+                        defaults:{
+                            msgTarget:'under'
+                        },
+                        items:[
+                            {
+                                xtype:'combo',
+                                id:'comboClienteDetalleId',
+                                name:'clienteDetalle',
+                                fieldLabel:'Cliente',
+                                allowBlank:false,
+                                width:300,
+                                queryMode:'remote',
+                                emptyText:'',
+                                typeAhead: true,
+                                triggerAction:'all',
+                                valueField:'id',
+                                displayField:'nombre',
+                                selectOnTab:true,
+                                store:storeClienteDetalle,
+                                listeners:{
+                                    'select':function(combo,records,options){
+
+                                    }
+                                }
+                            },{
+                                xtype:'combo',
+                                name:'categoria',
+                                fieldLabel:'Categoría',
+                                allowBlank:false ,
+                                width:300,
+                                queryMode:'remote',
+                                emptyText:'',
+                                typeAhead: true,
+                                triggerAction:'all',
+                                valueField:'id',
+                                displayField:'nombre',
+                                selectOnTab: true,
+                                store: storeCategoria,
+                                listeners:{
+                                    'select':function(combo,records,options){
+                                        //storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
+                                        //storeRaza.load();
+                                    }
+                                }
+
+                            },{
+                                xtype:'combo',
+                                name:'raza',
+                                fieldLabel:'Raza',
+                                allowBlank:false ,
+                                width:300,
+                                queryMode:'remote',
+                                emptyText:'',
+                                typeAhead: true,
+                                forceSelection:true,
+                                triggerAction:'all',
+                                valueField:'id',
+                                displayField:'nombre',
+                                selectOnTab: true,
+                                store: storeRaza
+                            },{
+                                xtype:'textfield',
+                                fieldLabel:'Leyenda',
+                                name:'corral',
+
+                                width:300
+                            },{
+                                xtype:'numberfield',
+                                name:'cantidad',
+                                allowBlank:false,
+                                value:0,
+                                fieldLabel:'Cantidad'
+                            },{
+                                xtype:'numberfield',
+                                name:'peso',
+                                value:0,
+                                fieldLabel:'Peso'
+                            },{
+                                xtype:'numberfield',
+                                name:'preciounitario',
+                                allowBlank:false,
+                                fieldLabel:'Precio Unitario'
+                            }
+                        ],
+                        buttons:[
+                            {
+                                text:'Agregar Línea',
+                                handler: onAddClick
+                            }
+                        ]
+                    },
+                    {
                         xtype:'grid',
                         id:'griddetalleId',
                         title:'Detalle Confeccionado',
@@ -1610,7 +1713,7 @@ Ext.onReady(function(){
                         width:900,
                         selType: 'cellmodel',
                         frame:false,
-                        //plugins:[plugin],
+                        plugins:[plugin],
                         store: storeGridDetalle,
                         columns:[
                             {
@@ -1627,11 +1730,26 @@ Ext.onReady(function(){
 
                                     return '';
                                 }
+                            },{
+                                header: 'Categoría',
+                                dataIndex: 'categoria',
+                                width: 100,
+                                renderer: function(value) {
+                                    var rec = storeCategoria.getById(value);
+
+                                    if (rec)
+                                    {
+                                        return rec.data.nombre;
+                                    }
+
+                                    return '';
+                                }
+
 
                             },{
                                 header: 'Raza',
                                 dataIndex: 'raza',
-                                width: 200,
+                                width: 150,
                                 renderer: function(value) {
                                     var rec = storeRaza.getById(value);
 
@@ -1648,22 +1766,21 @@ Ext.onReady(function(){
                             },{
                                 header: 'Cantidad',
                                 dataIndex:'cantidad',
-                                width:80,
+                                width:60,
                                 align:'right'
+                            },{
+                                header: 'Peso',
+                                width:60,
+                                dataIndex:'peso'
                             },{
                                 header: '$ x Unidad',
                                 dataIndex:'preciounitario',
                                 align:'right'
                             },{
-                                header: 'Peso',
-                                width:80,
-                                dataIndex:'peso'
-                            },{
                                 header: 'Subtotal',
                                 align:'right',
                                 dataIndex:'subtotal'
-                            }/*,
-                            {
+                            },{
 
                                 xtype:'actioncolumn',
                                 width:30,
@@ -1678,7 +1795,7 @@ Ext.onReady(function(){
                                         }
                                     }
                                 ]
-                            }*/
+                            }
                         ]
 
                     }
@@ -1693,130 +1810,247 @@ Ext.onReady(function(){
                     },{
                         text:'siguiente',
                         handler: function(){
-                            if (storeGridDetalle.count()==0){
-                                Ext.Msg.show({
-                                    title:'Error',
-                                    msg:'Agregue al menos una línea de detalle',
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.ERROR
-                                });
-                                return;
-                            }
+                            /*reactivar luego estas lineas
+                             if (storeGridDetalle.count()==0){
+                             Ext.Msg.show({
+                             title:'Error',
+                             msg:'Agregue al menos una línea de detalle',
+                             buttons: Ext.Msg.OK,
+                             icon: Ext.Msg.ERROR
+                             });
+                             return;
+                             } */
                             var wizard = this.up('#wizardId');
                             wizard.getLayout().setActiveItem('stepFormGastosVentaId');
 
                         }
                     }
                 ]
-            }
-
-            ,{
+            },{
                 xtype:'panel',
                 margin:'10 10 10 10',
                 itemId:'stepFormGastosVentaId',
-                title:'Paso 4 - Gastos de Venta',
+                title:'Paso 4 - Gastos',
 
                 items:[
                     {
-                        xtype:'form',
-                        //height:300,
-                        border:false,
-                        layout:'anchor',
-                        defaults:{msgTarget:'under'},
-                        defaultType:'textfield',
+                        xtype:'panel',
+                        layout:'column',
                         items:[
+
                             {
-                                xtype:'combo',
-                                name:'gasto',
-                                fieldLabel:'Gasto',
-                                allowBlank:false ,
-                                width:300,
-                                queryMode:'remote',
-                                emptyText:'',
-                                typeAhead: true,
-                                forceSelection:true,
-                                triggerAction:'all',
-                                valueField:'id',
-                                displayField:'descripcion',
-                                selectOnTab: true,
-                                store: storeGasto
-
-                            },{
-                                xtype:'numberfield',
-                                fieldLabel:'Porcentaje',
-                                value:0,
-                                name: 'porcentaje'
-                            },{
-                                xtype:'numberfield',
-                                fieldLabel:'Monto',
-                                value:0,
-                                name: 'monto'
-                            }
-                        ],
-                        buttons:[
-                            {
-                                text:'Agregar Linea',
-                                handler: onAddGastoClick
-                            }
-                        ]
-                    },
-                    {
-                        xtype:'grid',
-                        id:'gridDetalleGastosId',
-                        title:'Detalle de Gastos Confeccionado',
-                        height:250,
-                        width:700,
-                        //selType: 'cellmodel',
-                        frame:false,
-                        store: storeGridGastos,
-                        columns:[
-                            {
-                                header: 'Descripción',
-                                dataIndex: 'gasto',
-                                width: 150,
-                                renderer: function(value) {
-                                    var rec = storeGasto.getById(value);
-
-                                    if (rec)
-                                    {
-                                        return rec.data.descripcion;
-                                    }
-
-                                    return '';
-                                }
-
-                            },{
-                                header: 'Porcentaje',
-                                dataIndex:'porcentaje'
-                            },{
-                                header: '$ Monto',
-                                dataIndex:'monto',
-                                width:80,
-                                align:'right'
-                            },{
-                                header: 'Subtotal',
-                                align:'right',
-                                dataIndex:'subtotal'
-                            },{
-
-                                xtype:'actioncolumn',
-                                width:30,
-                                sortable:false,
-                                menuDisabled:true,
+                                xtype:'form',
+                                //height:300,
+                                border:false,
+                                layout:'anchor',
+                                defaults:{msgTarget:'under'},
+                                defaultType:'textfield',
                                 items:[
                                     {
-                                        icon:deleteImg,
-                                        tooltip:'Eliminar Línea',
-                                        handler: function(grid,rowIndex){
-                                            Ext.getCmp('gridDetalleGastosId').getStore().removeAt(rowIndex);
-                                        }
+                                        xtype:'combo',
+                                        name:'gasto',
+                                        fieldLabel:'Gasto',
+                                        allowBlank:false ,
+                                        width:300,
+                                        queryMode:'remote',
+                                        emptyText:'',
+                                        typeAhead: true,
+                                        forceSelection:true,
+                                        triggerAction:'all',
+                                        valueField:'id',
+                                        displayField:'descripcion',
+                                        selectOnTab: true,
+                                        store: storeGasto
+
+                                    },{
+                                        xtype:'numberfield',
+                                        fieldLabel:'Porcentaje',
+                                        value:0,
+                                        name: 'porcentaje'
+                                    },{
+                                        xtype:'numberfield',
+                                        fieldLabel:'Monto',
+                                        value:0,
+                                        name: 'monto'
+                                    }
+                                ],
+                                buttons:[
+                                    {
+                                        text:'Agregar Gasto Venta',
+                                        handler: onAddGastoClick
+                                    }
+                                ]
+                            }
+                            ,
+                            {
+                                xtype:'form',
+                                margin: '0 0 0 150',
+                                border:false,
+                                layout:'anchor',
+                                defaults:{msgTarget:'under'},
+                                defaultType:'textfield',
+                                items:[
+                                    {
+                                        xtype:'combo',
+                                        name:'gasto',
+                                        fieldLabel:'Gasto',
+                                        allowBlank:false ,
+                                        width:300,
+                                        queryMode:'remote',
+                                        emptyText:'',
+                                        typeAhead: true,
+                                        forceSelection:true,
+                                        triggerAction:'all',
+                                        valueField:'id',
+                                        displayField:'descripcion',
+                                        selectOnTab: true,
+                                        store: storeGasto
+
+                                    },{
+                                        xtype:'numberfield',
+                                        fieldLabel:'Porcentaje',
+                                        value:0,
+                                        name: 'porcentaje'
+                                    },{
+                                        xtype:'numberfield',
+                                        fieldLabel:'Monto',
+                                        value:0,
+                                        name: 'monto'
+                                    }
+                                ],
+                                buttons:[
+                                    {
+                                        text:'Agregar Gasto Compra',
+                                        handler: onAddGastoCompraClick
                                     }
                                 ]
                             }
                         ]
+                    },
+                    {
+                        xtype:'panel',
+                        layout:'column',
+                        items:[
+                            {
+                                xtype:'grid',
+                                id:'gridDetalleGastosId',
+                                title:'Detalle de Gastos de Venta',
+                                height:250,
+                                width:430,
+                                //selType: 'cellmodel',
+                                frame:false,
+                                store: storeGridGastos,
+                                columns:[
+                                    {
+                                        header: 'Descripción',
+                                        dataIndex: 'gasto',
+                                        width: 150,
+                                        renderer: function(value) {
+                                            var rec = storeGasto.getById(value);
 
+                                            if (rec)
+                                            {
+                                                return rec.data.descripcion;
+                                            }
+
+                                            return '';
+                                        }
+
+                                    },{
+                                        header: 'Porcentaje',
+                                        width:80,
+                                        dataIndex:'porcentaje'
+                                    },{
+                                        header: '$ Monto',
+                                        dataIndex:'monto',
+                                        width:80,
+                                        align:'right'
+                                    },{
+                                        header: 'Subtotal',
+                                        width:80,
+                                        align:'right',
+                                        dataIndex:'subtotal'
+                                    },{
+
+                                        xtype:'actioncolumn',
+                                        width:30,
+                                        sortable:false,
+                                        menuDisabled:true,
+                                        items:[
+                                            {
+                                                icon:deleteImg,
+                                                tooltip:'Eliminar Línea',
+                                                handler: function(grid,rowIndex){
+                                                    Ext.getCmp('gridDetalleGastosId').getStore().removeAt(rowIndex);
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+
+                            }
+                            ,{
+                                xtype:'grid',
+                                margin: '0 0 0 10',
+                                id:'gridDetalleGastosCompradorId',
+                                title:'Detalle de Gastos de Compra',
+                                height:250,
+                                width:430,
+                                //selType: 'cellmodel',
+                                frame:false,
+                                store: storeGridGastosCompra,
+                                columns:[
+                                    {
+                                        header: 'Descripción',
+                                        dataIndex: 'gasto',
+                                        width: 150,
+                                        renderer: function(value) {
+                                            var rec = storeGasto.getById(value);
+
+                                            if (rec)
+                                            {
+                                                return rec.data.descripcion;
+                                            }
+
+                                            return '';
+                                        }
+
+                                    },{
+                                        header: 'Porcentaje',
+                                        width: 80,
+                                        dataIndex:'porcentaje'
+                                    },{
+                                        header: '$ Monto',
+                                        dataIndex:'monto',
+                                        width:80,
+                                        align:'right'
+                                    },{
+                                        header: 'Subtotal',
+                                        align:'right',
+                                        width:80,
+                                        dataIndex:'subtotal'
+                                    },{
+
+                                        xtype:'actioncolumn',
+                                        width:30,
+                                        sortable:false,
+                                        menuDisabled:true,
+                                        items:[
+                                            {
+                                                icon:deleteImg,
+                                                tooltip:'Eliminar Línea',
+                                                handler: function(grid,rowIndex){
+                                                    Ext.getCmp('gridDetalleGastosCompradorId').getStore().removeAt(rowIndex);
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+
+                            }
+
+                        ]
                     }
-
                 ],
                 buttons:[
                     {
@@ -1833,15 +2067,14 @@ Ext.onReady(function(){
                         }
                     }
                 ]
-            }
-
-            ,{
+            },{
                 xtype:'form',
                 margin:'10 10 10 10',
                 itemId:'stepFormVencimientosId',
                 title:'Paso 5 - Pago',
                 defaults:{msgTarget:'under'},
                 items:[
+
                     {
                         xtype:'combo',
                         fieldLabel:'Condición de Operación',
@@ -1849,7 +2082,7 @@ Ext.onReady(function(){
                         name:'formadePago',
                         id:'formadePagoId',
                         allowBlank:false,
-                        editable:false,
+                        //editable:false,
                         queryMode:'remote',
                         emtpyText:'',
                         typeAhead:true,
@@ -1873,93 +2106,227 @@ Ext.onReady(function(){
                         disabled:true,
                         items:[
                             {
-                                xtype:'form',
-                                //height:300,
-                                border:false,
-                                layout:'anchor',
-                                defaults:{msgTarget:'under'},
-                                defaultType:'textfield',
+                                xtype:'panel',
+                                layout:'column',
                                 items:[
                                     {
-                                        xtype:'numberfield',
-                                        fieldLabel:'Cantidad días',
-                                        name: 'dias',
-                                        minValue:5
-                                    },{
-                                        xtype:'numberfield',
-                                        fieldLabel:'% Bruto',
-                                        minValue:10,
-                                        maxValue:100,
-                                        name: 'bruto'
-                                    },{
-                                        xtype:'numberfield',
-                                        fieldLabel:'% Gastos',
-                                        minValue:10,
-                                        maxValue:100,
-                                        name: 'gastos'
-                                    },{
-                                        xtype:'numberfield',
-                                        fieldLabel:'% I.V.A',
-                                        minValue:10,
-                                        maxValue:100,
-                                        name: 'iva'
-                                    }
-                                ],
-                                buttons:[
-                                    {
-                                        text:'Agregar Linea',
-                                        handler: onAddVencimientoClick
-                                    }
-                                ]
-                            },{
-                                xtype:'grid',
-                                id:'gridDetalleVencimientosId',
-                                title:'Detalle Confeccionado',
-                                height:250,
-                                width:700,
-                                //selType: 'cellmodel',
-                                frame:false,
-                                store: storeGridVencimientos,
-                                columns:[
-                                    {
-                                        header: 'Días',
-                                        dataIndex:'dias',
-                                        //xtype: 'numericfield',
-                                        width:100,
-                                        align:'right'
-                                    },{
-                                        header: '% Bruto',
-                                        align:'right',
-                                        dataIndex:'bruto'
-                                    },{
-                                        header: '% Gastos',
-                                        align:'right',
-                                        dataIndex:'gastos'
+                                        xtype:'form',
+                                        //height:300,
+                                        id:'formPagosVencimientosVentaId',
 
-                                    },{
-                                        header: '% IVA',
-                                        align:'right',
-                                        dataIndex:'iva'
-                                    },{
-
-                                        xtype:'actioncolumn',
-                                        width:30,
-                                        sortable:false,
-                                        menuDisabled:true,
+                                        border:false,
+                                        layout:'anchor',
+                                        defaults:{msgTarget:'under'},
+                                        defaultType:'textfield',
                                         items:[
                                             {
-                                                icon:deleteImg,
-                                                tooltip:'Eliminar Línea',
-                                                handler: function(grid,rowIndex){
-                                                    Ext.getCmp('gridDetalleVencimientosId').getStore().removeAt(rowIndex);
+                                                xtype:'numberfield',
+                                                fieldLabel:'Cantidad días',
+                                                name: 'dias'//,
+                                                //minValue:5
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% Bruto',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'bruto'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% Gastos',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'gastos'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% I.V.A',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'iva'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'Anticipo',
+                                                name:'anticipo'
+                                            }
+                                        ],
+                                        buttons:[
+                                            {
+                                                text:'Agregar Linea',
+                                                listeners:{
+                                                    'click':onAddVencimientoClick
+                                                }
+                                            }
+                                        ]
+                                    }
+                                    ,{
+                                        xtype:'form',
+                                        //height:300,
+                                        title:'',
+                                        margin: '0 0 0 200',
+                                        id:'formPagosVencimientosCompraId',
+                                        border:false,
+                                        layout:'anchor',
+                                        defaults:{msgTarget:'under'},
+                                        defaultType:'textfield',
+                                        items:[
+                                            {
+                                                xtype:'numberfield',
+                                                fieldLabel:'Cantidad días',
+                                                name: 'dias'//,
+                                                //minValue:5
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% Bruto',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'bruto'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% Gastos',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'gastos'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'% I.V.A',
+                                                minValue:10,
+                                                maxValue:100,
+                                                name: 'iva'
+                                            },{
+                                                xtype:'numberfield',
+                                                fieldLabel:'Anticipo',
+                                                name:'anticipo'
+                                            }
+
+                                        ],
+                                        buttons:[
+                                            {
+                                                text:'Agregar Linea',
+                                                listeners:{
+                                                    'click':onAddVencimientoClick
                                                 }
                                             }
                                         ]
                                     }
                                 ]
-
                             }
+                            ,{
+                                xtype:'panel',
+                                layout:'column',
+                                items:[
+                                    {
+                                        xtype:'grid',
+                                        id:'gridDetalleVencimientosVentaId',
+                                        title:'Detalle Venc.Venta',
+                                        height:250,
+                                        width:400,
+                                        //selType: 'cellmodel',
+                                        frame:false,
+                                        store: storeGridVencVentas,
+                                        columns:[
+                                            {
+                                                header: 'Días',
+                                                dataIndex:'dias',
+                                                //xtype: 'numericfield',
+                                                width:60,
+                                                align:'right'
+                                            },{
+                                                header: '% Bruto',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'bruto'
+                                            },{
+                                                header: '% Gastos',
+                                                align:'right',
+                                                dataIndex:'gastos'
 
+                                            },{
+                                                header: '% IVA',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'iva'
+                                            },{
+                                                header: 'Anticipo',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'anticipo'
+                                            },{
+
+                                                xtype:'actioncolumn',
+                                                width:30,
+                                                sortable:false,
+                                                menuDisabled:true,
+                                                items:[
+                                                    {
+                                                        icon:deleteImg,
+                                                        tooltip:'Eliminar Línea',
+                                                        handler: function(grid,rowIndex){
+                                                            storeGridVencVentas.removeAt(rowIndex);
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+
+                                    }
+                                    ,{
+                                        xtype:'grid',
+                                        margin: '0 0 0 10',
+                                        id:'gridDetalleVencimientosCompraId',
+                                        title:'Detalle Venc.Compras',
+                                        height:250,
+                                        width:400,
+                                        //selType: 'cellmodel',
+                                        frame:false,
+                                        store: storeGridVencCompras,
+                                        columns:[
+                                            {
+                                                header: 'Días',
+                                                dataIndex:'dias',
+                                                //xtype: 'numericfield',
+                                                width:60,
+                                                align:'right'
+                                            },{
+                                                header: '% Bruto',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'bruto'
+                                            },{
+                                                header: '% Gastos',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'gastos'
+
+                                            },{
+                                                header: '% IVA',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'iva'
+                                            },{
+                                                header: 'Anticipo',
+                                                align:'right',
+                                                width:60,
+                                                dataIndex:'anticipo'
+                                            },{
+                                                xtype:'actioncolumn',
+                                                width:30,
+                                                sortable:false,
+                                                menuDisabled:true,
+                                                items:[
+                                                    {
+                                                        icon:deleteImg,
+                                                        tooltip:'Eliminar Línea',
+                                                        handler: function(grid,rowIndex){
+                                                            storeGridVencCompras.removeAt(rowIndex);
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+
+                                    }
+                                ]
+                            }
+///--------------------------
                         ]
                     }
                 ],
@@ -1980,7 +2347,8 @@ Ext.onReady(function(){
             }
         ]
     });
-    loadOrden();
+    storeRaza.load();
+    //loadOrden();
     Ext.getCmp('regimen2daVentaId').hide();
     //storeRaza.load();
     //Ext.getCmp('regimen2daVentaId').hide();
