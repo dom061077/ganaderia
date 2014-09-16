@@ -18,7 +18,7 @@ public enum TipoOrden {
     NOTA_CREDITO_B("Nota de Crédito B"),
     NUMERO_OPERACION("Tipo especial para numero de operación")
     String name
-    
+
     public TipoOrden(String name){
         this.name = name
     }

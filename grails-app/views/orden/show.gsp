@@ -1,5 +1,6 @@
 
 <%@ page import="com.rural.ganaderia.Orden" %>
+<%@ page import="com.rural.ganaderia.enums.TipoOrden" %>
 <!doctype html>
 <html>
 	<head>
@@ -22,7 +23,15 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
             <fieldset style="border: solid">
-                <legend>Datos de Orden de Venta</legend>
+                <legend>
+                    <g:if test="${ordenInstance.tipoOrden == TipoOrden.COMPRA_A || ordenInstance.tipoOrden == TipoOrden.COMPRA_B}">
+                            <g:message code="com.educacion.academico.Orden.compra.showdatos"/>
+                    </g:if>
+                    <g:if test="${ordenInstance.tipoOrden == TipoOrden.VENTA_A || ordenInstance.tipoOrden == TipoOrden.VENTA_B}">
+                        <g:message code="com.educacion.academico.Orden.venta.showdatos"/>
+                    </g:if>
+
+                </legend>
 			<ol class="property-list orden">
                 <li class="fieldcontain">
                     <span id="orden-numeroOperacion-label" class="property-label"><g:message code="orden.numeroOperacion.label" default="Nº de Operación" /></span>

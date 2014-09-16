@@ -119,7 +119,16 @@ class Orden {
        return contador
     }
 
-    static transients = ['cantidadVenc','totalGastos','ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total']
+    String getNumeroFormateado(){
+        String.format("%08d", numero)
+    }
+
+    String getTipoOrdenDesc(){
+        tipoOrden.name
+    }
+
+    static transients = ['cantidadVenc','totalGastos','ganancias','baseImponible','iva','subTotal'/*BRUTO*/,'total'
+                ,/*para la vista*/'numeroFormateado','tipoOrdenDesc']
 
     static hasMany = [detalle:DetalleOrden,detallegastos:GastoOrden,detallevencimientos:Vencimiento,ordenescompra:Orden,notas:NotaDC]
 

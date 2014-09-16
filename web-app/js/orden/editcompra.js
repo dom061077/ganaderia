@@ -524,7 +524,9 @@ Ext.onReady(function(){
                     rec = new ganaderia.model.ClienteGanadero({
                         id : objJson.cliente.id,
                         ordenId : objJson.id,
+                        numero : objJson.numero,
                         clienteId: objJson.cliente.id,
+                        tipoOrden:objJson.tipoOrden.name,
                         cuit : objJson.cliente.cuit,
                         ingresosBrutos: objJson.cliente.ingresosBrutos,
                         razonSocial: objJson.cliente.razonSocial,
@@ -818,6 +820,8 @@ Ext.onReady(function(){
             //-------form cliente-----------
             {name:'clienteId',type:'int'},
             {name:'id',type:'int'},
+            {name:'numero',type:'int'},
+            {name:'tipoOrden',type:'string'},
             {name:'cuit',type:'string'},
             {name:'ingresosBrutos',type:'string'},
             {name:'situacionIVA',type:'string'},
@@ -1288,7 +1292,7 @@ Ext.onReady(function(){
     }
 
     Ext.widget('panel',{
-        title:titulo,
+        title:'Modificación de la Orden de Compra',
         itemId:'wizardId',
         id:'wizardId',
         renderTo:'formpanelId',
@@ -1321,11 +1325,21 @@ Ext.onReady(function(){
                         id:'ordenIdId',
                         xtype:'hidden'
                     },{
+                        name:'numero',
+                        id:'numeroordenId',
+                        xtype:'displayfield',
+                        fieldLabel:'Nº de Orden'
+                    },{
                         name:'clienteId',
                         id: 'clienteId',
                         xtype:'displayfield',
                         value:'Cliente Nuevo',
                         fieldLabel:'Código de Cliente'
+                    },{
+                        name:'tipoOrden',
+                        id:'tipoordenId',
+                        xtype:'displayfield',
+                        fieldLabel:'Tipo de Orden'
                     },{
                         fieldLabel:'C.U.I.T o D.N.I',
                         name:'cuit',

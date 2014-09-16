@@ -66,7 +66,12 @@ class OrdenController {
         else
             titulo="Modificación de Orden de Venta"
 
-        [ordenInstance: ordenInstance,titulo: titulo]
+        if (ordenInstance.tipoOrden == TipoOrden.COMPRA_A || ordenInstance.tipoOrden == TipoOrden.COMPRA_B)
+            render(view: 'editcompra', model: [ordenInstance:ordenInstance])
+        else
+            render(view: 'edit',model: [ordenInstance:ordenInstance])
+            
+        //[ordenInstance: ordenInstance,titulo: titulo]
     }
 
     def update(Long id, Long version) {
