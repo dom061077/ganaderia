@@ -1338,8 +1338,15 @@ Ext.onReady(function(){
                     },{
                         name:'tipoOrden',
                         id:'tipoordenId',
-                        xtype:'displayfield',
-                        fieldLabel:'Tipo de Orden'
+                        xtype:'combo',
+                        fieldLabel:'Tipo de Orden',
+                        emptyText:'',
+                        typeAhead: true,
+                        triggerAction: 'all',
+                        valueField:'id',
+                        displayField:'descripcion',
+                        store:
+
                     },{
                         fieldLabel:'C.U.I.T o D.N.I',
                         name:'cuit',
@@ -1457,6 +1464,7 @@ Ext.onReady(function(){
                         forceSelection:true,
                         name:'exposicion',
                         editable:false,
+                        disabled:true,
                         width:300,
                         //allowBlank:false,
                         queryMode:'remote',
