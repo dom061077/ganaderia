@@ -3,6 +3,7 @@ Ext.define('ganaderia.model.grid.Orden',{
     fields: [
         {name:'id',type:'int'},
         {name:'numero',type:'int'},
+        {name:'tipo',type:'string'},
         {name:'cliente', type:'string'},
         {name:'exposicion', type:'string'},
         {name:'anio', type:'int'},
@@ -51,8 +52,9 @@ Ext.onReady(function(){
         store:storeGrid,
         columns :[
             {text:'Número', dataIndex: 'numero', width: 60},
+            {text:'Tipo', dataIndex: 'tipo', width: 150},
             {header:'Cliente', dataIndex:'cliente', width:250},
-            {header:'Exposición', dataIndex:'exposicion', width:250},
+            {header:'Exposición', dataIndex:'exposicion', width:150},
             {header:'Año', dataIndex:'anio',width:50},
             {text:'Nº de Operación',width:100,dataIndex:'numeroOperacion'},
             {header:'Fecha Carga',dataIndex:'fechacarga',width:100, xtype: 'datecolumn',   format:'d/m/Y'},

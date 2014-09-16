@@ -152,6 +152,7 @@ class OrdenController {
                 else
                     ordenCompraInstance.tipoOrden = TipoOrden.COMPRA_B
                 ordenCompraInstance.numero = Numerador.sigNumero(ordenCompraInstance.tipoOrden)
+                ordenCompraInstance.numeroOperacion = Numerador.sigNumero(ordenCompraInstance.tipoOrden)
                 ordenCompraInstance.razonSocial = ordenCompraInstance.cliente.razonSocial
                 ordenCompraInstance.localidad = ordenCompraInstance.cliente.localidad
                 ordenCompraInstance.direccion = ordenCompraInstance.cliente.direccion
@@ -579,13 +580,13 @@ class OrdenController {
         def pagingConfig = [max: params.limit as Integer ?:10, offset: params.start as Integer ?:0]
 
         def ordenes = Orden.createCriteria().list(pagingConfig){
-            or{
-              eq("tipoOrden",TipoOrden.VENTA_A)
-              eq("tipoOrden",TipoOrden.VENTA_B)
-            }
+            //or{
+            //  eq("tipoOrden",TipoOrden.VENTA_A)
+            //  eq("tipoOrden",TipoOrden.VENTA_B)
+            //}
         }
         ordenes.each {
-            recordList << [id: it.id,numero:it.numero,mumeroOperacion:it.numeroOperacion,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
+            recordList << [id: it.id,tipo: it.tipoOrden.name,numero:it.numero,numeroOperacion:it.numeroOperacion,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
                     ,anio:it.anioExposicion.anio,fechacarga:it.fechaAlta,total:it.total,estado:it.estado]
         }
         
@@ -630,6 +631,9 @@ class OrdenController {
         }
         ordenInstance.detallegastos.each{
             it.gasto.descripcion
+        }
+        ordenInstance.notas.each{
+            it.descripcion
         }
 
         String reportsDirPath = servletContext.getRealPath("/reports/");

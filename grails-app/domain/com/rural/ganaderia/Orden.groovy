@@ -105,6 +105,9 @@ class Orden {
         detallegastos.each {
             sumtotal+=it.subTotal
         }
+        if(tipoOrden==TipoOrden.VENTA_A || tipoOrden==TipoOrden.VENTA_B)
+            sumtotal = sumtotal * (-1)
+
         return sumtotal*(-1)
     }
     int getCantidadVenc(){
