@@ -516,8 +516,8 @@ Ext.onReady(function(){
                     storeOperacion.load();
                     storeDestino.load();
                     storeEspecie.load();
-                    storeClienteDetalle.load();
-                    storeRaza.load();
+                    //storeClienteDetalle.load();
+                    //storeRaza.load();
                     storeGasto.load();
 
 
@@ -568,8 +568,9 @@ Ext.onReady(function(){
                     for(var i=0;i<objJson.detalle.length;i++){
                         det = objJson.detalle[i];
                         rec = new ganaderia.model.grid.DetalleOrden({
-                            cliente: det.cliente.id,
-                            raza: det.raza.id,
+                            cliente: det.cliente.razonSocial,
+                            raza: det.raza.nombre,
+                            categoria: det.categoria.nombre,
                             corral: det.datosCorral,
                             cantidad: det.cantidad,
                             peso: det.peso,
@@ -842,8 +843,9 @@ Ext.onReady(function(){
         fields: [
             // the 'name' below matches the tag name to read, except 'availDate'
             // which is mapped to the tag 'availability'
-            {name: 'cliente', type: 'int'},
-            {name: 'raza', type: 'int'},
+            {name: 'cliente', type: 'string'},
+            {name: 'categoria', type:'string'},
+            {name: 'raza', type: 'string'},
             {name: 'corral', type: 'string'},
             {name: 'cantidad',type:'int'},
             {name: 'peso',type:'int'},
@@ -878,7 +880,8 @@ Ext.onReady(function(){
             {name:'dias',type:'int'},
             {name:'bruto',type:'float'},
             {name:'gastos',type:'float'},
-            {name:'iva',type:'float'}
+            {name:'iva',type:'float'},
+            {name:'anticipo',type:'float'}
         ]
     });
 
@@ -1082,6 +1085,21 @@ Ext.onReady(function(){
         fields:['id','descripcion','porcentajeDescuento','tieneVencimientos']
     });
 
+    Ext.define('ganaderai.model.combo.TipoOrden',{
+        extend:'Ext.data.Store',
+        autoLoad:true,
+        proxy:{
+            type:'ajax',
+            url:tipoOrdenUrl,
+            reader:{
+                type:'json',
+                root:'rows',
+                idProperty:'id'
+            }
+        },
+        fields:['id','descripcion']
+    });
+
 
     Ext.define('ganaderia.model.combo.Cliente',{
         extend:'Ext.data.Store',
@@ -1143,6 +1161,7 @@ Ext.onReady(function(){
     var storeOperacion = Ext.create('ganaderia.model.combo.Operacion');
     var storeDestino = Ext.create('ganaderia.model.combo.Destino');
     var storeFormasdePago = Ext.create('ganaderia.model.combo.FormasdePago');
+    var storeTipoOrden = Ext.create('ganaderai.model.combo.TipoOrden');
 
 
 
@@ -1247,7 +1266,8 @@ Ext.onReady(function(){
                 dias: fieldValues.dias,
                 bruto: fieldValues.bruto,
                 gastos: fieldValues.gastos,
-                iva : fieldValues.iva
+                iva : fieldValues.iva,
+                anticipo : fieldValues.anticipo
             });
             form.reset();
             storeGridVencimientos.add(rec);
@@ -1338,6 +1358,8 @@ Ext.onReady(function(){
                     },{
                         name:'tipoOrden',
                         id:'tipoordenId',
+                        width:400,
+                        disabled:true,
                         xtype:'combo',
                         fieldLabel:'Tipo de Orden',
                         emptyText:'',
@@ -1345,7 +1367,7 @@ Ext.onReady(function(){
                         triggerAction: 'all',
                         valueField:'id',
                         displayField:'descripcion',
-                        store:
+                        store: storeTipoOrden
 
                     },{
                         fieldLabel:'C.U.I.T o D.N.I',
@@ -1360,6 +1382,7 @@ Ext.onReady(function(){
                     },{
                         xtype:'combo',
                         fieldLabel:'Situación I.V.A',
+                        width:400,
                         forceSelection: true,
                         name:'situacionIVA',
                         //allowBlank:false,
@@ -1375,6 +1398,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Razon Social/Apellido y Nombre',
                         name:'razonSocial',
+                        width:500,
                         maxLengthText:60,
                         allowBlank:false
                     },{
@@ -1392,6 +1416,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Provincia',
                         xtype:'combo',
+                        width:400,
                         store:storeProvincia,
                         forceSelection : true,
                         name:'provincia',
@@ -1414,6 +1439,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Localidad',
                         xtype:'combo',
+                        width:500,
                         id:'localidadId',
                         allowBlank:false,
                         store:storeLocalidad,
@@ -1431,6 +1457,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Direccion',
                         name:'direccion',
+                        width:500,
                         maxLengthText:60,
                         allowBlank:false
                     }
@@ -1478,6 +1505,7 @@ Ext.onReady(function(){
                     },{
                         xtype:'combo',
                         fieldLabel:'Año de Exposición',
+                        disabled:true,
                         forceSelection: true,
                         name:'anioExposicion',
                         //allowBlank:false,
@@ -1525,6 +1553,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Provincia Proc./Remitente',
                         xtype:'combo',
+                        width:450,
                         store:storeProvinciaRemitente,
                         forceSelection : true,
                         name:'provincia',
@@ -1547,6 +1576,7 @@ Ext.onReady(function(){
                     },{
                         fieldLabel:'Localidad Proc./Remitente',
                         xtype:'combo',
+                        width:500,
                         id:'localidadRemitenteId',
                         name:'localidad',
                         //allowBlank:false,
@@ -1638,32 +1668,15 @@ Ext.onReady(function(){
                             {
                                 header: 'Cliente',
                                 dataIndex: 'cliente',
-                                width: 150,
-                                renderer: function(value) {
-                                    var rec = storeClienteDetalle.getById(value);
-
-                                    if (rec)
-                                    {
-                                        return rec.data.nombre;
-                                    }
-
-                                    return '';
-                                }
-
+                                width: 150
+                            },{
+                                header: 'Categoria',
+                                dataIndex:'categoria',
+                                width:150
                             },{
                                 header: 'Raza',
                                 dataIndex: 'raza',
-                                width: 200,
-                                renderer: function(value) {
-                                    var rec = storeRaza.getById(value);
-
-                                    if (rec)
-                                    {
-                                        return rec.data.nombre;
-                                    }
-
-                                    return '';
-                                }
+                                width: 200
                             },{
                                 header: 'Leyenda',
                                 dataIndex:'corral'
@@ -1925,6 +1938,12 @@ Ext.onReady(function(){
                                         minValue:10,
                                         maxValue:100,
                                         name: 'iva'
+                                    },{
+                                        xtype:'numberfield',
+                                        fieldLabel:'Anticipo',
+                                        minValue:10,
+                                        maxValue:100,
+                                        name: 'anticipo'
                                     }
                                 ],
                                 buttons:[
@@ -1962,6 +1981,10 @@ Ext.onReady(function(){
                                         header: '% IVA',
                                         align:'right',
                                         dataIndex:'iva'
+                                    },{
+                                        header: 'Anticipo',
+                                        align:'right',
+                                        dataIndex:'anticipo'
                                     },{
 
                                         xtype:'actioncolumn',

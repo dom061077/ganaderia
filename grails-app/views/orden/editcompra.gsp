@@ -11,7 +11,7 @@
         var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
         var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
         var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
-        var updateOrdenUrl = '${createLink(controller:'orden',action:'updatejson')}';
+        var updateOrdenUrl = '${createLink(controller:'orden',action:'updatecomprajson')}';
         var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
         var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
         var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
@@ -30,6 +30,7 @@
         var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
         var titulo = '<%out << titulo%>';
         var loadordenUrl = '<%out << createLink(controller:'orden',action:'getordenjson')+'/'+ordenInstance?.id%>';
+        var tipoOrdenUrl = '<%out << createLink(controller:'orden',action:'listtipojson')%>';
     </script>
 
     <title><g:message code="default.edit.label" args="[entityName]" /></title>

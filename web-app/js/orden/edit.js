@@ -1273,7 +1273,7 @@ Ext.onReady(function(){
     }
 
     Ext.widget('panel',{
-        title:'Registro de Orden de Venta',
+        title:'Modificación de Orden de Venta',
         itemId:'wizardId',
         id:'wizardId',
         renderTo:'formpanelId',

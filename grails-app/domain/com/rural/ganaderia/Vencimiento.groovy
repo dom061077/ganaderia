@@ -6,10 +6,10 @@ import com.rural.ganaderia.enums.TipoOrden
 class Vencimiento {
     java.sql.Date vencimiento
     int cantidadDias
-    BigDecimal porcentajeBruto
-    BigDecimal porcentajeGastos
-    BigDecimal porcentajeIva
-    BigDecimal anticipo
+    BigDecimal porcentajeBruto  = new BigDecimal(0)
+    BigDecimal porcentajeGastos = new BigDecimal(0)
+    BigDecimal porcentajeIva = new BigDecimal(0)
+    BigDecimal anticipo = new BigDecimal(0)
 
 
     //BigDecimal importePagoGanacias
