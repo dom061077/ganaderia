@@ -34,6 +34,22 @@
                 </legend>
 			<ol class="property-list orden">
                 <li class="fieldcontain">
+                    <span id="orden-tipoOrden-label" class="property-label"><g:message code="orden.tipoOrden.label" default="Tipo de Orden" /></span>
+                    <span class="property-value" aria-labelledby="orden-tipoOrden-label">
+                        ${ordenInstance?.tipoOrden.name}
+                    </span>
+
+                </li>
+
+                <li class="fieldcontain">
+                    <span id="orden-numero-label" class="property-label"><g:message code="orden.numero.label" default="Nº de Orden" /></span>
+                    <span class="property-value" aria-labelledby="orden-tipoOrden-label">
+                        ${ordenInstance?.numeroFormateado}
+                    </span>
+
+                </li>
+
+                <li class="fieldcontain">
                     <span id="orden-numeroOperacion-label" class="property-label"><g:message code="orden.numeroOperacion.label" default="Nº de Operación" /></span>
                     <span class="property-value" aria-labelledby="orden-numeroOperacion-label">
                         ${ordenInstance?.numeroOperacion}
@@ -120,7 +136,7 @@
                                       <td><g:formatNumber number="${d?.monto}" type="currency" locale="es_AR"/></td>
                                     </g:if>
 
-                                    <td> <g:formatNumber number="${d.subTotal*-1}" type="currency" locale="es_AR"/></td>
+                                    <td> <g:formatNumber number="${d.subTotal}" type="currency" locale="es_AR"/></td>
                                 </tr>
                             </g:each>
                             </table>
@@ -163,16 +179,6 @@
 
                 </li>
 
-                    <li class="fieldcontain">
-                        <span id="orden-baseImponible-label" class="property-label"><g:message code="orden.baseImponible.label" default="Base" /></span>
-
-                        <%--span class="property-value" aria-labelledby="cliente-label"><g:link controller="cliente" action="show" id="${ordenInstance?.cliente?.id}">${ordenInstance?.cliente?.encodeAsHTML()}</g:link></span--%>
-                        <span class="property-value" aria-labelledby="orden-baseImponible-label">
-                            <g:formatNumber number="${ordenInstance?.baseImponible}" type="currency" locale="es_AR" />
-
-                        </span>
-
-                    </li>
 
                 <li class="fieldcontain">
                         <span id="orden-baseImponible-label" class="property-label"><g:message code="orden.baseImponible.label" default="Base" /></span>

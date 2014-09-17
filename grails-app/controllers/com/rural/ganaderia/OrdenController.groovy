@@ -190,10 +190,9 @@ class OrdenController {
         }
         def cal = Calendar.getInstance()
         def vencimiento
-        log.debug "************Antes de la iteracion de las ordenes de compra*************"
         listCompras.each{itorden->
            detalleGastosCompra.each{det->
-               itorden.addToDetallegastos(new GastoOrden(gasto:Gasto.load(det.gasto),porcentaje:det.porcentaje,monto:det.monto))
+               itorden.addToDetallegastos(new GastoOrden(gasto:Gasto.load(det.gasto),porcentaje:det.porcentaje,monto:det.monto,anticipo:det.anticipo))
            }
            detalleVencComprasJson.each{itvenc->
                cal.setTime(ordenVenta.fechaOperacion)
@@ -415,7 +414,7 @@ class OrdenController {
 
         def cal = Calendar.getInstance()
         def vencimiento
-        def formadePagoInstance = FormasdePago.load(ordenInstance.formasdePago.id)
+        def formadePagoInstance = FormasdePago.load(params.formasdePago.id)
 
 
         Orden.withTransaction{TransactionStatus status->
@@ -426,6 +425,7 @@ class OrdenController {
             ordenInstance.situacionIVA = ordenInstance.cliente.situacionIVA
             ordenInstance.cuit = ordenInstance.cliente.cuit
             ordenInstance.ingresosBrutos = ordenInstance.cliente.ingresosBrutos
+            ordenInstance.formasdePago = formadePagoInstance
 
             //--------modificación de los detalles--------
             def arrayObj = []
@@ -440,7 +440,7 @@ class OrdenController {
             }
             detalleGastosJson.each{
                 ordenInstance.addToDetallegastos(
-                        new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
+                        new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto,anticipo:it.anticipo)
                 )
             }
             arrayObj.clear()
@@ -453,6 +453,7 @@ class OrdenController {
                 ordenInstance.removeFromDetallevencimientos(objDetalle)
                 objDetalle.delete()
             }
+            log.debug "*****************FORMA DE PAGO EN UPDATEORDENDEOMPRAJSON, forma de pago en orden : ${ordenInstance.formasdePago.descripcion} forma de apgo en parametro: ${formadePagoInstance.descripcion}***************"
             if (formadePagoInstance.tieneVencimientos){
 
                 detalleVencimientosJson.each{
@@ -461,7 +462,7 @@ class OrdenController {
                     //}catch(ParseException e){
 
                     //}
-                    cal.setTime(fecha)
+                    cal.setTime(ordenInstance.fechaOperacion)
                     cal.add(Calendar.DATE,it.dias)
                     vencimiento = new java.sql.Date(cal.getTime().getTime())
                     ordenInstance.addToDetallevencimientos(new Vencimiento(cantidadDias: it.dias,porcentajeBruto: it.bruto
@@ -500,7 +501,7 @@ class OrdenController {
                     ordenInstance.notas.each{
                         it.estado = EstadoDocumento.ANULADO
                     }
-                    def notaDCInstance = new NotaDC(descripcion:"Descuento pago "+orden.formasdePago.descripcion+" "+ordenInstance.formasdePago.porcentajeDescuento+"%"
+                    def notaDCInstance = new NotaDC(descripcion:"Descuento pago "+ordenInstance.formasdePago.descripcion+" "+ordenInstance.formasdePago.porcentajeDescuento+"%"
                             ,monto: totalDescuento,tipo: (ordenInstance.situacionIVA==SituacionIVA.IVA?TipoOrden.NOTA_CREDITO_A:TipoOrden.NOTA_CREDITO_B))
                     notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
                     ordenInstance.addToNotas(notaDCInstance)

@@ -521,7 +521,7 @@ Ext.onReady(function(){
                     storeGasto.load();
 
 
-                    rec = new ganaderia.model.ClienteGanadero({
+                    var rec = new ganaderia.model.ClienteGanadero({
                         id : objJson.cliente.id,
                         ordenId : objJson.id,
                         numero : objJson.numero,
@@ -583,6 +583,7 @@ Ext.onReady(function(){
                         det = objJson.detallegastos[i];
                         rec = new ganaderia.model.grid.Gastos({
                             gasto:det.gasto.id,
+                            gastodesc:det.gasto.descripcion,
                             porcentaje:det.porcentaje,
                             monto:det.monto,
                             //subtotal:det.subTotal*(-1)
@@ -858,6 +859,7 @@ Ext.onReady(function(){
         extend: 'Ext.data.Model',
         fields:[
             {name:'gasto',type: 'int'},
+            {name:'gastodesc',type: 'string'},
             {name:'porcentaje',type:'float'},
             {name:'monto',type:'float'},
             {name:'subtotal',type:'float'}
@@ -1139,6 +1141,7 @@ Ext.onReady(function(){
 
     var storeGridVencimientos = new Ext.data.Store({
         model: ganaderia.model.grid.Vencimientos,
+        sortInfo:{field:'dias',direction:'ASC'},
         proxy:{
             type:'memory'
         }
@@ -1183,8 +1186,10 @@ Ext.onReady(function(){
                 });
                 return;
             }
+            var recgasto = storeGasto.getById(fieldValues.gasto);
             var rec = new ganaderia.model.grid.Gastos({
                 gasto: fieldValues.gasto,
+                gastodesc: recgasto.data.descripcion,
                 porcentaje: fieldValues.porcentaje,
                 monto: fieldValues.monto,
                 subtotal: (fieldValues.porcentaje>0?subTotal()*fieldValues.porcentaje/100:fieldValues.monto)
@@ -1807,18 +1812,8 @@ Ext.onReady(function(){
                         columns:[
                             {
                                 header: 'Descripción',
-                                dataIndex: 'gasto',
-                                width: 150,
-                                renderer: function(value) {
-                                    var rec = storeGasto.getById(value);
-
-                                    if (rec)
-                                    {
-                                        return rec.data.descripcion;
-                                    }
-
-                                    return '';
-                                }
+                                dataIndex: 'gastodesc',
+                                width: 150
 
                             },{
                                 header: 'Porcentaje',

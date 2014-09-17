@@ -30,6 +30,7 @@
             var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
             var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
             var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
+            var tipoOrdenUrl = '<%out << createLink(controller:'orden',action:'listtipojson')%>';
 
 
 
