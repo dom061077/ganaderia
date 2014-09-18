@@ -323,7 +323,7 @@ class OrdenController {
 
             orden.numeroOperacion = Numerador.sigNumero(TipoOrden.NUMERO_OPERACION)
             orden.razonSocial = orden.cliente.razonSocial
-            orden.localidad = Localidad.load(22987)
+            orden.localidad = Localidad.load(22987)  //por defecto la localiad es san miguel de tucuman para la orden
             orden.direccion = orden.cliente.direccion
             orden.situacionIVA = orden.cliente.situacionIVA
             orden.cuit = orden.cliente.cuit
@@ -631,7 +631,10 @@ class OrdenController {
                 }
             }
 
-            //--------------------------------------------
+            //------------------------si la orden es de venta----------------
+
+
+            //--------------------------------------------------------
 
 
             if (!ordenInstance.validate()){
@@ -662,6 +665,30 @@ class OrdenController {
                     notaDCInstance.numero = Numerador.sigNumero(notaDCInstance.tipo)
                     ordenInstance.addToNotas(notaDCInstance)
                 }
+
+                if (ordenInstance.tipoOrden == TipoOrden.VENTA_A || ordenInstance.tipoOrden == TipoOrden.VENTA_B){
+                    arrayObj.clear()
+                    arrayObj = []
+                    ordenInstance.detalle.each {
+                        arrayObj.add(it.id)
+                    }
+                    arrayObj.each {
+                        objDetalle = DetalleOrden.load(it)
+                        ordenInstance.removeFromDetalle(objDetalle)
+                        objDetalle.delete()
+                    }
+                    arrayObj.clear()
+                    ordenInstance.ordenescompra.each {
+                        arrayObj.add(it.id)
+                    }
+                    arrayObj.each {
+                        objDetalle = Orden.load(it)
+                        ordenInstance.removeFromOrdenescompra(objDetalle)
+                        objDetalle.delete()
+                    }
+                    generarOrdenesdeCompra(orden,detalleVencComprasJson,detalleGastosCompra)
+                }
+
                 if(!ordenInstance.save()){
                     status.setRollbackOnly()
                     ordenInstance.errors.allErrors.each{
@@ -674,6 +701,7 @@ class OrdenController {
                     }
 
                 }else{
+
                     objJson.idOrden = ordenInstance.id
                     objJson.errors = null
 
@@ -726,7 +754,7 @@ class OrdenController {
             //}
         }
         ordenes.each {
-            recordList << [id: it.id,tipo: it.tipoOrden.name,numero:it.numero,numeroOperacion:it.numeroOperacion,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
+            recordList << [id: it.id,tipo: it.tipoOrden.name,numero:it.numeroFormateado,numeroOperacion:it.numeroOperacion,cliente:it.cliente.razonSocial,exposicion:it.exposicion.nombre
                     ,anio:it.anioExposicion.anio,fechacarga:it.fechaAlta,total:it.total,estado:it.estado]
         }
         

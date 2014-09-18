@@ -32,7 +32,7 @@
             var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
             var tipoOrdenUrl = '<%out << createLink(controller:'orden',action:'listtipojson')%>';
 
-
+            var updateOrdenUrl = '${createLink(controller:'orden',action:'updatecomprajson')}';
 
             var titulo = '<%out << titulo%>';
             var loadordenUrl = '<%out << createLink(controller:'orden',action:'getordenjson')+'/'+ordenInstance?.id%>';

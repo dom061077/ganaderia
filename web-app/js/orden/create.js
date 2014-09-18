@@ -641,7 +641,7 @@ Ext.onReady(function(){
                     });
                     wincomprobantes.show();
                     */
-                   window.location = 'show/'+jsonObj.idOrden;
+                   //window.location = 'show/'+jsonObj.idOrden;
                 }
 
             },
