@@ -643,24 +643,34 @@ Ext.onReady(function(){
         storeGridDetalle.data.each(function(row){
             detalleArr.push(row.data);
         });
-        var detalleGastosArr = [];
+        var detalleGastosVentaArr = [];
         storeGridGastos.data.each(function(row){
-            detalleGastosArr.push(row.data);
+            detalleGastosVentaArr.push(row.data);
         });
+        var detalleGastosCompraArr = [];
+        storeGridGastosCompra.data.each(function(row){
+            detalleGastosCompraArr.push(row.data);
+        });
+
         var detalleImpuestosArr = [];
         storeGridImpuestos.data.each(function(row){
             detalleImpuestosArr.push(row.data);
         });
-        var detalleVencimientosArr = [];
-        storeGridVencimientos.data.each(function(row){
-            detalleVencimientosArr.push(row.data);
+        var detalleVencVentasArr = [];
+        storeGridVencVentas.data.each(function(row){
+            detalleVencVentasArr.push(row.data);
+        });
+        var detalleVencComprasArr = [];
+        storeGridVencCompras.data.each(function(row){
+            detalleVencComprasArr.push(row.data);
         });
 
         var detalle
         var detalleJson = Ext.encode(detalleArr);
-        var detalleGastosJson = Ext.encode(detalleGastosArr);
-        var detalleImpuestosJson = Ext.encode(detalleImpuestosJson);
-        var detalleVencimientosJson = Ext.encode(detalleVencimientosArr);
+        var detalleVencVentasJson = Ext.encode(detalleVencVentasArr);
+        var detalleVencComprasJson = Ext.encode(detalleVencComprasArr);
+        var detalleGastosVentaJson = Ext.encode(detalleGastosVentaArr);
+        var detalleGastosCompraJson = Ext.encode(detalleGastosCompraArr);
         var wizard = Ext.getCmp('wizardId');
         var fieldValuesFormGanadero = wizard.getComponent('stepFormGanaderoId').getForm().getFieldValues();
         var fieldValuesFormDatosExposicion = wizard.getComponent('stepFormDatosExposicionId').getForm().getFieldValues();
@@ -668,11 +678,12 @@ Ext.onReady(function(){
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
-            url:updateOrdenUrl,
+            url:saveOrdenUrl,
             params:{
                 'id' : fieldValuesFormGanadero.ordenId,
                 'cliente.id' : fieldValuesFormGanadero.id,
                 'cliente.cuit' :fieldValuesFormGanadero.cuit,
+                'cliente.situacionIVA':fieldValuesFormGanadero.situacionIVA,
                 'cliente.ingresosBrutos' : fieldValuesFormGanadero.ingresosBrutos,
                 'cliente.razonSocial':fieldValuesFormGanadero.razonSocial,
                 'cliente.telefono1':fieldValuesFormGanadero.telefono1,
@@ -692,9 +703,10 @@ Ext.onReady(function(){
                 //'tipoOrden':fieldValuesFormGanadero.tipoOrden,
                 'formasdePago.id' : fieldValuesFormDatosPagos.formadePago,
                 'detalleJson': detalleJson,
-                'detalleGastosJson': detalleGastosJson,
-                'detalleImpuestosJson' : detalleImpuestosJson,
-                'detalleVencimientosJson' : detalleVencimientosJson
+                'detalleGastosVenta':detalleGastosVentaJson,
+                'detalleGastosCompra':detalleGastosCompraJson,
+                'detalleVencVentasJson' : detalleVencVentasJson,
+                'detalleVencComprasJson': detalleVencComprasJson
             },
             success: function(xhr){
                 loadMask.hide();
@@ -714,29 +726,29 @@ Ext.onReady(function(){
                     });
                     return;
                 }else{
-                    /*var wincomprobantes = Ext.create('Ext.window.Window',{
-                        modal:true,
-                        width:600,
-                        x:400,
-                        y:200,
-                        title:'Impresión de Comprobantes',
-                        items:[
-                            { xtype:'panel',
-                                html:jsonObj.html
-                                ,buttons:[
-                                {
-                                    text:'Cerrar',
-                                    handler: function(){
-                                    }
-                                }
-                            ]
-                            }
-                        ]
-                    });
-                    wincomprobantes.show();
-                    */
-                    window.location = '../show/'+jsonObj.idOrden;
-
+                    /*
+                     var wincomprobantes = Ext.create('Ext.window.Window',{
+                     modal:true,
+                     width:600,
+                     x:400,
+                     y:200,
+                     title:'Impresión de Comprobantes',
+                     items:[
+                     { xtype:'panel',
+                     html:jsonObj.html
+                     ,buttons:[
+                     {
+                     text:'Cerrar',
+                     handler: function(){
+                     }
+                     }
+                     ]
+                     }
+                     ]
+                     });
+                     wincomprobantes.show();
+                     */
+                    //window.location = 'show/'+jsonObj.idOrden;
                 }
 
             },
@@ -751,6 +763,7 @@ Ext.onReady(function(){
                 console.log("Error: "+xhr.statusText);
             }
         });
+
 
     }
 

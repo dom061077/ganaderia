@@ -545,8 +545,13 @@ class OrdenController {
 
 
         def detalleJson = JSON.parse(params.detalleJson)
-        def detalleGastosJson = JSON.parse(params.detalleGastosJson)
-        def detalleVencimientosJson = JSON.parse(params.detalleVencimientosJson)
+        def detalleGastosVenta = JSON.parse(params.detalleGastosVenta)
+        def detalleGastosCompra = JSON.parse(params.detalleGastosCompra)
+
+        def detalleVencVentasJson = JSON.parse(params.detalleVencVentasJson)
+        def detalleVencComprasJson = JSON.parse(params.detalleVencComprasJson);
+
+
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
         java.util.Date fecha
@@ -589,17 +594,19 @@ class OrdenController {
             ordenInstance.ingresosBrutos = ordenInstance.cliente.ingresosBrutos
 
             //--------modificación de los detalles--------
+            def objDetalle
             def arrayObj = []
+
+            arrayObj.clear()
             ordenInstance.detallegastos.each{
                 arrayObj.add(it.id)
             }
-            def objDetalle
             arrayObj.each{
                 objDetalle = GastoOrden.load(it)
                 ordenInstance.removeFromDetallegastos(objDetalle)
                 objDetalle.delete()
             }
-            detalleGastosJson.each{
+            detalleGastosVenta.each{
                 ordenInstance.addToDetallegastos(
                         new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
                 )
@@ -616,7 +623,7 @@ class OrdenController {
             }
             if (formadePagoInstance.tieneVencimientos){
                 
-                detalleVencimientosJson.each{
+                detalleVencVentasJson.each{
                     //try{
                     //    fecha = df.parse(it.vencimiento.substring(0,10))
                     //}catch(ParseException e){
@@ -677,16 +684,50 @@ class OrdenController {
                         ordenInstance.removeFromDetalle(objDetalle)
                         objDetalle.delete()
                     }
-                    arrayObj.clear()
-                    ordenInstance.ordenescompra.each {
-                        arrayObj.add(it.id)
+                    detalleJson.each{ det ->
+                        ordenInstance.addToDetalle(new DetalleOrden(cliente: ordenInstance.cliente
+                                ,categoria: det.categoria,raza: det.raza, datosCorral: det.datosCorral
+                                ,precio: det.preciounitario, cantidad: det.cantidad, peso: det.peso ))
                     }
-                    arrayObj.each {
-                        objDetalle = Orden.load(it)
-                        ordenInstance.removeFromOrdenescompra(objDetalle)
-                        objDetalle.delete()
+
+                    //recolecto todos los detalles de las ordenes de compra
+                    ordenInstance.ordenescompra.each {ordc->
+                        arrayObj.clear()                        
+                        ordc.detalle.each{det->
+                            arrayObj.add(det.id)
+                        }
+
+                        arrayObj.each {
+                            objDetalle = Orden.load(it)
+                            ordc.removeFromOrdenescompra(objDetalle)
+                            objDetalle.delete()
+                        }
+
+                        //todo SIGO AQUI
+                        ordenInstance.detalle{det->
+                            
+                            ordc.addToDetalle(new DetalleOrden(cliente: ordenInstance.cliente
+                                    ,categoria: det.categoria,raza: det.raza, datosCorral: det.datosCorral
+                                    ,precio: det.precio, cantidad: det.cantidad, peso: det.peso ))
+                        }
+                        ordc.notas.each {
+                            it.estado = EstadoDocumento.ANULADO
+                        }
+                        
+                        arrayObj.clear()
+                        ordc.detallegastos.each {
+                            arrayObj.add(it.id)
+                        }
+                        arrayObj.each {
+                            objDetalle = GastoOrden.load(it.id)
+                            objDetalle.delete()
+                            ordc.removeFromDetallegastos(objDetalle)
+                        }
+                        detalleGastosCompra.each{
+                            ordc.addToDetallegastos(new GastoOrden(gasto: Gasto.load(it.gasto)))
+                        }
+
                     }
-                    generarOrdenesdeCompra(orden,detalleVencComprasJson,detalleGastosCompra)
                 }
 
                 if(!ordenInstance.save()){
@@ -778,19 +819,19 @@ class OrdenController {
         ordenList.add(ordenInstance)
         ordenList.add(ordenInstance)
         log.debug ordenInstance.cliente
-        log.debug ordenInstance.operacion.id
-        log.debug ordenInstance.anioExposicion.id
-        log.debug ordenInstance.destino.id
-        log.debug ordenInstance.exposicion.id
-        log.debug ordenInstance.situacionIVA.name
-        log.debug ordenInstance.cliente.localidad
-        log.debug ordenInstance.cliente.localidad.provincia.id
-        log.debug ordenInstance.formasdePago.id
-        log.debug ordenInstance.localidad.nombre
-        log.debug ordenInstance.localidad.provincia.nombre
-        log.debug ordenInstance.destino.descripcion
-        ordenInstance.especie.nombre
-        ordenInstance.procedencia.nombre
+        log.debug ordenInstance.operacion?.id
+        log.debug ordenInstance.anioExposicion?.id
+        log.debug ordenInstance.destino?.id
+        log.debug ordenInstance.exposicion?.id
+        log.debug ordenInstance.situacionIVA?.name
+        log.debug ordenInstance.cliente?.localidad
+        log.debug ordenInstance.cliente.localidad?.provincia?.id
+        log.debug ordenInstance.formasdePago?.id
+        log.debug ordenInstance.localidad?.nombre
+        log.debug ordenInstance.localidad.provincia?.nombre
+        log.debug ordenInstance.destino?.descripcion
+        ordenInstance.especie?.nombre
+        ordenInstance.procedencia?.nombre
 
         ordenInstance.detalle.each {
             it.raza.nombre
