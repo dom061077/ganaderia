@@ -697,15 +697,7 @@ class OrdenController {
                             arrayObj.add(det.id)
                         }
 
-                        arrayObj.each {
-                            objDetalle = Orden.load(it)
-                            ordc.removeFromOrdenescompra(objDetalle)
-                            objDetalle.delete()
-                        }
-
-                        //todo SIGO AQUI
                         ordenInstance.detalle{det->
-                            
                             ordc.addToDetalle(new DetalleOrden(cliente: ordenInstance.cliente
                                     ,categoria: det.categoria,raza: det.raza, datosCorral: det.datosCorral
                                     ,precio: det.precio, cantidad: det.cantidad, peso: det.peso ))
@@ -725,6 +717,16 @@ class OrdenController {
                         }
                         detalleGastosCompra.each{
                             ordc.addToDetallegastos(new GastoOrden(gasto: Gasto.load(it.gasto)))
+                        }
+                        ordenInstance.detalle.each { det->
+                            if(det.cliente==ordc.cliente){
+                                ordc.addToDetalle(new DetalleOrden(cliente:ordenInstance.cliente,categoria:det.categoria
+                                        ,raza:det.raza,datosCorral:det.datosCorral,precio:det.precio,cantidad:det.cantidad
+                                        ,peso:det.peso
+                                ))
+                                return
+                            }
+
                         }
 
                     }
