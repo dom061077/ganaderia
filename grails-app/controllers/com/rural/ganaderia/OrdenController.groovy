@@ -611,24 +611,19 @@ class OrdenController {
                         new GastoOrden(gasto:Gasto.load(it.gasto),porcentaje: it.porcentaje,monto:it.monto)
                 )
             }
-            arrayObj.clear()
-            arrayObj = []
-            ordenInstance.detallevencimientos.each{
-                arrayObj.add(it.id)
-            }
-            arrayObj.each {
-                objDetalle = Vencimiento.load(it)
-                ordenInstance.removeFromDetallevencimientos(objDetalle)
-                objDetalle.delete()
-            }
             if (formadePagoInstance.tieneVencimientos){
-                
-                detalleVencVentasJson.each{
-                    //try{
-                    //    fecha = df.parse(it.vencimiento.substring(0,10))
-                    //}catch(ParseException e){
 
-                    //}
+                arrayObj.clear()
+                arrayObj = []
+                ordenInstance.detallevencimientos.each{
+                    arrayObj.add(it.id)
+                }
+                arrayObj.each {
+                    objDetalle = Vencimiento.load(it)
+                    ordenInstance.removeFromDetallevencimientos(objDetalle)
+                    objDetalle.delete()
+                }
+                detalleVencVentasJson.each{
                     cal.setTime(fecha)
                     cal.add(Calendar.DATE,it.dias)
                     vencimiento = new java.sql.Date(cal.getTime().getTime())
@@ -676,6 +671,8 @@ class OrdenController {
                 if (ordenInstance.tipoOrden == TipoOrden.VENTA_A || ordenInstance.tipoOrden == TipoOrden.VENTA_B){
                     arrayObj.clear()
                     arrayObj = []
+
+                    //-------logica de modificacion para el detalle de la orden de venta
                     ordenInstance.detalle.each {
                         arrayObj.add(it.id)
                     }
@@ -685,38 +682,25 @@ class OrdenController {
                         objDetalle.delete()
                     }
                     detalleJson.each{ det ->
-                        ordenInstance.addToDetalle(new DetalleOrden(cliente: ordenInstance.cliente
-                                ,categoria: det.categoria,raza: det.raza, datosCorral: det.datosCorral
+                        ordenInstance.addToDetalle(new DetalleOrden(cliente: Cliente.load(det.clienteid)
+                                ,categoria: Categoria.load(det.categoriaId),raza: Raza.load(det.razaId), datosCorral: det.corral
                                 ,precio: det.preciounitario, cantidad: det.cantidad, peso: det.peso ))
                     }
+                    //--------------------------------
 
                     //recolecto todos los detalles de las ordenes de compra
                     ordenInstance.ordenescompra.each {ordc->
-                        arrayObj.clear()                        
-                        ordc.detalle.each{det->
-                            arrayObj.add(det.id)
-                        }
+                        ordc.formasdePago = ordenInstance.formasdePago
 
-                        ordenInstance.detalle{det->
-                            ordc.addToDetalle(new DetalleOrden(cliente: ordenInstance.cliente
-                                    ,categoria: det.categoria,raza: det.raza, datosCorral: det.datosCorral
-                                    ,precio: det.precio, cantidad: det.cantidad, peso: det.peso ))
-                        }
-                        ordc.notas.each {
-                            it.estado = EstadoDocumento.ANULADO
-                        }
-                        
+                        //------logica de modificacion del detalle de la orden de compra
                         arrayObj.clear()
-                        ordc.detallegastos.each {
+                        ordc.detalle.each {
                             arrayObj.add(it.id)
                         }
                         arrayObj.each {
-                            objDetalle = GastoOrden.load(it.id)
+                            objDetalle = DetalleOrden.load(it)
+                            ordc.removeFromDetalle(objDetalle)
                             objDetalle.delete()
-                            ordc.removeFromDetallegastos(objDetalle)
-                        }
-                        detalleGastosCompra.each{
-                            ordc.addToDetallegastos(new GastoOrden(gasto: Gasto.load(it.gasto)))
                         }
                         ordenInstance.detalle.each { det->
                             if(det.cliente==ordc.cliente){
@@ -728,6 +712,41 @@ class OrdenController {
                             }
 
                         }
+                        //------------------
+                        ordc.notas.each {
+                            it.estado = EstadoDocumento.ANULADO
+                        }
+                        //------logica gastos de compra
+                        arrayObj.clear()
+                        ordc.detallegastos.each {
+                            arrayObj.add(it.id)
+                        }
+                        arrayObj.each {
+                            objDetalle = GastoOrden.load(it)
+                            objDetalle.delete()
+                            ordc.removeFromDetallegastos(objDetalle)
+                        }
+                        detalleGastosCompra.each{
+                            ordc.addToDetallegastos(new GastoOrden(gasto: Gasto.load(it.gasto),monto: it.monto,porcentaje:it.porcentaje))
+                        }
+                        //-----
+
+                        //---logica de modificacion del vencimiento de la orden de compra----
+                        if(formadePagoInstance.tieneVencimientos){
+                            arrayObj.clear()
+                            ordc.detallevencimientos.each{
+                                arrayObj.add(it.id)
+                            }
+                            arrayObj.each {
+                                objDetalle = Vencimiento.load(it)
+                                ordc.removeFromDetallevencimientos(objDetalle)
+                                objDetalle.delete(objDetalle)
+                            }
+                            detalleVencComprasJson.each{det->
+                                ordc.addToDetallevencimientos(new Vencimiento(cantidadDias: det.dias,bruto:det.bruto,gastos:det.gastos,iva:det.iva,anticipo: det.anticipo))
+                            }
+                        }
+                        //----------------
 
                     }
                 }

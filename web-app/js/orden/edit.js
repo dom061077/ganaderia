@@ -500,7 +500,9 @@ Ext.onReady(function(){
                             detid : det.id,
                             clienteid: det.cliente.id,
                             cliente: det.cliente.razonSocial,
+                            categoriaId: det.categoria.id,
                             categoria: det.categoria.nombre,
+                            razaId: det.raza.id,
                             raza: det.raza.nombre,
                             corral: det.datosCorral,
                             cantidad: det.cantidad,
@@ -543,7 +545,7 @@ Ext.onReady(function(){
                                 gastos: det.porcentajeGastos,
                                 iva : det.porcentajeIva
                             });
-                            storeGridVencVentas.add(rec);
+                            storeGridVencCompras.add(rec);
                         }
                         for(var i = 0;i<objJson.ordenescompra[0].detallegastos.length;i++){
                             det = objJson.ordenescompra[0].detallegastos[i];
@@ -678,7 +680,7 @@ Ext.onReady(function(){
         var loadMask = new Ext.LoadMask(Ext.getBody(), {msg:'Enviando Información'});
         loadMask.show();
         Ext.Ajax.request({
-            url:saveOrdenUrl,
+            url:updateOrdenUrl,
             params:{
                 'id' : fieldValuesFormGanadero.ordenId,
                 'cliente.id' : fieldValuesFormGanadero.id,
@@ -816,6 +818,8 @@ Ext.onReady(function(){
             {name :'detid', type:'int'},
             {name:'clienteid', type:'int'},
             {name: 'cliente', type: 'string'},
+            {name: 'categoriaId', type:'int'},
+            {name: 'razaId',type:'int'},
             {name: 'categoria', type: 'string'},
             {name: 'raza', type: 'string'},
             {name: 'corral', type: 'string'},

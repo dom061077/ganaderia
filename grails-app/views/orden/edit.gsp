@@ -13,7 +13,6 @@
             var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
             var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
             var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
-            var saveOrdenUrl = '${createLink(controller:'orden',action:'savejson')}';
             var situacionIVAUrl = '${createLink(controller:'orden',action:'situacionIVAjson')}';
             var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
             var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
@@ -32,7 +31,7 @@
             var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
             var tipoOrdenUrl = '<%out << createLink(controller:'orden',action:'listtipojson')%>';
 
-            var updateOrdenUrl = '${createLink(controller:'orden',action:'updatecomprajson')}';
+            var updateOrdenUrl = '${createLink(controller:'orden',action:'updatejson')}';
 
             var titulo = '<%out << titulo%>';
             var loadordenUrl = '<%out << createLink(controller:'orden',action:'getordenjson')+'/'+ordenInstance?.id%>';
