@@ -16,11 +16,11 @@ class CondicionOperacionController {
     }
 
     def create() {
-        [condicionOperacionInstance: new CondicionOperacion(params)]
+        //[condicionOperacionInstance: new CondicionOperacion(params)]
     }
 
     def save() {
-        def condicionOperacionInstance = new CondicionOperacion(params)
+       // def condicionOperacionInstance = new CondicionOperacion(params)
         if (!condicionOperacionInstance.save(flush: true)) {
             render(view: "create", model: [condicionOperacionInstance: condicionOperacionInstance])
             return
