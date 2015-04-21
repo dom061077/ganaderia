@@ -1,7 +1,7 @@
 import com.rural.ganaderia.Especie
 import com.rural.ganaderia.Raza
 import grails.util.Environment
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+//import org.codehaus.groovy.grails.commons.ApplicationHolder
 import com.rural.ganaderia.localizacion.Provincia
 import com.rural.ganaderia.localizacion.Localidad
 import com.rural.ganaderia.Exposicion
@@ -46,7 +46,7 @@ class BootStrap {
     }
 
     void datosprueba(){
-            if(ApplicationHolder.application.config.dataSource.dbCreate == "create-drop"){
+            //if(ApplicationHolder.application.config.dataSource.dbCreate == "create-drop"){
                 /*def especie = new Especie(nombre: "BOVINO",porcentajeIVA: 10.5)
                 def categoria = new Categoria(nombre: "CATEGORIA 1 - BOVINO")
                 categoria.addToRazas(new Raza(nombre: "RAZA 1- CATEGORIA 1 - BOVINO"))
@@ -213,7 +213,7 @@ class BootStrap {
                 new Numerador(tipoOrden: TipoOrden.NUMERO_OPERACION).save(failOnError: true)
                 */
 
-            }
+            //}
 
     }
 }

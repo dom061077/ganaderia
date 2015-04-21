@@ -6,6 +6,7 @@ grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+grails.project.dependency.resolver = "maven" // or ivy
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -38,21 +39,24 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        runtime ":hibernate:$grailsVersion"
-        runtime ":jquery:1.7.2"
-        runtime ":resources:1.1.6"
+        build ":tomcat:7.0.55"
 
-        // Uncomment these (or add new ones) to enable additional resources capabilities
-        //runtime ":zipped-resources:1.0"
-        //runtime ":cached-resources:1.0"
-        //runtime ":yui-minify-resources:0.1.4"
+        // plugins for the compile step
+        compile ":scaffolding:2.1.2"
+        compile ':cache:1.1.8'
+        compile ":asset-pipeline:1.9.9"
 
-        build ":tomcat:$grailsVersion"
-
-        runtime ":database-migration:1.1"
-
-        compile ':cache:1.0.0'
-        compile ':spring-security-core:1.2.7.3'
+        // plugins needed at runtime but not for compilation
+        runtime ":hibernate:3.6.10.18"   // or ":hibernate4:4.3.6.1"
+        runtime ":database-migration:1.4.0"
+        runtime ":jquery:1.11.1"
+        //compile ":spring-security-core:2.0-RC4"
+        //compile ":burning-image:0.5.2"
+        compile ":audit-logging:1.0.3"
+        compile ":jasper:1.11.0"
+        compile ':spring-security-core:2.0-RC4'
+        compile ":spring-security-ui:1.0-RC2"
+        //compile ":spring-mobile:0.5.1"
 
     }
 }
