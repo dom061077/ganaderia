@@ -93,6 +93,7 @@ log4j = {
         error 'stdout'/*, 'smtp'*/
         // additivity = true
         //debug 'stdout'
+
     }
 
 }
