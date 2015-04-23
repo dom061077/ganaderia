@@ -103,4 +103,17 @@ grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.rural.gana
 grails.plugin.springsecurity.authority.className = 'com.rural.ganaderia.seguridad.Role'
 grails.plugin.springsecurity.requestMap.className = 'com.rural.ganaderia.seguridad.Requestmap'
 grails.plugin.springsecurity.securityConfigType = 'Requestmap'
+grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
+grails.plugin.springsecurity.useRoleGroups = true
 
+
+
+// Added by the Spring Security Core plugin:
+
+/*
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.rural.ganaderia.seguridad.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.rural.ganaderia.seguridad.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.rural.ganaderia.seguridad.Role'
+grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
+grails.plugin.springsecurity.useRoleGroups = true
+*/

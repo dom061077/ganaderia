@@ -15,7 +15,7 @@
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
         <!--link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css"-->
         <link rel="stylesheet" href="${resource(dir:'css/extjs',file: 'ext-theme-neptune-all.css')}">
-        <script type="text/javascript" src="${resource(dir:'js/extjs',file: 'ext-all-rtl-debug-w.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js/extjs',file: 'ext-all-rtl-debug-w-comments.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-lang-es.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/ConstraintsDefinitions.js')}"></script>
 
@@ -29,7 +29,7 @@
                     xtype:'panel',
                     border:false,
                     margin: '0 0 30 0',
-                    renderTo:'grailsLogo',
+                    renderTo:'menuId',
                     //title: 'Mix and match icon sizes to create a huge unusable toolbar',
                     items: [
                         {
@@ -156,7 +156,11 @@
         </script>
 	</head>
 	<body style="margin: 2em 13em 1.25em 13em">
-		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir:"/images",file:"headersrt.png")}" alt="Logo"/></a></div>
+		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir:"/images",file:"headersrt.png")}" alt="Logo"/></a>
+            <sec:ifLoggedIn>
+                <div id="menuId"></div>
+            </sec:ifLoggedIn>
+        </div>
         <g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/>
