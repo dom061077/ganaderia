@@ -23,6 +23,7 @@ class Cliente {
     static constraints = {
         cuit(unique: true)
         direccion(maxSize: 60,nullable: true,blank: true)
+        ingresosBrutos(nullable: true, blank: true)
         email(email: true,nullable: true,blank: true,maxSize: 50)
         telefono1(nullable: true,maxSize: 20,blank: true)
         telefono2(maxSize: 20,nullable: true, blank: true)

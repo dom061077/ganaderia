@@ -21,5 +21,6 @@ class DetalleOrden {
 
     static belongsTo = [orden:Orden]
     static constraints = {
+        datosCorral(nullable: true, blank: true)
     }
 }

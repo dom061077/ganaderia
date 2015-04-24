@@ -493,6 +493,9 @@ Ext.onReady(function(){
                 success: function(response, opts) {
                     var objJson = Ext.decode(response.responseText);
                     if (objJson.id != null) {
+                        storeProvinciaAltaCliente.load();
+                        storeLocalidadAltaCliente.proxy.extraParams={provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)};
+                        storeLocalidadAltaCliente.load();
                         Ext.getCmp('idEditClienteId').setValue(objJson.id);
                         Ext.getCmp('cuitEditClienteId').setValue(objJson.cuit);
                         Ext.getCmp('razonSocialEditClienteId').setValue(objJson.razonSocial);
@@ -1531,114 +1534,153 @@ Ext.onReady(function(){
               title:'Paso 3 - Confección del Detalle',
               items:[
                   {
-                      xtype:'form',
 
-                      tools:[
-                          {
-                              type:'gear',
-                              tooltip:'Permite modificar datos del cliente seleccionado',
-                              handler: function(event, toolEl, panelHeader){
-                                  showEditCliente(Ext.getCmp('comboClienteDetalleId').getValue());
-                              }
-                          },{
-                              type:'plus',
-                              tooltipType:'title',
-                              tooltip:'Permite agregar un cliente',
-                              handler: function(event, toolEl, panelHeader) {
-                                    showAddCliente();
-                              }
-                          }
-                      ],
-                      defaults:{
-                            msgTarget:'under'
-                      },
+                      xtype:'panel',
+                      layout:'column',
                       items:[
                           {
-                              xtype:'combo',
-                              id:'comboClienteDetalleId',
-                              name:'clienteDetalle',
-                              fieldLabel:'Cliente',
-                              allowBlank:false,
-                              width:300,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              triggerAction:'all',
-                              valueField:'id',
-                              displayField:'nombre',
-                              selectOnTab:true,
-                              store:storeClienteDetalle,
-                              listeners:{
-                                  'select':function(combo,records,options){
+                              xtype:'form',
 
+                              tools:[
+                                  {
+                                      type:'gear',
+                                      tooltip:'Permite modificar datos del cliente seleccionado',
+                                      handler: function(event, toolEl, panelHeader){
+                                          showEditCliente(Ext.getCmp('comboClienteDetalleId').getValue());
+                                      }
+                                  },{
+                                      type:'plus',
+                                      tooltipType:'title',
+                                      tooltip:'Permite agregar un cliente',
+                                      handler: function(event, toolEl, panelHeader) {
+                                          showAddCliente();
+                                      }
                                   }
-                              }
-                          },{
-                              xtype:'combo',
-                              name:'categoria',
-                              fieldLabel:'Categoría',
-                              allowBlank:false ,
-                              width:300,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              triggerAction:'all',
-                              valueField:'id',
-                              displayField:'nombre',
-                              selectOnTab: true,
-                              store: storeCategoria,
-                              listeners:{
-                                  'select':function(combo,records,options){
-                                      //storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
-                                      //storeRaza.load();
+                              ],
+                              defaults:{
+                                  msgTarget:'under'
+                              },
+                              items:[
+                                  {
+                                      xtype:'combo',
+                                      id:'comboClienteDetalleId',
+                                      name:'clienteDetalle',
+                                      fieldLabel:'Cliente',
+                                      allowBlank:false,
+                                      width:400,
+                                      queryMode:'remote',
+                                      emptyText:'',
+                                      typeAhead: true,
+                                      triggerAction:'all',
+                                      valueField:'id',
+                                      displayField:'nombre',
+                                      selectOnTab:true,
+                                      store:storeClienteDetalle,
+                                      listeners:{
+                                          'select':function(combo,records,options){
+
+                                          }
+                                      }
+                                  },{
+                                      xtype:'combo',
+                                      name:'categoria',
+                                      fieldLabel:'Categoría',
+                                      allowBlank:false ,
+                                      width:300,
+                                      queryMode:'remote',
+                                      emptyText:'',
+                                      typeAhead: true,
+                                      triggerAction:'all',
+                                      valueField:'id',
+                                      displayField:'nombre',
+                                      selectOnTab: true,
+                                      store: storeCategoria,
+                                      listeners:{
+                                          'select':function(combo,records,options){
+                                              //storeRaza.proxy.extraParams={categoriaId:records[0].data.id};
+                                              //storeRaza.load();
+                                          }
+                                      }
+
+                                  },{
+                                      xtype:'combo',
+                                      name:'raza',
+                                      fieldLabel:'Raza',
+                                      allowBlank:false ,
+                                      width:300,
+                                      queryMode:'remote',
+                                      emptyText:'',
+                                      typeAhead: true,
+                                      forceSelection:true,
+                                      triggerAction:'all',
+                                      valueField:'id',
+                                      displayField:'nombre',
+                                      selectOnTab: true,
+                                      store: storeRaza
+                                  },{
+                                      xtype:'textfield',
+                                      fieldLabel:'Leyenda',
+                                      name:'corral',
+
+                                      width:300
+                                  },{
+                                      xtype:'numberfield',
+                                      name:'cantidad',
+                                      allowBlank:false,
+                                      value:0,
+                                      fieldLabel:'Cantidad'
+                                  },{
+                                      xtype:'numberfield',
+                                      name:'peso',
+                                      value:0,
+                                      fieldLabel:'Peso'
+                                  },{
+                                      xtype:'numberfield',
+                                      name:'preciounitario',
+                                      allowBlank:false,
+                                      fieldLabel:'Precio Unitario'
                                   }
-                              }
-
-                          },{
-                              xtype:'combo',
-                              name:'raza',
-                              fieldLabel:'Raza',
-                              allowBlank:false ,
-                              width:300,
-                              queryMode:'remote',
-                              emptyText:'',
-                              typeAhead: true,
-                              forceSelection:true,
-                              triggerAction:'all',
-                              valueField:'id',
-                              displayField:'nombre',
-                              selectOnTab: true,
-                              store: storeRaza
-                          },{
-                              xtype:'textfield',
-                              fieldLabel:'Leyenda',
-                              name:'corral',
-
-                              width:300
-                          },{
-                              xtype:'numberfield',
-                              name:'cantidad',
-                              allowBlank:false,
-                              value:0,
-                              fieldLabel:'Cantidad'
-                          },{
-                              xtype:'numberfield',
-                              name:'peso',
-                              value:0,
-                              fieldLabel:'Peso'
-                          },{
-                              xtype:'numberfield',
-                              name:'preciounitario',
-                              allowBlank:false,
-                              fieldLabel:'Precio Unitario'
-                          }
-                      ],
-                      buttons:[
+                              ],
+                              buttons:[
+                                  {
+                                      text:'Agregar Línea',
+                                      handler: onAddClick
+                                  }
+                              ]
+                          },
                           {
-                              text:'Agregar Línea',
-                              handler: onAddClick
+                              xtype: 'panel',
+                              title:'Datos del Cliente Seleccionado',
+                              width:400,
+                              items:[
+                                  {
+                                      xtype:'displayfield',
+                                      fieldLabel:'C.U.I.T'
+                                  },                                  {
+                                      xtype:'displayfield',
+                                      fieldLabel:'Razon Social o Apellido y Nombre'
+                                  },{
+                                      xtype:'displayfield',
+                                      fieldLabel:'Situación I.V.A'
+                                  },{
+                                      xtype:'displayfield',
+                                      fieldLabel:'Ingresos Brutos'
+                                  },{
+                                      xtype:'displayfield',
+                                      fieldLabel:'Provincia'
+                                  },{
+                                      xtype:'displayfield',
+                                      fieldLabel:'Localidad'
+
+                                  },{
+                                      xtype:'displayfield',
+                                      fieldLabel:'Dirección'
+
+                                  }
+                              ]
                           }
                       ]
+
                   },
                   {
                      xtype:'grid',
