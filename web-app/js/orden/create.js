@@ -190,6 +190,17 @@ Ext.onReady(function(){
         win.show();
     }
 
+    function completarPanelClienteSeleccionado(){
+         var fieldValues = Ext.getCmp('formEditClienteId').getForm().getFieldValues();
+         Ext.getCmp('cuitCliSelecId').setValue(fieldValues.cuit);
+         Ext.getCmp('razonSocialApellidoNombreCliSelecId').setValue(fieldValues.razonSocial);
+         Ext.getCmp('situacionIvaCliSelecId').setValue(fieldValues.situacionIVA);
+         Ext.getCmp('ingBrutosCliSelecId').setValue(fieldValues.ingresosBrutos);
+         Ext.getCmp('provinciaCliSelecId').setValue(fieldValues.provincia);
+         Ext.getCmp('localidadCliSelecId').setValue(fieldValues.provincia);
+         Ext.getCmp('direccionCliSelecId').setValue(fieldValues.provincia);
+    }
+
     function showEditCliente(idCliente){
         if(!idCliente){
             Ext.Msg.show({
@@ -278,7 +289,7 @@ Ext.onReady(function(){
                                 'select':function(combo,records,options){
                                     storeLocalidadAltaCliente.proxy.extraParams={provinciaId:records[0].data.id};
                                     storeLocalidadAltaCliente.load();
-                                    Ext.getCmp('localidadAltaClienteId').clearValue();
+                                    Ext.getCmp('localidadEditClienteId').clearValue();
                                 }
                             }
                         },{
@@ -315,6 +326,7 @@ Ext.onReady(function(){
                             success:function(f,a){
                                 storeClienteDetalle.load();
                                 Ext.getCmp('comboClienteDetalleId').setValue(a.result.idCliente);
+                                completarPanelClienteSeleccionado();
                                 winEditCliente.close();
                             },
                             failure:function(f,a){
@@ -1655,25 +1667,32 @@ Ext.onReady(function(){
                               items:[
                                   {
                                       xtype:'displayfield',
+                                      id:'cuitCliSelecId',
                                       fieldLabel:'C.U.I.T'
                                   },                                  {
                                       xtype:'displayfield',
+                                      id:'razonSocialApellidoNombreCliSelecId',
                                       fieldLabel:'Razon Social o Apellido y Nombre'
                                   },{
                                       xtype:'displayfield',
+                                      id:'situacionIvaCliSelecId',
                                       fieldLabel:'Situación I.V.A'
                                   },{
                                       xtype:'displayfield',
+                                      id:'ingBrutosCliSelecId',
                                       fieldLabel:'Ingresos Brutos'
                                   },{
                                       xtype:'displayfield',
+                                      id:'provinciaCliSelecId',
                                       fieldLabel:'Provincia'
                                   },{
                                       xtype:'displayfield',
+                                      id:'localidadCliSelecId',
                                       fieldLabel:'Localidad'
 
                                   },{
                                       xtype:'displayfield',
+                                      id:'direccionCliSelecId',
                                       fieldLabel:'Dirección'
 
                                   }
