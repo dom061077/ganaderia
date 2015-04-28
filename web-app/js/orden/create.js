@@ -218,7 +218,7 @@ Ext.onReady(function(){
             autoDestroy:false,
             x:400,
             y:200,
-            title:'ModificaciÃ³n de Cliente',
+            title:'Modificación de Cliente',
             items:[
                 {
                     xtype:'form',
