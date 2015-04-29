@@ -1,5 +1,69 @@
 
 Ext.onReady(function(){
+    function getDatosCliente(numdoc){
+        var recRetornado;
+        Ext.Ajax.request(
+            {
+                url: getDatosClientesUrl,
+                method: 'POST',
+                async:false,
+                params : {
+                    cuitDni: numdoc
+                },  // end-params
+
+                success: function(response, opts) {
+                    var objJson = Ext.decode(response.responseText);
+                    var rec;
+                    if (objJson.id != null) {
+                        tempCuit = objJson.cuit;
+                        storeProvincia.load();
+                        storeLocalidad.proxy.extraParams={provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)};
+                        storeLocalidad.load();
+                        rec = new ganaderia.model.ClienteGanadero({
+                            id : objJson.id,
+                            clienteId: objJson.id,
+                            cuit : objJson.cuit,
+                            ingresosBrutos: objJson.ingresosBrutos,
+                            razonSocial: objJson.razonSocial,
+                            telefono1 : objJson.telefono1,
+                            telefono2 : objJson.telefono2,
+                            email : objJson.email,
+                            situacionIVA: objJson.situacionIVA.name,
+                            provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
+                            localidad :(objJson.localidad!=null?objJson.localidad.id:null),
+                            direccion : objJson.direccion
+                        });
+                        //Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+                        recRetornado = rec;
+                    }else{
+                        //Ext.getCmp('clienteId').setValue('Cliente Nuevo');
+                        recRetornado = 'Cliente Nuevo';
+                    }
+
+
+
+                }, // end-function
+
+                failure: function (response, options) {
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg:'Se produjo un error de comunicación',
+                        icon:Ext.MessageBox.ERROR,
+                        buttons:Ext.MessageBox.OK,
+                        fn:function(btn){
+                            //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
+                            console.log("Error al traer datos del cliente ganadero");
+                        }
+                    });
+                }
+
+            } // end-ajax
+
+        );
+        return recRetornado;
+    }
+
+
     Ext.apply(Ext.form.VTypes,{
         //cuitVal: /^\d{2}\-\d{8}\-\d{1}$/,
 
@@ -8,62 +72,12 @@ Ext.onReady(function(){
 
             var vec= new Array(10);
             if( tempCuit!=numdoc ){
-                Ext.Ajax.request(
-                    {
-                        url: getDatosClientesUrl,
-                        method: 'POST',
-                        async:false,
-                        params : {
-                            cuitDni: numdoc
-                        },  // end-params
+                var rec = getDatosCliente(numdoc);
+                if (rec.id)
+                    Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
+                else
+                    Ext.getCmp('clienteId').setValue('Cliente Nuevo');
 
-                        success: function(response, opts) {
-                            var objJson = Ext.decode(response.responseText);
-                            var rec;
-                            if (objJson.id != null) {
-                                tempCuit = objJson.cuit;
-                                storeProvincia.load();
-                                storeLocalidad.proxy.extraParams={provinciaId:(objJson.localidad!=null?objJson.localidad.provincia.id:null)};
-                                storeLocalidad.load();
-                                rec = new ganaderia.model.ClienteGanadero({
-                                    id : objJson.id,
-                                    clienteId: objJson.id,
-                                    cuit : objJson.cuit,
-                                    ingresosBrutos: objJson.ingresosBrutos,
-                                    razonSocial: objJson.razonSocial,
-                                    telefono1 : objJson.telefono1,
-                                    telefono2 : objJson.telefono2,
-                                    email : objJson.email,
-                                    situacionIVA: objJson.situacionIVA.name,
-                                    provincia: (objJson.localidad!=null? objJson.localidad.provincia.id:null),
-                                    localidad :(objJson.localidad!=null?objJson.localidad.id:null),
-                                    direccion : objJson.direccion
-                                });
-                                Ext.getCmp('wizardId').getComponent('stepFormGanaderoId').loadRecord(rec);
-                            }else{
-                                Ext.getCmp('clienteId').setValue('Cliente Nuevo');
-                            }
-
-
-
-                        }, // end-function
-
-                        failure: function (response, options) {
-                            Ext.Msg.show({
-                                title:'Error',
-                                msg:'Se produjo un error de comunicación',
-                                icon:Ext.MessageBox.ERROR,
-                                buttons:Ext.MessageBox.OK,
-                                fn:function(btn){
-                                    //wizard.cardPanel.getLayout().setActiveItem(wizard.currentCard - 1);
-                                    console.log("Error al traer datos del cliente ganadero");
-                                }
-                            });
-                        }
-
-                    } // end-ajax
-
-                );
             }
 
 
@@ -956,7 +970,7 @@ Ext.onReady(function(){
                 idProperty:'id'
             }
         },
-        fields:['id','nombre']
+        fields:['id','nombre','cuit']
     });
   var storeClienteDetalle = Ext.create('ganaderia.model.combo.Cliente');
 
@@ -1590,7 +1604,11 @@ Ext.onReady(function(){
                                       store:storeClienteDetalle,
                                       listeners:{
                                           'select':function(combo,records,options){
-
+                                                var rec = getDatosCliente(records[0].data.cuit)
+                                                Ext.getCmp('cuitCliSelecId').setValue(rec.data.cuit);
+                                                Ext.getCmp('razonSocialApellidoNombreCliSelecId').setValue(rec.data.razonSocial);
+                                                Ext.getCmp('situacionIvaCliSelecId').setValue(rec.data.situacionIVA);
+                                                Ext.getCmp('situacionIvaCliSelecId').setValue(rec.situacionIVA);
                                           }
                                       }
                                   },{
