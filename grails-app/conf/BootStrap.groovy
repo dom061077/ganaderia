@@ -49,12 +49,16 @@ class BootStrap {
     }
 
     void datosprueba(){
-        def userAdmin = User.findByUsername('useradmin')
+        def userAdmin = null
+        userAdmin = User.findByUsername('useradmin')
         if(!userAdmin){
-            def adminRole = new Role(authority: 'ROLE_ADMIN').save(failOnError: true)
-            userAdmin = new User(username: 'useradmin',password: 'useradmin').save(failOnError: true)
-            if(!userAdmin.authorities.contains(adminRole))
-                UserRole.create(userAdmin,adminRole)
+            userAdmin = new User(username: 'useradmin',password: 'useradmin',).save(failOnError: true)
+            def adminRole = Role.findByAuthority('ROLE_ADMIN')
+            if (!adminRole){
+                adminRole = new Role(authority: 'ROLE_ADMIN').save(failOnError: true)
+                //if(!userAdmin.authorities.contains(adminRole))
+            }
+            UserRole.create(userAdmin,adminRole)
         }
 
 

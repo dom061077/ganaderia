@@ -107,7 +107,7 @@ class ClienteController {
     
     //-----------------json return-------------
     def listjson(){
-        log.info("PARAMETROS: "+params)
+        log.info("PARAMETROS: "+params+" devueltos")
         def hashJson = [:]
         def listRows = []
         def clientes = Cliente.createCriteria().list{
@@ -116,8 +116,10 @@ class ClienteController {
             }
             order("razonSocial","asc")
         }
+
         clientes.each{
-            listRows << [id:it.id,nombre:it.razonSocial]
+            listRows << [id:it.id,nombre:it.razonSocial,cuit:it.cuit]
+            log.debug "CUIT: "+it.cuit
         }
         hashJson.success = true
         hashJson.rows = listRows
