@@ -179,16 +179,18 @@ class ClienteController {
     
     def getdatosjson(String cuitDni){
         log.info("Parametros: "+cuitDni)
-       
+        def objJson = [:]
         Cliente clienteInstance  
         if (cuitDni)
             clienteInstance =  Cliente.findByCuit(cuitDni);
         if(!clienteInstance)
             clienteInstance = new Cliente()
-
-        JSON.use("deep"){
-            render clienteInstance as JSON
-        }
+        objJson.id = clienteInstance.id
+        objJson.razonSocial = clienteInstance.razonSocial
+        objJson.situacionIVA = [name:clienteInstance.situacionIVA.name,descripcion: clienteInstance.situacionIVA.name.toString()]
+        //JSON.use("deep"){
+        //    render clienteInstance as JSON
+        //}
     }
     
     def getdatosjsonbyid(long id){
