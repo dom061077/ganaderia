@@ -6,6 +6,15 @@ grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+forkConfig = [maxMemory: 1024, minMemory: 64, debug: false, maxPerm: 256]
+grails.project.fork = [
+        test: forkConfig, // configure settings for the test-app JVM
+        run: forkConfig, // configure settings for the run-app JVM
+        war: forkConfig, // configure settings for the run-war JVM
+        console: forkConfig // configure settings for the Swing console JVM
+         ]
+
+
 grails.project.dependency.resolver = "maven" // or ivy
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies

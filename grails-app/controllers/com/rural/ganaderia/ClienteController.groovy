@@ -188,6 +188,14 @@ class ClienteController {
         objJson.id = clienteInstance.id
         objJson.razonSocial = clienteInstance.razonSocial
         objJson.situacionIVA = [name:clienteInstance.situacionIVA.name,descripcion: clienteInstance.situacionIVA.name.toString()]
+        objJson.cuit = clienteInstance.cuit
+        objJson.direccion = clienteInstance.direccion
+        objJson.ingresosBrutos = clienteInstance.ingresosBrutos
+        objJson.localidad = [id:clienteInstance.localidad.id,codigoPostal:clienteInstance.localidad?.codigoPostal
+                           ,nombre: clienteInstance.localidad?.nombre
+                           ,provincia: [id:clienteInstance.localidad?.provincia?.id,nombre: clienteInstance.localidad?.provincia?.nombre]]
+
+        render objJson as grails.converters.JSON
         //JSON.use("deep"){
         //    render clienteInstance as JSON
         //}
