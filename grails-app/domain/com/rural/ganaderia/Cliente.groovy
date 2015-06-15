@@ -1,9 +1,10 @@
 package com.rural.ganaderia
 
 import com.rural.ganaderia.localizacion.Localidad
-import com.rural.ganaderia.enums.SituacionIVA
+import com.rural.ganaderia.SituacionIVA
 
 class Cliente {
+    String codigo
     String direccion
     String email
     String telefono1

@@ -3,7 +3,8 @@ package com.rural.ganaderia.localizacion
 class Localidad {
     String nombre
     int codigoPostal
-    Provincia provincia
+    String ubicacion
+    Partido partido
 
     static constraints = {
     }
