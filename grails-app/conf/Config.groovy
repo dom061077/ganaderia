@@ -107,7 +107,7 @@ grails.plugin.springsecurity.securityConfigType = 'Requestmap'
 grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
 grails.plugin.springsecurity.useRoleGroups = true
 
-
+//-- test git
 
 // Added by the Spring Security Core plugin:
 
