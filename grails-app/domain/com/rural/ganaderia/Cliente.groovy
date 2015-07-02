@@ -14,6 +14,7 @@ class Cliente {
     String razonSocial //apellido y nombre del expositor o raz�n social
     String ingresosBrutos
     SituacionIVA situacionIVA
+    boolean gananciasIns
 
     String codigoPostal
 

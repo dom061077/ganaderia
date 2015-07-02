@@ -1,7 +1,7 @@
 package com.rural.ganaderia
 
 class Raza {
-    
+    String codigo //codigo legacy
     String nombre
     Especie especie
 

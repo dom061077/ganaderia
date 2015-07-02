@@ -1,15 +1,17 @@
 <%@ page import="com.rural.ganaderia.Orden" %>
 <!doctype html>
+
 <html>
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'orden.label', default: 'Orden')}" />
 		<title><g:message code="default.create.label" args="[entityName]" /></title>
-        <script type="text/javascript" src="${resource(dir:'js/orden',file:'create.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'orden',file:'app.js')}"></script>
         <script type="text/javascript">
             var especiesUrl = '<%out << createLink(controller:'especie',action:'listjson')%>';
             var razaUrl = '<%out << createLink(controller:'raza',action:'listjson')%>';
             var provinciaUrl = '<%out << createLink(controller:'provincia',action:'listjson')%>';
+            var partidoUrl = '<%out << createLink(controller:'partido',action:'listjson')%>';
             var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
             var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
             var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
@@ -30,6 +32,7 @@
             var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
             var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
             var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
+            var clientestoreUrl = '<% out << createLink(controller:'cliente',action:'')%>';
         </script>
 
 	</head>

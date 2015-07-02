@@ -24,6 +24,7 @@ class ClienteController {
         [clienteInstance: new Cliente(params)]
     }
 
+
     def save() {
         def clienteInstance = new Cliente(params)
         if (!clienteInstance.save(flush: true)) {

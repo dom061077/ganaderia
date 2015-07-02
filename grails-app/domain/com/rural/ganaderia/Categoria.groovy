@@ -1,6 +1,7 @@
 package com.rural.ganaderia
 
 class Categoria {
+    String codigo //codigo legacy
     Especie especie
     String nombre
 

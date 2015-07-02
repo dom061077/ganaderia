@@ -30,6 +30,11 @@ class OrdenController {
         [ordenInstance: new Orden(params)]
     }
 
+    def create2() {
+        [clienteInstance: new Cliente(params)]
+    }
+
+
     def save() {
         def ordenInstance = new Orden(params)
         if (!ordenInstance.save(flush: true)) {

@@ -254,12 +254,12 @@ Ext.onReady(function(){
                             name:'id'
                         },{
                             fieldLabel:'C.U.I.T o D.N.I',
-                            allowBlank:false,
+                            allowBlank:true,
                             id:'cuitEditClienteId',
                             name:'cuit'
                         },{
                             fieldLabel:'Razon Social o Apellido y Nombre',
-                            allowBlank:false,
+                            allowBlank:true,
                             id:'razonSocialEditClienteId',
                             name:'razonSocial'
                         },{
@@ -269,7 +269,7 @@ Ext.onReady(function(){
                             forceSelection: true,
                             name:'situacionIVA',
                             id:'situacionIVAEditClienteId',
-                            allowBlank:false,
+                            allowBlank:true,
                             //editable:false,
                             queryMode:'remote',
                             emptyText:'',
@@ -282,7 +282,7 @@ Ext.onReady(function(){
                             fieldLabel:'Ing.Brutos',
                             id:'ingresosBrutosEditClienteId',
                             name:'ingresosBrutos',
-                            allowBlank:false
+                            allowBlank:true
                         },{
                             fieldLabel:'Provincia',
                             xtype:'combo',
@@ -290,7 +290,7 @@ Ext.onReady(function(){
                             forceSelection : true,
                             id:'provinciaEditClienteId',
                             name:'provincia',
-                            allowBlank:false,
+                            allowBlank:true,
                             anyMatch:true,
                             queryMode:'remote',
                             emptyText:'',
@@ -310,7 +310,7 @@ Ext.onReady(function(){
                             fieldLabel:'Localidad',
                             xtype:'combo',
                             id:'localidadEditClienteId',
-                            allowBlank:false,
+                            allowBlank:true,
                             store:storeLocalidadAltaCliente,
                             forceSelection:true,
                             queryMode:'remote',
@@ -327,7 +327,7 @@ Ext.onReady(function(){
                             fieldLabel:'Dirección',
                             name:'direccion',
                             id:'direccionEditClienteId',
-                            allowBlank:false
+                            allowBlank:true
                         }
                     ]
                 }
@@ -1282,14 +1282,14 @@ Ext.onReady(function(){
                                         buscarClienteVenta();
                                    },
                                    vtype:'numdocexists',
-                                   allowBlank:false
+                                   allowBlank:true
                   },{
                       fieldLabel:'Ingresos Brutos',
                       name:'ingresosBrutos'
                   },{
                       xtype:'combo',
                       fieldLabel:'Situación I.V.A',
-                      forceSelection: true,
+                      forceSelection: false,
                       name:'situacionIVA',
                       width:400,
                       //allowBlank:false,
@@ -1308,7 +1308,7 @@ Ext.onReady(function(){
                       style:{textTransform: 'uppercase'},
                       width:400,
                       maxLengthText:60,
-                      allowBlank:false
+                      allowBlank:true
                   },{
                       fieldLabel:'Teléfono 1',
                       maxLengthText:20,
@@ -1326,9 +1326,9 @@ Ext.onReady(function(){
                       xtype:'combo',
                       width:500,
                       store:storeProvincia,
-                      forceSelection : true,
+                      forceSelection : false,
                       name:'provincia',
-                      allowBlank:false,
+                      allowBlank:true,
                       anyMatch:true,
                       queryMode:'remote',
                       emptyText:'',
@@ -1351,7 +1351,7 @@ Ext.onReady(function(){
                       id:'localidadId',
                       allowBlank:false,
                       store:storeLocalidad,
-                      forceSelection:true,
+                      forceSelection:false,
                       queryMode:'remote',
                       anyMatch:true,
                       emptyText:'',
@@ -1361,13 +1361,13 @@ Ext.onReady(function(){
                       displayField:'nombre',
                       selectOnTab: true,
                       name:'localidad',
-                      allowBlank:false
+                      allowBlank:true
                   },{
                       fieldLabel:'Direccion',
                       width:400,
                       name:'direccion',
                       maxLengthText:60,
-                      allowBlank:false
+                      allowBlank:true
                   }
               ],
               buttons: [{

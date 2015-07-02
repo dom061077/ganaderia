@@ -101,12 +101,12 @@ class LocalidadController {
         }
     }
     //--------------------
-    def listjson(long provinciaId){
+    def listjson(long partidoId){
         def hashJson = [:]
         def listRows = []
         def localidades = Localidad.createCriteria().list{
-            provincia{
-                eq("id",provinciaId)
+            partido{
+                eq("id",partidoId)
             }
             if (params.query){
                 ilike("nombre",'%'+params.query+'%')
