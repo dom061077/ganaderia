@@ -66,12 +66,12 @@ Ext.define('Ganaderia.view.GastosGridVista',
                             {
                                 xtype:'combo',
                                 id:'cmbCategoria',
-                                emptyText:'<Seleccione una Categoría>',
+                                emptyText:'<Seleccione un gasto>',
                                 typeAhead: true,
                                 triggerAction: 'all',
-                                store:'Ganaderia.store.CategoriaStore',
+                                store:'Ganaderia.store.GastoStore',
                                 valueField:'id',
-                                displayField:'nombre',
+                                displayField:'descripcion',
                                 selectOnTab:true
 
 
@@ -90,6 +90,17 @@ Ext.define('Ganaderia.view.GastosGridVista',
 
                         },
                         {
+                            text : "Monto",
+                            flex : 1,
+                            dataIndex : 'monto',
+                            allowDecimals: false,
+                            columnWidth:40,
+                            editor:{
+                                xtype:'numberfield',
+                                allowDecimals:false
+                            }
+                        },
+                        {
                             text : "Porcentaje",
                             flex : 1,
                             dataIndex : 'porcentaje',
@@ -102,7 +113,8 @@ Ext.define('Ganaderia.view.GastosGridVista',
                         },
                         {
                             text : "Ac.Base I.V.A",
-                            width:80,
+                            editable: true,
+                            width:40,
                             flex : 1,
                             xtype:'checkcolumn',
                             dataIndex : 'acbaseiva'

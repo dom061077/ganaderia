@@ -1,7 +1,7 @@
 Ext.define('Ganaderia.view.OrdenVista',
     {
         extend : 'Ext.form.Panel',
-        requires : ['Ganaderia.view.DetalleGridVista','Ganaderia.view.GastosGridVista'],
+        requires : ['Ganaderia.view.DetalleGridVista','Ganaderia.view.GastosGridVista','Ganaderia.view.VencimientosGridVista'],
         alias : 'widget.OrdenVista',
         constructor : function(config){
             this.initConfig(config);
@@ -284,7 +284,13 @@ Ext.define('Ganaderia.view.OrdenVista',
                                     {xtype:'GastosGridVista'}
                                   ]
                               }
-                            ,{title:'Vencimientos de la Boleta'}
+                            ,{  title:'Vencimientos de la Boleta'
+                                ,height:400
+                                ,width:850
+                                ,items:[
+                                    {xtype:'VencimientosGridVista'}
+                                ]
+                            }
                            ]
                         }],
                     buttons : [{
