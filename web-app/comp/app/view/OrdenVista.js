@@ -108,9 +108,9 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                         items:[
                                                             {
                                                                 xtype:'combo',
-                                                                margin:'0 20 0 0',
+                                                                margin:'0 20 5 0',
                                                                 fieldLabel:'Exposición',
-                                                                name:'exposicion.id',
+                                                                name:'exposicion',
                                                                 allowBlank:false,
                                                                 width:400,
                                                                 queryMode:'remote',
@@ -127,7 +127,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                             },{
                                                                 xtype:'combo',
                                                                 fieldLabel:'Año Exposición',
-                                                                name:'anioExposicion.id',
+                                                                name:'anioExposicion',
                                                                 allowBlank:false,
                                                                 width:250,
                                                                 queryMode:'remote',
@@ -156,10 +156,10 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                                 xtype:'combo',
                                                                 fieldLabel:'Especie',
                                                                 itemId:'cmbEspecie',
-                                                                margin:'0 170 0 0',
-                                                                name:'especie.id',
+                                                                margin:'0 20 5 0',
+                                                                name:'especie',
                                                                 allowBlank:false,
-                                                                width:250,
+                                                                width:400,
                                                                 queryMode:'remote',
                                                                 emptyText:'',
                                                                 typeAhead: true,
@@ -172,9 +172,9 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                             },{
                                                                 xtype:'combo',
                                                                 fieldLabel:'Destino',
-                                                                name:'destino.id',
+                                                                name:'destino',
                                                                 allowBlank:false,
-                                                                width:250,
+                                                                width:400,
                                                                 queryMode:'remote',
                                                                 emptyText:'',
                                                                 typeAhead: true,
@@ -197,12 +197,28 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                       border:false,
                                                       items:[
                                                           {
+                                                              xtype:'combo',
+                                                              name:'operacion',
+                                                              margin: '0 20 5 0',
+                                                              itemId:'cmbOperacion',
+                                                              fieldLabel:'Operación',
+                                                              name:'operacion',
+                                                              allowBlank:false,
+                                                              width:400,
+                                                              queryMode:'remote',
+                                                              typeAhead: true,
+                                                              triggerAction: 'all',
+                                                              valueField:'id',
+                                                              displayField:'nombre',
+                                                              store:'Ganaderia.store.OperacionStore'
+                                                          },{
                                                               name:'guias',
                                                               margin:'0 100 5 0',
                                                               xtype:'textfield',
                                                               fieldLabel:'Guías'
                                                           },{
                                                               name:'fechaOperacion',
+                                                              margin: '0 100 5 0',
                                                               xtype:'datefield',
                                                               fieldLabel:'Fecha de Operación'
                                                           },{
@@ -210,7 +226,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               margin:'0 20 5 0',
                                                               itemId:'cmbProvinciaProc',
                                                               fieldLabel:'Provincia Proc.',
-                                                              name:'provincia',
+                                                              name:'procedenciaProvincia',
                                                               allowBlank:false,
                                                               width:400,
                                                               queryMode:'remote',
@@ -223,10 +239,10 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               store:'Ganaderia.store.ProvinciaStore'
                                                           },{
                                                               xtype:'combo',
-                                                              margin:'0 0 5 0',
+                                                              margin:'0 20 5 0',
                                                               itemId:'cmbPartidoProc',
                                                               fieldLabel:'Partido Proc',
-                                                              name:'partido',
+                                                              name:'procedenciaPartido',
                                                               allowBlank:false,
                                                               width:400,
                                                               queryMode:'remote',
@@ -241,7 +257,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               xtype:'combo',
                                                               itemId:'cmbLocalidadProc',
                                                               fieldLabel:'Localidad Proc',
-                                                              name:'partido',
+                                                              name:'procedenciaLocalidad',
                                                               allowBlank:false,
                                                               width:400,
                                                               queryMode:'remote',
@@ -294,32 +310,13 @@ Ext.define('Ganaderia.view.OrdenVista',
                            ]
                         }],
                     buttons : [{
-                        text : 'Create',
-                        itemId : 'btnCreate',
+                        text : 'Generar',
+                        itemId : 'btnGenerar',
                         formBind : true
-                    },
-                        {
-                            text : 'Read Data',
-                            itemId : 'btnLoad'
-                        },
-
-                        {
-                            text : 'Update',
-                            itemId : 'btnUpdate',
-                            formBind : true
                         },
                         {
-                            text : 'Delete',
-                            itemId : 'btnDelete',
-                            formBind : true
-                        },
-                        {
-                            text : 'Reset',
-                            itemId : 'btnReset'
-                        },
-                        {
-                            text : 'Clear',
-                            itemId : 'btnClear'
+                            text : 'Cancelar',
+                            itemId : 'btnCancelar'
                         }]
                 });
 

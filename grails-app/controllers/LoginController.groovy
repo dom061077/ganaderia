@@ -50,6 +50,9 @@ class LoginController {
 
 		String view = 'auth'
 		String postUrl = "${request.contextPath}${config.apf.filterProcessesUrl}"
+        log.info("url_prior_login POSTURL: "+request.session.getAttribute("url_prior_login"))
+        if(postUrl.contains('json'))
+            postUrl="/"
 		render view: view, model: [postUrl: postUrl,
 		                           rememberMeParameter: config.rememberMe.parameter]
 	}

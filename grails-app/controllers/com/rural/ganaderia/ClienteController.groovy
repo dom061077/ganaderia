@@ -120,7 +120,6 @@ class ClienteController {
 
         clientes.each{
             listRows << [id:it.id,nombre:it.razonSocial,cuit:it.cuit]
-            log.debug "CUIT: "+it.cuit
         }
         hashJson.success = true
         hashJson.rows = listRows

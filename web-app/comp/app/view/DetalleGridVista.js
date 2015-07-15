@@ -45,7 +45,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                             itemId:'colCategoria',
                             flex : 1,
                             dataIndex : 'categoria',
-                            columnWidth:200,
+                            //columnWidth:200,
                             editor :
                             {
                                 xtype:'combo',
@@ -68,7 +68,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                                 if(rec)
                                     return rec.get(combo.displayField);
                                 else
-                                    return "";
+                                    return "no encuentra categoria";
                             }
 
 

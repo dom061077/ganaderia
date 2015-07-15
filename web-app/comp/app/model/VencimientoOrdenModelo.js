@@ -8,8 +8,8 @@ Ext.define('Ganaderia.model.VencimientoOrdenModelo',
             {name: 'cantidaddias',type:'int'},
             {name: 'procentajebruto', type: 'float'},
             {name: 'porcentajegastos', type: 'float'},
-            {name: 'porcentajeiva', type: 'boolean'},
-            {name: 'anticipo',type:'boolean'}
+            {name: 'porcentajeiva', type: 'float'},
+            {name: 'anticipo',type:'float'}
         ],
         proxy :  {
             type:'memory'

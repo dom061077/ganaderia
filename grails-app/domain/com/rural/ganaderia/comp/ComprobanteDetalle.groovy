@@ -18,7 +18,9 @@ class ComprobanteDetalle {
 
     static transients = ['subTotal']
 
+    static belongsTo = [comprobante:Comprobante]
 
     static constraints = {
+        leyenda(nullable: true, blank: true)
     }
 }

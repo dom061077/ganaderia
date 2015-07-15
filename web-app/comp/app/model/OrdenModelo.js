@@ -3,17 +3,38 @@ Ext.define('Ganaderia.model.OrdenModelo', {
     idProperty:'Id',
     fields: [
         { name: 'Id', type: 'int'},
-        { name: 'firstName', type: 'string' },
-        { name: 'middleName', type: 'string' },
-        { name: 'lastName', type: 'string' },
-        { name: 'birthDate', type: 'date' },
-        { name: 'address1', type: 'string' },
-        { name: 'address2', type: 'string' },
-        { name: 'city', type: 'string' },
-        { name: 'state', type: 'string' }
+        { name: 'vendedor', type: 'int' },
+        { name: 'comprador', type: 'int' },
+        { name: 'exposicion', type: 'int' },
+        { name: 'anioExposicion', type: 'int' },
+        { name: 'especie', type: 'int' },
+        { name: 'destino', type: 'int' },
+        { name: 'guias', type: 'string' },
+        { name: 'operacion', type: 'int'},
+        { name: 'fechaOperacion', type: 'date' },
+        { name: 'procedenciaProvincia', type: 'int'},
+        { name: 'procedenciaPartido', type:'int'},
+        { name: 'procedenciaLocalidad', type:'int'},
+        { name: 'lotesjson', type:'auto'},
+        { name: 'gastosjson', type:'auto'},
+        { name: 'vencimientosjson', type:'auto'}
     ],
-    validations: [{
-        type: 'presence',
-        field: 'firstName'
-    }]
+    proxy: {
+        type: 'ajax',
+        idParam: 'id',
+        reader:{
+            type:'json',
+            root: 'data'
+        },
+        api:{
+            create: savecompUrl
+        },
+        writer:{
+            type:'json',
+            encode:true,
+            dateFormat:'Y-m-d',
+            root:'comprobante'
+        }
+    },
+    validations: []
 });

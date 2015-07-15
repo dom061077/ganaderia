@@ -52,7 +52,8 @@
 			<form action='${postUrl}' method='POST' id='loginForm' class='cssform' autocomplete='off'>
 				<p>
 					<label for='username'><g:message code="springSecurity.login.username.label" /></label>
-					<input type='text' class='text_' name='j_username' id='username' />
+                    <input type='text' class='text_' name='j_username' id='username' />
+					<input type='hidden' class='text_' name='spring-security-redirect' value="/" />
 				</p>
 				<p>
 					<label for='password'><g:message code="springSecurity.login.password.label" /></label>

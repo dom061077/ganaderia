@@ -4,7 +4,9 @@ class SituacionIVA {
     
     String descripcion
     String codigo
-    char letraComprobante
+    String letraComprobante
+
+
 
     static constraints = {
     }

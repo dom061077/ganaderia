@@ -106,6 +106,7 @@ grails.plugin.springsecurity.requestMap.className = 'com.rural.ganaderia.segurid
 grails.plugin.springsecurity.securityConfigType = 'Requestmap'
 grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
 grails.plugin.springsecurity.useRoleGroups = true
+grails.plugin.successHandler.alwaysUseDefault = true
 
 //-- test git
 

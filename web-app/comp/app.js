@@ -16,6 +16,7 @@ Ext.application({
             ,'Ganaderia.store.CompradorVendedorStore'
             ,'Ganaderia.store.GastoStore'
             ,'Ganaderia.store.VencimientosOrdenStore'
+            ,'Ganaderia.store.OperacionStore'
     ],
 
     launch: function () {

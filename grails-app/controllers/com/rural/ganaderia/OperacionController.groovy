@@ -1,6 +1,7 @@
 package com.rural.ganaderia
 
 import org.springframework.dao.DataIntegrityViolationException
+import grails.converters.JSON
 
 class OperacionController {
 
@@ -98,5 +99,18 @@ class OperacionController {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'operacion.label', default: 'Operacion'), id])
             redirect(action: "show", id: id)
         }
+    }
+
+    def listjson(){
+        def returnMap = [:]
+        def returnList = []
+        def operaciones = Operacion.list()
+        operaciones.each {
+            returnList << [id: it.id,nombre:it.nombre]
+        }
+        returnMap.rows = returnList
+        returnMap.success = true
+        returnMap.total = operaciones.size()
+        render returnMap as JSON
     }
 }

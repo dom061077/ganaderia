@@ -15,7 +15,6 @@ import com.rural.ganaderia.enums.SituacionIVA
 import com.rural.ganaderia.Destino
 import com.rural.ganaderia.FormasdePago
 import com.rural.ganaderia.Gasto
-import com.rural.ganaderia.RegimenGanancia
 import com.rural.ganaderia.enums.TipoOrden
 import com.rural.ganaderia.seguridad.Role
 import com.rural.ganaderia.seguridad.User

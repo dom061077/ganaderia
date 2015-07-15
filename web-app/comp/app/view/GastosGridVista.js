@@ -42,13 +42,14 @@ Ext.define('Ganaderia.view.GastosGridVista',
                     columns : [
                         {
                             text:'C/V',
+                            flex : 1,
                             dataIndex: 'compradorvendedor',
                             editor :
                             {
                                 xtype:'combo',
                                 store:'Ganaderia.store.CompradorVendedorStore',
                                 id:'cmbCVgasto',
-                                emptyText:'<Seleccione una C o V>',
+                                //emptyText:'<Sel.C o V>',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 valueField:'codigo',
@@ -61,12 +62,11 @@ Ext.define('Ganaderia.view.GastosGridVista',
                             text : "Gasto",
                             flex : 1,
                             dataIndex : 'gasto',
-                            columnWidth:200,
                             editor :
                             {
                                 xtype:'combo',
-                                id:'cmbCategoria',
-                                emptyText:'<Seleccione un gasto>',
+                                id:'cmbGasto',
+                                //emptyText:'<Seleccione un gasto>',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 store:'Ganaderia.store.GastoStore',
@@ -75,16 +75,6 @@ Ext.define('Ganaderia.view.GastosGridVista',
                                 selectOnTab:true
 
 
-                            },
-                            renderer:function(value){
-                                var store = Ext.getCmp('cmbCategoria').getStore();
-                                var combo = Ext.getCmp('cmbCategoria');
-                                var idx = store.find(combo.valueField, value);
-                                var rec = store.getAt(idx);
-                                if(rec)
-                                    return rec.get(combo.displayField);
-                                else
-                                    return "";
                             }
 
 
@@ -94,7 +84,6 @@ Ext.define('Ganaderia.view.GastosGridVista',
                             flex : 1,
                             dataIndex : 'monto',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -105,7 +94,6 @@ Ext.define('Ganaderia.view.GastosGridVista',
                             flex : 1,
                             dataIndex : 'porcentaje',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false

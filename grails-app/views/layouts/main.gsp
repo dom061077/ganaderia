@@ -24,6 +24,14 @@
 		<r:layoutResources />
         <script type="text/javascript">
             var imgPrint = '<% out << resource(dir:'images',file:'Print.png')%>';
+            var urllogin = '<% out << createLink(controller:'login',action:'auth')%>';
+            Ext.util.Observable.observe(Ext.data.Connection, {
+                requestexception: function(conn, response, options) {
+                    if(response.status == '401')
+                        window.location = urllogin;
+                }
+            });
+
             Ext.onReady(function(){
                 Ext.widget({
                     xtype:'panel',
@@ -40,7 +48,7 @@
                                     text:'Alta Orden de Venta',
                                     listeners:{
                                         click:function(menu, item, e, eOpts){
-                                            window.location = '<%out << createLink(controller:'orden',action:'create')%>'
+                                            window.location = '<%out << createLink(controller:'comprobante',action:'create')%>'
                                         }
                                     }
                                 },{
@@ -155,7 +163,8 @@
             });
         </script>
 	</head>
-	<body style="margin: 2em 13em 1.25em 13em">
+	<!-- body style="margin: 2em 13em 1.25em 13em" -->
+    <body>
 		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir:"/images",file:"headersrt.png")}" alt="Logo"/></a>
             <sec:ifLoggedIn>
                 <div id="menuId"></div>

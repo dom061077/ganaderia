@@ -13,7 +13,7 @@
         var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
         var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
         var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
-        var savecompUrl = '${createLink(controller:'comp',action:'savejson')}';
+        var savecompUrl = '${createLink(controller:'comprobante',action:'savejson')}';
        // var situacionIVAUrl = '${createLink(controller:'comp',action:'situacionIVAjson')}';
         var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
         var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
@@ -31,6 +31,7 @@
         var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
         var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
         var clientestoreUrl = '<% out << createLink(controller:'cliente',action:'')%>';
+        var operacionUrl = '<% out << createLink(controller:'operacion',action:'listjson')%>';
     </script>
 
 </head>

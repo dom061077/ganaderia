@@ -42,13 +42,15 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                     columns : [
                         {
                             text:'C/V',
+                            flex : 1,
+                            with:100,
                             dataIndex: 'compradorvendedor',
                             editor :
                             {
                                 xtype:'combo',
                                 store:'Ganaderia.store.CompradorVendedorStore',
-                                id:'cmbCVgasto',
-                                emptyText:'<Seleccione una C o V>',
+                                id:'cmbCVVencimiento',
+                                //emptyText:'<Sele.C o V>',
                                 typeAhead: true,
                                 triggerAction: 'all',
                                 valueField:'codigo',
@@ -62,7 +64,6 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                             flex : 1,
                             dataIndex : 'cantidaddias',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -73,7 +74,6 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                             flex : 1,
                             dataIndex : 'procentajebruto',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -84,7 +84,6 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                             flex : 1,
                             dataIndex : 'porcentajegastos',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -95,7 +94,6 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                             flex : 1,
                             dataIndex : 'porcentajeiva',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -106,7 +104,6 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                             flex : 1,
                             dataIndex : 'anticipo',
                             allowDecimals: false,
-                            columnWidth:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
