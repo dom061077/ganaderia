@@ -14,5 +14,17 @@ Ext.define('Ganaderia.model.DetalleOrdenModelo',
         ],
         proxy :  {
             type:'memory'
-        }
+        },
+        validations:[
+            {
+                type:'presence',
+                name:'categoria'
+            },{
+                type:'presence',
+                name:'raza'
+            },{
+                type:'presence',
+                name:'preciounitario'
+            }
+        ]
     });

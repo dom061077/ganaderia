@@ -45,7 +45,7 @@ class Comprobante {
     Comprobante comprobanteDestino
     //------- Trasients fields---
      BigDecimal getImporteBruto(){
-        def retorno
+        def retorno=0
         detalle.each{det->
             retorno += det.subTotal
         }
@@ -63,7 +63,7 @@ class Comprobante {
 
     BigDecimal getBaseIva(){
         def retorno = importeBruto
-        def gasto=0
+        def gasto= new BigDecimal(0)
         detallegastos.each{det->
             if(det.acumulaBaseIva){
                 if(det.importe>0)
@@ -77,6 +77,7 @@ class Comprobante {
             retorno += gasto
         if (tipoComprobante==TipoComprobante.ORDENVENTA)
             retorno -= gasto
+        return retorno
     }
 
     BigDecimal getAlicuota(){

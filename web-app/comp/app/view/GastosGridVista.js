@@ -75,6 +75,16 @@ Ext.define('Ganaderia.view.GastosGridVista',
                                 selectOnTab:true
 
 
+                            },
+                            renderer:function(value){
+                                var store = Ext.getCmp('cmbGasto').getStore();
+                                var combo = Ext.getCmp('cmbGasto');
+                                var idx = store.find(combo.valueField, value);
+                                var rec = store.getAt(idx);
+                                if(rec)
+                                    return rec.get(combo.displayField);
+                                else
+                                    return "no encuentra el gasto";
                             }
 
 

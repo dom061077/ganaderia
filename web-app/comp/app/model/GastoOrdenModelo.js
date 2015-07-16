@@ -14,5 +14,14 @@ Ext.define('Ganaderia.model.GastoOrdenModelo',
         ],
         proxy :  {
             type:'memory'
-        }
+        },
+        validations:[
+            {
+                type:'presence',
+                name:'compradorvendedor'
+            },{
+                type:'presence',
+                name:'gasto'
+            }
+        ]
     });

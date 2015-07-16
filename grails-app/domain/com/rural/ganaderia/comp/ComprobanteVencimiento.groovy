@@ -25,16 +25,33 @@ class ComprobanteVencimiento {
 
     BigDecimal getSubTotalGanancias(){
         def valoresGananciasInstance = GananciasValores.findAll().get(0)
-        def minimoRetencion
+        def retorno = 0
         if(comprobante.tipoComprobante==TipoComprobante.ORDENVENTA){
-            if (comprobante.clienteOrigen.gananciasIns){
-                if(comprobante.clienteOrigen.situacionIVA.codigo=='IRI'){
-                    if((subTotal-valoresGananciasInstance.minRetencionIns)>20){
+            def minimoRetencion
+            def minimoRetener
+            def porcentaje
 
+            if (comprobante.clienteOrigen.gananciasIns){
+
+                if(comprobante.clienteOrigen.situacionIVA.codigo=='IRI'){
+                    minimoRetencion = valoresGananciasInstance.minRetencionIns
+                    minimoRetener = valoresGananciasInstance.minRetenerIns
+                    porcentaje = valoresGananciasInstance.porcentajeIns
+
+                    if((subTotal-minimoRetencion)>minimoRetener){
+                        retorno = subTotal-minimoRetencion
+                        retorno = retorno * porcentaje / 100
                     }
+                }else{
+                    minimoRetencion = valoresGananciasInstance.minRetencionNoIns
+                    minimoRetener = valoresGananciasInstance.minRetenerNoIns
+                    porcentaje = valoresGananciasInstance.porcentajeNoIns
+                    retorno = retorno * porcentaje/100
                 }
             }
+            return retorno
         }
+        return retorno
     }
 
     static transients = ['subTotal','subTotalGanancias']
