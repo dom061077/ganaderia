@@ -72,6 +72,17 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             text:'Total Compra',
                             flex:1,
                             dataIndex:'totalCompra'
+                        },
+                        {
+                            text:'Imp.Venta',
+                            xtype:'actioncolumn',
+                            icon: selectImg,
+                            handler: function(grid, rowIndex, colIndex) {
+                                var rec = grid.getStore().getAt(rowIndex);
+                                window.open(imprimirUrl+'/'+rec.data.idVenta,'_blank');
+                            },
+                            width:50,
+                            flex:1
                         }
                     ],
                     bbar: {

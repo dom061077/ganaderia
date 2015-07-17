@@ -288,6 +288,43 @@ class ComprobanteController {
         render objJson as JSON
     }
 
+    def imprimircomprobante(){
+        def comprobanteInstance = Comprobante.get(params.id)
+        List comprobantes = new ArrayList()
+        comprobantes.add(comprobanteInstance)
+        comprobanteInstance.localidad.partido.provincia.nombre
+        comprobanteInstance.situacionIVA.descripcion
+        comprobanteInstance.clienteDestino.cuit
+        comprobanteInstance.clienteOrigen.cuit
+        comprobanteInstance.operacion.nombre
+        comprobanteInstance.destino.descripcion
+        comprobanteInstance.procedencia.nombre
+        comprobanteInstance.especie.nombre
+
+        comprobanteInstance.detalle.each{
+                it.categoria.codigo
+                it.raza.codigo
+
+        }
+        comprobanteInstance.detallegastos.each{
+                it.gasto.codigo
+        }
+        comprobanteInstance.detallevencimientos.each{
+                it.id
+        }
+
+
+        String reportsDirPath = servletContext.getRealPath("/reports/");
+        params.put("reportsDirPath", reportsDirPath);
+        //open('ordenreservareporte?tipo=ORIGINAL&_format=PDF&_name=ordenReservaInstance&_file=OrdenReserva&id='+sel.data.ordenId
+        params.put("_format","PDF")
+        params.put("_name","Orden de "+comprobanteInstance.tipoComprobante.name+" Nro "+comprobanteInstance.numero)
+        params.put("_file","ComprobanteOrden")
+        params.put("reportsDirPath",reportsDirPath)
+        log.debug("Parametros: $params")
+        chain(controller:'jasper',action:'index',model:[data:comprobantes],params:params)
+    }
+
     protected void notFound() {
         request.withFormat {
             form multipartForm {

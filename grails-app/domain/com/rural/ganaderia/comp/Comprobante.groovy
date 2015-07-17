@@ -52,31 +52,20 @@ class Comprobante {
         return retorno
      }
     BigDecimal getTotalGastos(){
-        def retorno
+        def retorno=0
         detallegastos.each{det ->
-            if(det.importe>0)
-                retorno += det.importe
-            else
-                retorno += importeBruto * det.porcentaje / 100
+            retorno+=det.subTotal
         }
+        return retorno
     }
 
     BigDecimal getBaseIva(){
         def retorno = importeBruto
-        def gasto= new BigDecimal(0)
-        detallegastos.each{det->
-            if(det.acumulaBaseIva){
-                if(det.importe>0)
-                    gasto += det.importe + (det.tieneIva?det.importe*alicuota/100:0)
-                else
-                    gasto += importeBruto * det.porcentaje / 100 + (det.tieneIva?(importeBruto * det.porcentaje / 100)*alicuota/100:0)
-            }
 
-        }
         if (tipoComprobante==TipoComprobante.ORDENCOMPRA)
-            retorno += gasto
+            retorno += totalGastos
         if (tipoComprobante==TipoComprobante.ORDENVENTA)
-            retorno -= gasto
+            retorno -= totalGastos
         return retorno
     }
 
@@ -97,6 +86,30 @@ class Comprobante {
     BigDecimal getIva(){
         def retorno
         retorno = baseIva * alicuota / 100
+
+    }
+
+    BigDecimal getTotalGanancias(){
+        def retorno = 0
+        detallevencimientos.each{
+            retorno += it.subTotalGanancias
+        }
+
+        return retorno
+    }
+
+    BigDecimal getTotal(){
+        def retorno = importeBruto + iva
+        return importeBruto + iva + totalGanancias + totalGastosFinal
+    }
+
+    BigDecimal getTotalGastosFinal(){
+        def retorno=0
+        if(tipoComprobante == TipoComprobante.ORDENCOMPRA)
+            retorno = totalGastos
+        if(tipoComprobante == TipoComprobante.ORDENVENTA)
+            retorno = totalGastos*(-1)
+        return retorno
     }
     //---------------------
 
@@ -105,10 +118,9 @@ class Comprobante {
     static hasMany = [detalle:ComprobanteDetalle, detallegastos:ComprobanteGasto
                         , detallevencimientos:ComprobanteVencimiento]
 
-    static transients = ['importeBruto','baseIva','iva','alicuota']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
+    static transients = ['importeBruto','baseIva','iva','alicuota','totalGastos','total','totalGanancias','totalGastosFinal']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {
-        //formasdePago(nullable: true,blank:true)
-        ingresosBrutos(nullable: true,blank: true)
+
     }
 }

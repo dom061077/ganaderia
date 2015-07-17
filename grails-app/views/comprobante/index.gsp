@@ -12,6 +12,8 @@
         <script type="text/javascript" src="${resource(dir:'complist',file:'app.js')}"></script>
         <script type="text/javascript">
             var listjson='<% out << createLink(controller:'comprobante',action:'listjson') %>';
+            var selectImg = '<%out << resource(dir:'images',file:'select.jpg')%>';
+            var imprimirUrl = '<%out << createLink(controller:'comprobante',action:'imprimircomprobante')%>'
         </script>
 	</head>
 	<body>

@@ -66,7 +66,7 @@ Ext.onReady(function(){
                           tooltip:'Seleccionar',
                           handler: function(grid,rowIndex){
                               var orden = storeGrid.getAt(rowIndex);
-                              window.location='show/'+orden.data.id;
+                              window.open=('show/'+orden.data.id,'_blank');
                           }
                       }
                   ]}
