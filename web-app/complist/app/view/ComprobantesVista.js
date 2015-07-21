@@ -83,6 +83,15 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             },
                             width:50,
                             flex:1
+                        },{
+                            text:'Imp.Compra',
+                            xtype:'actioncolumn',
+                            icon: selectImg,
+                            handler: function(grid,rowIndex,colIndex){
+                                var rec = grid.getStore().getAt(rowIndex);
+                                window.open(imprimirUrl+'/'+rec.data.idCompra,'_blank');
+                            }
+
                         }
                     ],
                     bbar: {

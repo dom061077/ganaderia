@@ -280,10 +280,10 @@ class ComprobanteController {
                 isNotNull("comprobanteDestino")
         }
         comprobantes.each{
-            objJson << [idVenta:it.id,idCompra:it.comprobanteDestino.id,letraVenta:it.letra,letraCompra:it.comprobanteDestino.letra
-                        ,numeroVenta : it.numero,numeroCompra : it.comprobanteDestino.numero,clienteVenta: it.clienteOrigen.razonSocial
-                        ,clienteCompra : it.clienteDestino.razonSocial
-                        ]
+                objJson << [idVenta:it.id,idCompra:it.comprobanteDestino.id,letraVenta:it.letra,letraCompra:it.comprobanteDestino.letra
+                            ,numeroVenta : it.numero,numeroCompra : it.comprobanteDestino.numero,clienteVenta: it.clienteOrigen.razonSocial
+                            ,clienteCompra : it.clienteDestino.razonSocial
+                            ]
         }
         render objJson as JSON
     }
@@ -302,8 +302,9 @@ class ComprobanteController {
         comprobanteInstance.especie.nombre
 
         comprobanteInstance.detalle.each{
-                it.categoria.codigo
-                it.raza.codigo
+                log.debug it.categoria.codigo
+                log.debug it.raza.codigo
+
 
         }
         comprobanteInstance.detallegastos.each{
@@ -315,13 +316,13 @@ class ComprobanteController {
 
 
         String reportsDirPath = servletContext.getRealPath("/reports/");
+        def nombreComprobante = comprobanteInstance.tipoComprobante.toString()+'_'+comprobanteInstance.letra+'_Nro.'+comprobanteInstance.numero
         params.put("reportsDirPath", reportsDirPath);
         //open('ordenreservareporte?tipo=ORIGINAL&_format=PDF&_name=ordenReservaInstance&_file=OrdenReserva&id='+sel.data.ordenId
         params.put("_format","PDF")
-        params.put("_name","Orden de "+comprobanteInstance.tipoComprobante.name+" Nro "+comprobanteInstance.numero)
+        params.put("_name",nombreComprobante)
         params.put("_file","ComprobanteOrden")
         params.put("reportsDirPath",reportsDirPath)
-        log.debug("Parametros: $params")
         chain(controller:'jasper',action:'index',model:[data:comprobantes],params:params)
     }
 

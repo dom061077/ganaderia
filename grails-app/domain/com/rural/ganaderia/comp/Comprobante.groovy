@@ -11,6 +11,7 @@ import com.rural.ganaderia.Destino
 import com.rural.ganaderia.enums.TipoComprobante
 import com.rural.ganaderia.SituacionIVA
 import com.rural.ganaderia.parametros.GastoEspecieDestinoOper
+import java.text.DecimalFormat
 
 class Comprobante {
     long numero
@@ -111,6 +112,10 @@ class Comprobante {
             retorno = totalGastos*(-1)
         return retorno
     }
+    
+    String getMembreteIva(){
+        return clienteOrigen.situacionIVA.descripcion+' '+alicuota+'%'
+    }
     //---------------------
 
 
@@ -118,7 +123,8 @@ class Comprobante {
     static hasMany = [detalle:ComprobanteDetalle, detallegastos:ComprobanteGasto
                         , detallevencimientos:ComprobanteVencimiento]
 
-    static transients = ['importeBruto','baseIva','iva','alicuota','totalGastos','total','totalGanancias','totalGastosFinal']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
+    static transients = ['importeBruto','baseIva','iva','alicuota','totalGastos'
+                        ,'total','totalGanancias','totalGastosFinal','membreteIva']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {
 

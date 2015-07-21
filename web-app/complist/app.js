@@ -14,7 +14,7 @@ Ext.application({
         Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             renderTo:'formpanelId',
-            title:'HOLA',
+            title:'Comprobantes generados',
             //width:950,
             items: [
                 {
