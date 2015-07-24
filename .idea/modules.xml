@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ganaderia.iml" filepath="$PROJECT_DIR$/ganaderia.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ganaderia-grailsPlugins.iml" filepath="$PROJECT_DIR$/ganaderia-grailsPlugins.iml" />
     </modules>
   </component>
 </project>

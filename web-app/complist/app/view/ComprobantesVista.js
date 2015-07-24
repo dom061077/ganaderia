@@ -24,65 +24,57 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                 {
                     store: 'Ganaderia.store.ComprobantesStore',
 
-                    columns: [{
+                    columns: [
+                        {
+                            text: "Letra Venta",
+                            dataIndex: 'letraVenta',
+                            width: 80
+                        },
+                        {
                         text: "N° Venta",
                         dataIndex: 'numeroVenta',
                         hidden: false,
-                        width: 70
-                        },
-                        {
-                            text: "Letra Venta",
-                            flex: 1,
-                            dataIndex: 'letraVenta',
-                            width: 70,
-                            editor:
-                            {
-                                // defaults to textfield if no xtype is supplied
-                                allowBlank: true
-                            }
+                        width: 80
                         },
                         {
                             text: "Letra Compra",
-                            flex: 1,
                             dataIndex: 'letraCompra',
                             width: 70
                         },
                         {
                             text: "N° Compra",
-                            flex: 1,
                             dataIndex: 'numeroCompra',
                             width: 70
                         },
                         {
                             text:'Cliente Venta',
-                            flex:1,
+                            width:300,
                             dataIndex:'clienteVenta'
                         },
                         {
                             text:'Cliente Compra',
-                            flex:1,
+                            width:300,
                             dataIndex:'clienteCompra'
                         },
                         {
                             text:'Total Venta',
-                            flex:1,
+                            width:110,
                             dataIndex:'totalVenta'
                         },
                         {
                             text:'Total Compra',
-                            flex:1,
+                            width:110,
                             dataIndex:'totalCompra'
                         },
                         {
                             text:'Imp.Venta',
+                            width:80,
                             xtype:'actioncolumn',
                             icon: selectImg,
                             handler: function(grid, rowIndex, colIndex) {
                                 var rec = grid.getStore().getAt(rowIndex);
                                 window.open(imprimirUrl+'/'+rec.data.idVenta,'_blank');
-                            },
-                            width:50,
-                            flex:1
+                            }
                         },{
                             text:'Imp.Compra',
                             xtype:'actioncolumn',
@@ -90,7 +82,8 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
                                 window.open(imprimirUrl+'/'+rec.data.idCompra,'_blank');
-                            }
+                            },
+                            width:80
 
                         }
                     ],

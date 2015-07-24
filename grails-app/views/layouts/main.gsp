@@ -36,7 +36,7 @@
                 Ext.widget({
                     xtype:'panel',
                     border:false,
-                    margin: '0 0 30 0',
+                    //margin: '0 0 30 0',
                     renderTo:'menuId',
                     //title: 'Mix and match icon sizes to create a huge unusable toolbar',
                     items: [
@@ -55,7 +55,7 @@
                                     text:'Listado Orden de Venta',
                                     listeners:{
                                         click:function(men,item,e, eOpts){
-                                            window.location = '<%out << createLink(controller:'orden', action:'list')%>';
+                                            window.location = '<%out << createLink(controller:'comprobante', action:'index')%>';
                                         }
                                     }
                                 }
@@ -165,7 +165,7 @@
 	</head>
 	<!-- body style="margin: 2em 13em 1.25em 13em" -->
     <body>
-		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><img src="${resource(dir:"/images",file:"headersrt.png")}" alt="Logo"/></a>
+		<div id="grailsLogo" role="banner"><a href="${createLink(action:'index')}"><!--img src="${resource(dir:"/images",file:"headersrt.png")}" alt="Logo"/--></a>
             <sec:ifLoggedIn>
                 <div id="menuId"></div>
             </sec:ifLoggedIn>

@@ -126,7 +126,7 @@ Ext.define('Ganaderia.view.GastosGridVista',
 
                         },
                         {
-                            text : "Ac.Bsse I.V.A",
+                            text : "Ac.Bsse Ganancia",
                             columnWidth:50,
                             xtype:'checkcolumn',
                             flex : 1,

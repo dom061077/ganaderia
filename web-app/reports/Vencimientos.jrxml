@@ -1,35 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteDetalleOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d3eb95b-44ff-44fb-843e-5c202ad34753">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteDetalleOrden" language="groovy" pageWidth="595" pageHeight="150" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d3eb95b-44ff-44fb-843e-5c202ad34753">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="reportsDirPath" class="java.lang.String"/>
 	<field name="vencimiento" class="java.util.Date"/>
 	<field name="subTotal" class="java.math.BigDecimal"/>
 	<field name="subTotalGanancias" class="java.math.BigDecimal"/>
 	<field name="comprobante.membreteIva" class="java.lang.String"/>
+	<field name="cantidadDias" class="java.lang.String"/>
+	<field name="membreteVencimiento" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="28">
+		<band height="17">
 			<staticText>
-				<reportElement x="0" y="0" width="595" height="13" uuid="c158b1e2-6c50-4a9c-a63e-7192573fe3d1"/>
+				<reportElement x="0" y="2" width="595" height="13" isPrintWhenDetailOverflows="true" uuid="c158b1e2-6c50-4a9c-a63e-7192573fe3d1"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Impuestos]]></text>
+				<text><![CDATA[Vencimientos]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="2" y="13" width="277" height="14" uuid="34a0f209-3750-41e2-8c51-33f810085a93"/>
-				<textFieldExpression><![CDATA[$F{comprobante.membreteIva}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="154" y="0" width="100" height="14" uuid="aee7c0db-5dca-4f97-9060-2fb426d3e061"/>
-				<textFieldExpression><![CDATA[$F{vencimiento}]]></textFieldExpression>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="156" height="14" uuid="2f03085e-9092-4249-9969-d7c275cb024c"/>
+				<textFieldExpression><![CDATA[$F{membreteVencimiento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="174" y="0" width="100" height="14" uuid="2cc75bda-fc29-4a34-90f9-7ef33d1e2d17"/>
+				<textFieldExpression><![CDATA[$F{subTotal}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

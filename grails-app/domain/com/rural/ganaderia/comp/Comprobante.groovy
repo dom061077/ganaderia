@@ -12,6 +12,7 @@ import com.rural.ganaderia.enums.TipoComprobante
 import com.rural.ganaderia.SituacionIVA
 import com.rural.ganaderia.parametros.GastoEspecieDestinoOper
 import java.text.DecimalFormat
+import java.text.NumberFormat
 
 class Comprobante {
     long numero
@@ -19,6 +20,7 @@ class Comprobante {
     Cliente clienteOrigen
     Cliente clienteDestino
     TipoComprobante tipoComprobante
+
     
     Especie especie
 
@@ -42,6 +44,7 @@ class Comprobante {
     Destino destino
     Localidad procedencia
     java.sql.Date fechaOperacion
+    BigDecimal alicuota
     
     Comprobante comprobanteDestino
     //------- Trasients fields---
@@ -70,7 +73,9 @@ class Comprobante {
         return retorno
     }
 
-    BigDecimal getAlicuota(){
+
+
+  /*  BigDecimal getAlicuota(){
 
         def obj =GastoEspecieDestinoOper.createCriteria().list{
             situacionIVA{
@@ -82,7 +87,7 @@ class Comprobante {
             eq('codigoIvaDestino',destino.codigoIva)
         }
         return obj.get(0).alicuota
-    }
+    }    */
 
     BigDecimal getIva(){
         def retorno
@@ -114,7 +119,9 @@ class Comprobante {
     }
     
     String getMembreteIva(){
-        return clienteOrigen.situacionIVA.descripcion+' '+alicuota+'%'
+        DecimalFormat df = new DecimalFormat("#,##0.00")
+
+        return clienteOrigen.situacionIVA.descripcion+' '+df.format(alicuota)+'%'+' Base/'+df.format(baseIva)
     }
     //---------------------
 
@@ -123,10 +130,16 @@ class Comprobante {
     static hasMany = [detalle:ComprobanteDetalle, detallegastos:ComprobanteGasto
                         , detallevencimientos:ComprobanteVencimiento]
 
-    static transients = ['importeBruto','baseIva','iva','alicuota','totalGastos'
+    static transients = ['importeBruto','baseIva','iva','totalGastos'
                         ,'total','totalGanancias','totalGastosFinal','membreteIva']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {
+        direccion(nullable: true, blank: true)
+        ingresosBrutos(nullable: true, blank: true)
 
+
+    }
+    static mapping={
+        detalle(sort: 'categoria')
     }
 }

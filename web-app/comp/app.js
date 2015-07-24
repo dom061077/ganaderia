@@ -23,7 +23,7 @@ Ext.application({
         Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             renderTo:'formpanelId',
-            width:950,
+            //width:950,
             items: [
                 {
                     xtype: 'OrdenVista'

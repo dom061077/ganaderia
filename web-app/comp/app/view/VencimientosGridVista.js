@@ -37,7 +37,7 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
 
                     selModel :
                     {
-                        mode : 'MULTI'
+                       // mode : 'MULTI'
                     },
                     columns : [
                         {
@@ -72,7 +72,7 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                         {
                             text : "% Bruto",
                             flex : 1,
-                            dataIndex : 'procentajebruto',
+                            dataIndex : 'porcentajebruto',
                             allowDecimals: false,
                             editor:{
                                 xtype:'numberfield',
@@ -98,7 +98,7 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                                 xtype:'numberfield',
                                 allowDecimals:false
                             }
-                        },
+                        }/*,
                         {
                             text : "Anticipo",
                             flex : 1,
@@ -108,7 +108,7 @@ Ext.define('Ganaderia.view.VencimientosGridVista',
                                 xtype:'numberfield',
                                 allowDecimals:false
                             }
-                        }
+                        } */
                     ],
                     dockedItems : [{
                         xtype : 'toolbar',

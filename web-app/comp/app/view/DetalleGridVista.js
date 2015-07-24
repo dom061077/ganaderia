@@ -8,6 +8,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
         {
            // width : '100%',
             height : 400,
+
             selType : 'checkboxmodel'
         },
 
@@ -31,8 +32,8 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                             //if you have checkbox in first row then take clicksToEdit=2 otherwise it will go on edit mode
                         })],
                     selType : 'cellmodel',
-                    height : this.config.height,
-                    width : this.config.width,
+                    //height : this.config.height,
+                    //width : this.config.width,
                     height:400,
 
                     selModel :
@@ -45,6 +46,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                             itemId:'colCategoria',
                             flex : 1,
                             dataIndex : 'categoria',
+                            width:80,
                             //columnWidth:200,
                             editor :
                             {
@@ -78,7 +80,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                             flex : 1,
                             dataIndex : 'cantidad',
                             allowDecimals: false,
-                            columnWidth:40,
+                            with:40,
                             editor:{
                                 xtype:'numberfield',
                                 allowDecimals:false
@@ -107,14 +109,14 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                         },
                         {
                             text : "Total",
-                            columnWidth:50,
+                            width:50,
                             flex : 1,
                             dataIndex : 'subtotal'
                         },
                         {
                             text: 'Raza',
                             dataIndex : 'raza',
-                            columnWidth:200,
+                            width:200,
                             editor :
                             {
                                 xtype:'combo',
@@ -142,7 +144,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                         },
                         {
                             text : 'Leyenda',
-                            columnWidth:80,
+                            width:80,
                             dataIndex : 'corral'
                         }
                     ],

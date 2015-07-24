@@ -21,6 +21,8 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.transaction.TransactionStatus
 import com.rural.ganaderia.Operacion
 import com.rural.ganaderia.Numerador
+import com.rural.ganaderia.parametros.GastoEspecieDestinoOper
+import com.rural.ganaderia.parametros.GananciasValores
 
 //@Transactional(readOnly = true)
 class ComprobanteController {
@@ -137,6 +139,17 @@ class ComprobanteController {
                                         ,procedencia: Localidad.load(cJson.procedenciaLocalidad)
                                         ,fechaOperacion: new java.sql.Date(fecha.getTime())
                                         ,operacion: Operacion.load(cJson.operacion) )
+        //---------fijar alicuota para la orden de venta------
+        def obj =GastoEspecieDestinoOper.createCriteria().list{
+            situacionIVA{
+                eq('id',comprobanteInstance.clienteOrigen.situacionIVA.id)
+            }
+            eq('tipoComprobante',comprobanteInstance.tipoComprobante)
+            isNull('tipoComprobanteOrigen')
+            eq('codigoIvaEspecie',comprobanteInstance.especie.codigoIva)
+            eq('codigoIvaDestino',comprobanteInstance.destino.codigoIva)
+        }
+        comprobanteInstance.alicuota = obj.get(0).alicuota
 
         
         def detalleInstance
@@ -172,8 +185,36 @@ class ComprobanteController {
                 cal.setTime(fecha)
                 cal.add(Calendar.DATE,it.cantidaddias)
                 vencimiento = new java.sql.Date(cal.getTime().getTime())
-                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento)
+                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
+                                ,porcentajeBruto: it.porcentajebruto, porcentajeGastos: it.porcentajegastos
+                                ,porcentajeIva: it.porcentajeiva)
+
+                def minimoRetencion
+                def minimoRetener
+                def porcentaje
                 comprobanteInstance.addToDetallevencimientos(compVencInstance)
+                if (comprobanteInstance.clienteOrigen.gananciasIns){
+                    def valoresGananciasInstance = GananciasValores.findAll().get(0)
+                    if(comprobanteInstance.clienteOrigen.situacionIVA.codigo=='IRI'){
+                        minimoRetencion = valoresGananciasInstance.minRetencionIns
+                        minimoRetener = valoresGananciasInstance.minRetenerIns
+                        porcentaje = valoresGananciasInstance.porcentajeIns
+
+                        if((compVencInstance.subTotal-minimoRetencion)>minimoRetener){
+                            compVencInstance.subTotalGanancias = compVencInstance.subTotal-minimoRetencion
+                            compVencInstance.subTotalGanancias = compVencInstance.subTotalGanancias * porcentaje / 100
+                        }
+                    }else{
+                        minimoRetencion = valoresGananciasInstance.minRetencionNoIns
+                        minimoRetener = valoresGananciasInstance.minRetenerNoIns
+                        porcentaje = valoresGananciasInstance.porcentajeNoIns
+                        compVencInstance.subTotalGanancias = compVencInstance.subTotalGanancias * porcentaje/100
+                    }
+                }
+
+
+
+
             }
         }
         //----------datos de la orden de compra-----
@@ -205,8 +246,11 @@ class ComprobanteController {
                 cal.setTime(fecha)
                 cal.add(Calendar.DATE,it.cantidaddias)
                 vencimiento = new java.sql.Date(cal.getTime().getTime())
-                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento)
+                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
+                    ,porcentajeBruto: it.porcentajebruto,porcentajeGastos: it.porcentajegastos
+                    ,porcentajeIva: it.porcentajeiva)
                 compCompra.addToDetallevencimientos(compVencInstance)
+
             }
         }
         compCompra.razonSocial = comprobanteInstance.clienteDestino.razonSocial
@@ -232,6 +276,20 @@ class ComprobanteController {
             comprobanteInstance.numero = numeradorInstance.maximoNumero
             numeradorInstance.maximoNumero += 1
             numeradorInstance.save()
+            //----------------fijar alicuota de iva a la cabecera del comprobante---
+
+            obj = GastoEspecieDestinoOper.createCriteria().list{
+                situacionIVA{
+                    eq('id',comprobanteInstance.clienteDestino.situacionIVA.id)
+                }
+                eq('tipoComprobante',comprobanteInstance.comprobanteDestino.tipoComprobante)
+                isNull('tipoComprobanteOrigen')
+                eq('codigoIvaEspecie',comprobanteInstance.comprobanteDestino.especie.codigoIva)
+                eq('codigoIvaDestino',comprobanteInstance.comprobanteDestino.destino.codigoIva)
+            }
+            comprobanteInstance.comprobanteDestino.alicuota = obj.get(0).alicuota
+                
+            //--------------------------------------
 
             if (comprobanteInstance.comprobanteDestino.save()){
                 if (comprobanteInstance.save( flush:true)) {
@@ -282,7 +340,7 @@ class ComprobanteController {
         comprobantes.each{
                 objJson << [idVenta:it.id,idCompra:it.comprobanteDestino.id,letraVenta:it.letra,letraCompra:it.comprobanteDestino.letra
                             ,numeroVenta : it.numero,numeroCompra : it.comprobanteDestino.numero,clienteVenta: it.clienteOrigen.razonSocial
-                            ,clienteCompra : it.clienteDestino.razonSocial
+                            ,clienteCompra : it.clienteDestino.razonSocial,totalVenta:it.total,totalCompra:it.comprobanteDestino.total
                             ]
         }
         render objJson as JSON
@@ -322,7 +380,8 @@ class ComprobanteController {
         params.put("_format","PDF")
         params.put("_name",nombreComprobante)
         params.put("_file","ComprobanteOrden")
-        params.put("reportsDirPath",reportsDirPath)
+        params.put("reportsDirPath",reportsDirPath)   7
+        log.debug "ENVIANDO IMPRESION DE REPORTE"
         chain(controller:'jasper',action:'index',model:[data:comprobantes],params:params)
     }
 

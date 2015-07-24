@@ -261,11 +261,51 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                return;
            }
             var vencimientosArray = [];
+            var porcentajeBrutoV=0;
+            var porcentajeBrutoC=0;
+            var porcentajeIvaV=0;
+            var porcentajeIvaC=0;
+            var porcentajeGastosV=0;
+            var porcentajeGastosC=0;
             vencimientosStore.data.each(function(row){
+                if(row.data.compradorvendedor=='V')
+                    porcentajeBrutoV+=row.data.porcentajebruto;
+                else
+                    porcentajeBrutoC+=row.data.porcentajebruto;
+                if(row.data.compradorvendedor=='V')
+                    porcentajeGastosV+=row.data.porcentajegastos;
+                else
+                    porcentajeGastosC+=row.data.porcentajegastos;
+                if(row.data.compradorvendedor=='V')
+                    porcentajeIvaV+=row.data.porcentajeiva;
+                else
+                    porcentajeIvaC+=row.data.porcentajeiva;
                 vencimientosArray.push(row.data);
             });
-
-
+            if(porcentajeBrutoV!=100 || porcentajeGastosV!=100 || porcentajeIvaV!=100){
+                Ext.Msg.show({
+                    title:'Error',
+                    msg:'Verifique los porcentajes vencimientos para el vendedor, deben sumar 100%',
+                    icon:Ext.MessageBox.ERROR,
+                    buttons:Ext.MessageBox.OK,
+                    fn:function(btn){
+                        ordenVista.down('#tabpanelItem').setActiveTab(3);
+                    }
+                });
+                return;
+            }
+           if(porcentajeBrutoC!=100 || porcentajeGastosC!=100 || porcentajeIvaC!=100){
+               Ext.Msg.show({
+                   title:'Error',
+                   msg:'Verifique los porcentajes vencimientos para el comprador, deben sumar 100%',
+                   icon:Ext.MessageBox.ERROR,
+                   buttons:Ext.MessageBox.OK,
+                   fn:function(btn){
+                       ordenVista.down('#tabpanelItem').setActiveTab(3);
+                   }
+               });
+               return;
+           }
 
             lotesjson = Ext.encode(lotesArray);
             gastosjson = Ext.encode(gastosArray);

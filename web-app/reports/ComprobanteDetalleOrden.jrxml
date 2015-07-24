@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteDetalleOrden" language="groovy" pageWidth="546" pageHeight="842" columnWidth="546" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d3eb95b-44ff-44fb-843e-5c202ad34753">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
@@ -12,7 +12,7 @@
 	<field name="comprobante.clienteDestino.razonSocial" class="java.lang.String"/>
 	<field name="categoria.nombre" class="java.lang.String"/>
 	<field name="subTotal" class="java.math.BigDecimal"/>
-	<field name="comprobante.importeBruto" class="java.lang.String"/>
+	<field name="comprobante.importeBruto" class="java.math.BigDecimal"/>
 	<field name="comprobante.detallegastos" class="java.util.Collection"/>
 	<field name="comprobante.detallevencimientos" class="java.util.Collection"/>
 	<background>
@@ -81,7 +81,7 @@
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField pattern="#,##0.00">
-				<reportElement x="466" y="-1" width="71" height="16" uuid="dfab9856-221a-4fdc-b850-3ba284bce06a"/>
+				<reportElement x="466" y="0" width="71" height="16" uuid="dfab9856-221a-4fdc-b850-3ba284bce06a"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
@@ -139,9 +139,9 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="153">
-			<textField pattern="#,##0.00">
-				<reportElement x="444" y="0" width="100" height="20" uuid="abd71716-8344-4f8c-a77a-8c0690b5b4f6"/>
+		<band height="161">
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="444" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="abd71716-8344-4f8c-a77a-8c0690b5b4f6"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font isBold="true"/>
 				</textElement>
@@ -151,12 +151,12 @@
 				<reportElement x="491" y="5" width="50" height="1" uuid="f2107f92-7ca2-42be-b45f-d3dd4c5d3115"/>
 			</line>
 			<subreport>
-				<reportElement stretchType="RelativeToBandHeight" x="0" y="5" width="432" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="a2aaa1f0-dee6-4f47-8df7-86ca02f6c2b5"/>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="20" width="546" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="69d617d7-cba8-49c9-82d5-47adf07606d8"/>
 				<subreportParameter name="reportsDirPath">
 					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
 				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{comprobante.detallevencimientos})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Vencimientos.jasper")]]></subreportExpression>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{comprobante.detallegastos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
 	</columnFooter>

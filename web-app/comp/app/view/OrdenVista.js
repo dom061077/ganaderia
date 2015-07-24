@@ -17,7 +17,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                     title : 'Orden de Venta',
                     resizable : false,
                     collapsible : true,
-                    bodyPadding : '5',
+                    margins : '30 30 30 30',
                     buttonAlign : 'center',
                     border : false,
                     trackResetOnLoad : true,
@@ -38,6 +38,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                            ,itemId:'tabpanelItem'
                            ,width:950
                            ,border:false
+                            ,width : '100%'
                            ,height:400
                            ,items:[
                               {title:'Comprador/Vendedor'
