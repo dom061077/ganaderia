@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d555633-b473-41b6-af4b-6f8eb92b31b3">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.0980750000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="71"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
 	<field name="cuit" class="java.lang.String"/>
 	<field name="razonSocial" class="java.lang.String"/>
@@ -20,120 +20,157 @@
 	<field name="especie.nombre" class="java.lang.String"/>
 	<field name="detalle" class="java.util.Collection"/>
 	<field name="detallegastos" class="java.util.Collection"/>
-	<field name="detallevencimientos" class="java.lang.String"/>
+	<field name="detallevencimientos" class="java.util.Collection"/>
 	<field name="iva" class="java.math.BigDecimal"/>
 	<field name="total" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="542" splitType="Stretch">
-			<textField>
-				<reportElement stretchType="RelativeToTallestObject" x="12" y="86" width="236" height="20" uuid="829a626b-e8dd-4d38-8e00-df1c077ed2f0"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="12" y="110" width="129" height="20" uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="12" y="135" width="100" height="20" uuid="408f5c89-b243-49e6-ad5a-acca33be5619"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{localidad.nombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="125" y="135" width="100" height="20" uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{localidad.partido.provincia.nombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="12" y="159" width="129" height="20" uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{situacionIVA.descripcion}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="319" y="110" width="59" height="17" uuid="d4181247-a472-40c4-9ef3-3aec00b72fe0"/>
-				<text><![CDATA[Guía:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="409" y="178" width="100" height="13" uuid="e63ae0c3-6b10-415a-952f-ae23d1e7f4e2"/>
-				<textElement>
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{destino.descripcion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="82" y="184" width="100" height="20" uuid="4ae43dcc-167e-46f5-9e86-812ecc581d4a"/>
-				<textFieldExpression><![CDATA[$F{cuit}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="81" y="204" width="100" height="20" uuid="1f683b2d-a5c4-460a-bb8e-9a245e9b87b6"/>
-				<textFieldExpression><![CDATA[$F{ingresosBrutos}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="319" y="178" width="59" height="13" uuid="13d52ed2-a69e-4bbd-afd4-356f1a2fe24e"/>
-				<text><![CDATA[Destino:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="409" y="109" width="100" height="18" uuid="6c24191f-4a59-4a07-bd18-b74426d3da1a"/>
-				<textFieldExpression><![CDATA[$F{guias}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="319" y="131" width="80" height="20" uuid="2b6052a9-7dea-4037-a76d-57776d6ae6c5"/>
-				<text><![CDATA[Proc.Remitente:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="409" y="130" width="100" height="20" uuid="2f4a614a-30c1-43a9-9ad4-e861f55c6001"/>
-				<textFieldExpression><![CDATA[$F{procedencia.nombre}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="319" y="155" width="59" height="20" uuid="df1bceea-4538-47e5-bcfd-84b997aa755f"/>
-				<text><![CDATA[Especie:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="409" y="155" width="100" height="20" uuid="d9a05bfd-177b-4de9-8bc4-72c1e5936c3c"/>
-				<textFieldExpression><![CDATA[$F{especie.nombre}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="319" y="195" width="106" height="18" uuid="f47ae197-c60b-4fa6-92c0-273f8cbbb52c"/>
-				<text><![CDATA[Fecha de Operación:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="12" y="184" width="59" height="20" uuid="344487b2-7e70-451a-a72b-addc9d75d53b"/>
-				<text><![CDATA[C.U.I.T:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="12" y="204" width="59" height="20" uuid="3ce4da0d-5c08-4a5d-9850-b3dd3fc5b23d"/>
-				<text><![CDATA[Ing.Brutos:]]></text>
-			</staticText>
-			<subreport>
-				<reportElement stretchType="RelativeToBandHeight" x="6" y="224" width="546" height="60" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="1dd39a5a-d96e-4fad-8669-22e2c7413dad"/>
+		<band height="265" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="6" y="243" width="546" height="19" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="1dd39a5a-d96e-4fad-8669-22e2c7413dad"/>
 				<subreportParameter name="reportsDirPath">
 					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detalle})]]></dataSourceExpression>
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"ComprobanteDetalleOrden.jasper")]]></subreportExpression>
 			</subreport>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="11" y="100" width="236" height="20" uuid="829a626b-e8dd-4d38-8e00-df1c077ed2f0"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="124" width="129" height="20" uuid="e848a41a-b927-47cc-b337-a3ce0027d5c9"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="149" width="100" height="20" uuid="408f5c89-b243-49e6-ad5a-acca33be5619"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{localidad.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="124" y="149" width="100" height="20" uuid="ce6b46bf-cf24-4b40-88f0-66aea149d923"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{localidad.partido.provincia.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="173" width="129" height="20" uuid="14d7cc4e-3edc-434b-8d9c-71761e9f3d23"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{situacionIVA.descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="124" width="59" height="17" uuid="d4181247-a472-40c4-9ef3-3aec00b72fe0"/>
+				<text><![CDATA[Guía:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="408" y="192" width="100" height="13" uuid="e63ae0c3-6b10-415a-952f-ae23d1e7f4e2"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino.descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="81" y="198" width="100" height="20" uuid="4ae43dcc-167e-46f5-9e86-812ecc581d4a"/>
+				<textFieldExpression><![CDATA[$F{cuit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="219" width="100" height="20" uuid="1f683b2d-a5c4-460a-bb8e-9a245e9b87b6"/>
+				<textFieldExpression><![CDATA[$F{ingresosBrutos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="192" width="59" height="13" uuid="13d52ed2-a69e-4bbd-afd4-356f1a2fe24e"/>
+				<text><![CDATA[Destino:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="408" y="123" width="100" height="18" uuid="6c24191f-4a59-4a07-bd18-b74426d3da1a"/>
+				<textFieldExpression><![CDATA[$F{guias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="145" width="80" height="20" uuid="2b6052a9-7dea-4037-a76d-57776d6ae6c5"/>
+				<text><![CDATA[Proc.Remitente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="408" y="144" width="100" height="20" uuid="2f4a614a-30c1-43a9-9ad4-e861f55c6001"/>
+				<textFieldExpression><![CDATA[$F{procedencia.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="169" width="59" height="20" uuid="df1bceea-4538-47e5-bcfd-84b997aa755f"/>
+				<text><![CDATA[Especie:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="408" y="169" width="100" height="20" uuid="d9a05bfd-177b-4de9-8bc4-72c1e5936c3c"/>
+				<textFieldExpression><![CDATA[$F{especie.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="209" width="106" height="18" uuid="f47ae197-c60b-4fa6-92c0-273f8cbbb52c"/>
+				<text><![CDATA[Fecha de Operación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="198" width="59" height="20" uuid="344487b2-7e70-451a-a72b-addc9d75d53b"/>
+				<text><![CDATA[C.U.I.T:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="219" width="59" height="20" uuid="3ce4da0d-5c08-4a5d-9850-b3dd3fc5b23d"/>
+				<text><![CDATA[Ing.Brutos:]]></text>
+			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="436" y="195" width="100" height="16" uuid="53bf760b-2146-4985-93d5-2b131566194e"/>
+				<reportElement x="431" y="209" width="100" height="16" uuid="53bf760b-2146-4985-93d5-2b131566194e"/>
 				<textFieldExpression><![CDATA[$F{fechaOperacion}]]></textFieldExpression>
 			</textField>
 		</band>
+		<band height="20">
+			<subreport isUsingCache="true">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="6" y="3" width="546" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="7b13d6a7-89b7-4c33-9651-7a774322c686"/>
+				<subreportParameter name="reportsDirPath">
+					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detallegastos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="21">
+			<subreport isUsingCache="true">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="6" y="3" width="546" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="1fa04b31-e0ef-41aa-a2fb-a901608d5e38"/>
+				<subreportParameter name="reportsDirPath">
+					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detallevencimientos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Impuestos.jasper")]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="20">
+			<subreport isUsingCache="true">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="6" y="2" width="546" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="0c5a4bd7-39cf-4561-b05a-5ff52a6dadc3"/>
+				<subreportParameter name="reportsDirPath">
+					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detallevencimientos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Vencimientos.jasper")]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="9">
+			<break>
+				<reportElement x="0" y="1" width="100" height="1" uuid="1eac81c5-618e-446a-9292-8aa2d3384193">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}<=2]]></printWhenExpression>
+				</reportElement>
+			</break>
+		</band>
 	</detail>
 	<pageFooter>
-		<band height="50">
+		<band height="42">
 			<staticText>
 				<reportElement x="362" y="19" width="74" height="13" uuid="485156a6-e734-4326-aced-2ddeee4e9ab3"/>
 				<textElement verticalAlignment="Bottom">

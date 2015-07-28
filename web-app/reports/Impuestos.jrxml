@@ -1,65 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteDetalleOrden" language="groovy" pageWidth="546" pageHeight="600" columnWidth="546" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7d3eb95b-44ff-44fb-843e-5c202ad34753">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Impuestos" language="groovy" pageWidth="520" pageHeight="842" columnWidth="520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b150560c-de96-4a55-800f-acb63cff6b50">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\github\\ganaderia\\ganaderia\\web-app\\reports\\"]]></defaultValueExpression>
+	</parameter>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
-	<field name="comprobante.membreteIva" class="java.lang.String"/>
 	<field name="vencimiento" class="java.util.Date"/>
-	<field name="subTotal" class="java.math.BigDecimal"/>
-	<field name="subTotalGanancias" class="java.math.BigDecimal"/>
-	<field name="comprobante.iva" class="java.math.BigDecimal"/>
 	<field name="membreteGanancias" class="java.lang.String"/>
-	<field name="comprobante.clienteOrigen.gananciasIns" class="java.lang.String"/>
-	<field name="comprobante.detallevencimientos" class="java.util.Collection"/>
 	<field name="membreteVencimiento" class="java.lang.String"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
+	<field name="comprobante.iva" class="java.math.BigDecimal"/>
+	<field name="comprobante.detallevencimientos" class="java.util.Collection"/>
+	<field name="comprobante.membreteIva" class="java.lang.String"/>
+	<field name="subTotalGanancias" class="java.math.BigDecimal"/>
 	<columnHeader>
-		<band height="29">
+		<band height="28" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="546" height="13" isPrintWhenDetailOverflows="true" uuid="45f48030-c870-4a3c-b4e6-43e77c46e92b"/>
+				<reportElement x="18" y="1" width="57" height="13" uuid="d645aa38-08bf-42b7-97b2-498896337a4b"/>
 				<textElement>
-					<font isBold="true"/>
+					<font isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Impuestos]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="15" width="385" height="14" isPrintWhenDetailOverflows="true" uuid="c8f90a8f-f948-47ec-a9cd-e3d809ab7c5b"/>
+				<reportElement x="2" y="12" width="367" height="14" uuid="da8fde0c-d4de-4de1-9403-e59f30e7c732"/>
 				<textFieldExpression><![CDATA[$F{comprobante.membreteIva}]]></textFieldExpression>
-			</textField>
-			<textField pattern="¤ #,##0.00">
-				<reportElement x="444" y="14" width="100" height="14" uuid="738ebbe0-5c3a-4e28-809d-70c71658cf66"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{comprobante.iva}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="16" splitType="Stretch">
-			<printWhenExpression><![CDATA[$F{subTotalGanancias}>0]]></printWhenExpression>
 			<textField>
-				<reportElement x="0" y="0" width="385" height="14" uuid="dfeefecf-c4a9-4baf-a731-876086e9ddd1"/>
+				<reportElement x="2" y="0" width="367" height="14" uuid="fe52d4f2-95cc-4d2e-8246-e3a28c52426e"/>
 				<textFieldExpression><![CDATA[$F{membreteGanancias}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="444" y="1" width="100" height="14" uuid="1d300187-5131-43ab-8578-7151beaa034c"/>
+				<reportElement x="416" y="0" width="100" height="14" uuid="bb13f53e-ccad-47a2-a80e-6ab519096049"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{subTotalGanancias}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="59">
-			<subreport>
-				<reportElement stretchType="RelativeToBandHeight" x="2" y="3" width="542" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="fb41531e-b8bc-4956-8c9f-9ec3232c81b6"/>
-				<subreportParameter name="reportsDirPath">
-					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
-				</subreportParameter>
-				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{comprobante.detallevencimientos})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
-			</subreport>
-		</band>
-	</columnFooter>
 </jasperReport>

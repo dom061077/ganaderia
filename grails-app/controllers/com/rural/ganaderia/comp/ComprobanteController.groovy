@@ -350,6 +350,8 @@ class ComprobanteController {
         def comprobanteInstance = Comprobante.get(params.id)
         List comprobantes = new ArrayList()
         comprobantes.add(comprobanteInstance)
+        comprobantes.add(comprobanteInstance)
+        comprobantes.add(comprobanteInstance)
         comprobanteInstance.localidad.partido.provincia.nombre
         comprobanteInstance.situacionIVA.descripcion
         comprobanteInstance.clienteDestino.cuit
@@ -379,8 +381,8 @@ class ComprobanteController {
         //open('ordenreservareporte?tipo=ORIGINAL&_format=PDF&_name=ordenReservaInstance&_file=OrdenReserva&id='+sel.data.ordenId
         params.put("_format","PDF")
         params.put("_name",nombreComprobante)
-        params.put("_file","ComprobanteOrden")
-        params.put("reportsDirPath",reportsDirPath)   7
+        params.put("_file","ComprobanteOrden.jasper")
+        params.put("reportsDirPath",reportsDirPath)
         log.debug "ENVIANDO IMPRESION DE REPORTE"
         chain(controller:'jasper',action:'index',model:[data:comprobantes],params:params)
     }

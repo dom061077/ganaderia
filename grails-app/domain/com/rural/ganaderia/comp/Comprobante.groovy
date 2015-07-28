@@ -141,5 +141,7 @@ class Comprobante {
     }
     static mapping={
         detalle(sort: 'categoria')
+        detallevencimientos(sort:  'vencimiento')
+        detallegastos(sort:  'gasto')
     }
 }
