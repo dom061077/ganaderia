@@ -11,19 +11,19 @@ class ComprobanteVencimiento {
     BigDecimal porcentajeGastos = new BigDecimal(0)
     BigDecimal porcentajeIva = new BigDecimal(0)
     BigDecimal anticipo = new BigDecimal(0)
-    BigDecimal subTotalGanancias = new BigDecimal(0)
+    //BigDecimal subTotalGanancias = new BigDecimal(0)
     
 
 
     static belongsTo = [comprobante:Comprobante]
 
-    BigDecimal getSubTotal(){
-        def subTotalBruto = comprobante.importeBruto * porcentajeBruto / 100
-        def subTotalGastos = comprobante.totalGastos * porcentajeGastos / 100
-        def subTotalIva = comprobante.iva * porcentajeIva / 100
-        return  subTotalBruto + subTotalGastos +subTotalIva
-    }
-    /*
+
+
+
+
+
+
+
     BigDecimal getSubTotalGanancias(){
         def valoresGananciasInstance = GananciasValores.findAll().get(0)
         def retorno = 0
@@ -32,29 +32,55 @@ class ComprobanteVencimiento {
             def minimoRetener
             def porcentaje
 
-            if (comprobante.clienteOrigen.gananciasIns){
+            if (comprobante.ganaciasIns){
+                def subTotalBruto = comprobante.importeBruto * porcentajeBruto / 100
+                def subTotalGastos = comprobante.totalGastos * porcentajeGastos / 100
+                def subTotalIva = comprobante.iva * porcentajeIva / 100
+                def baseG=0
+                if (comprobante.ganaciasIns){
+                    baseG = subTotalBruto - subTotalGastos + subTotalIva //el gasto resta si acumula base ganancias
 
-                if(comprobante.clienteOrigen.situacionIVA.codigo=='IRI'){
+                }
+
+
+                if(comprobante.situacionIVA.codigo=='IRI'){
                     minimoRetencion = valoresGananciasInstance.minRetencionIns
                     minimoRetener = valoresGananciasInstance.minRetenerIns
                     porcentaje = valoresGananciasInstance.porcentajeIns
 
-                    if((subTotal-minimoRetencion)>minimoRetener){
-                        retorno = subTotal-minimoRetencion
+                    if((baseG-minimoRetencion)>minimoRetener){
+                        retorno = baseG-minimoRetencion
                         retorno = retorno * porcentaje / 100
-                    }
+                        if(retorno<20)
+                            retorno = 0
+                    } else
+                        retorno = 0
                 }else{
                     minimoRetencion = valoresGananciasInstance.minRetencionNoIns
                     minimoRetener = valoresGananciasInstance.minRetenerNoIns
                     porcentaje = valoresGananciasInstance.porcentajeNoIns
+                    retorno = baseG-minimoRetencion
                     retorno = retorno * porcentaje/100
+                    if(retorno<10)
+                         retorno
                 }
             }
             return retorno
         }
         return retorno
     }
-      */
+
+    BigDecimal getSubTotal(){
+        def subTotalBruto = comprobante.importeBruto * porcentajeBruto / 100
+        def subTotalGastos = comprobante.totalGastos * porcentajeGastos / 100
+        def subTotalIva = comprobante.iva * porcentajeIva / 100
+        if(comprobante.tipoComprobante==TipoComprobante.ORDENVENTA){
+
+            return subTotalBruto + subTotalIva - subTotalGastos  - subTotalGanancias
+        }else
+            return subTotalBruto + subTotalGastos + subTotalIva
+    }
+
     String getMembreteGanancias(){
         def retorno = ""
         if(comprobante.clienteOrigen.gananciasIns){
@@ -70,7 +96,7 @@ class ComprobanteVencimiento {
     }
     
 
-    static transients = ['subTotal','membreteGanancias','membreteVencimiento']
+    static transients = ['membreteGanancias','membreteVencimiento','subTotalGanancias','subTotal']
 
     static constraints = {
         porcentajeBruto(nullable:false,blank:false,minValue: 1,maxValue: 100)

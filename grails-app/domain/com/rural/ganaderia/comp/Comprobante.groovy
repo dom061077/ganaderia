@@ -32,6 +32,7 @@ class Comprobante {
     SituacionIVA situacionIVA
     String cuit
     String ingresosBrutos
+    boolean ganaciasIns
 
     //----------------
     java.sql.Date fechaAlta = new java.sql.Date(new java.util.Date().getTime())

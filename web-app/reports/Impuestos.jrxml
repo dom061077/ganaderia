@@ -27,6 +27,10 @@
 				<reportElement x="2" y="12" width="367" height="14" uuid="da8fde0c-d4de-4de1-9403-e59f30e7c732"/>
 				<textFieldExpression><![CDATA[$F{comprobante.membreteIva}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="416" y="12" width="100" height="14" uuid="552c22fe-d8df-41f2-8d5e-43106a0c020c"/>
+				<textFieldExpression><![CDATA[$F{comprobante.iva}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

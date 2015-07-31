@@ -130,7 +130,8 @@ class ComprobanteController {
 
         }
 
-        def comprobanteInstance = new Comprobante(clienteOrigen: clienteOInstance,clienteDestino: clienteDInstance,
+        def comprobanteInstance = new Comprobante(clienteOrigen: clienteOInstance,clienteDestino: clienteDInstance
+                                        ,situacionIVA: clienteOInstance.situacionIVA, ganaciasIns: clienteOInstance.gananciasIns,
                                         exposicion: Exposicion.load(cJson.exposicion),anioExposicion: AnioExposicion.load(cJson.anioExposicion)
                                         ,tipoComprobante: TipoComprobante.ORDENVENTA
                                         ,letra: clienteOInstance.situacionIVA.letraComprobante
@@ -188,38 +189,12 @@ class ComprobanteController {
                 compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
                                 ,porcentajeBruto: it.porcentajebruto, porcentajeGastos: it.porcentajegastos
                                 ,porcentajeIva: it.porcentajeiva)
-
-                def minimoRetencion
-                def minimoRetener
-                def porcentaje
-                comprobanteInstance.addToDetallevencimientos(compVencInstance)
-                if (comprobanteInstance.clienteOrigen.gananciasIns){
-                    def valoresGananciasInstance = GananciasValores.findAll().get(0)
-                    if(comprobanteInstance.clienteOrigen.situacionIVA.codigo=='IRI'){
-                        minimoRetencion = valoresGananciasInstance.minRetencionIns
-                        minimoRetener = valoresGananciasInstance.minRetenerIns
-                        porcentaje = valoresGananciasInstance.porcentajeIns
-
-                        if((compVencInstance.subTotal-minimoRetencion)>minimoRetener){
-                            compVencInstance.subTotalGanancias = compVencInstance.subTotal-minimoRetencion
-                            compVencInstance.subTotalGanancias = compVencInstance.subTotalGanancias * porcentaje / 100
-                        }
-                    }else{
-                        minimoRetencion = valoresGananciasInstance.minRetencionNoIns
-                        minimoRetener = valoresGananciasInstance.minRetenerNoIns
-                        porcentaje = valoresGananciasInstance.porcentajeNoIns
-                        compVencInstance.subTotalGanancias = compVencInstance.subTotalGanancias * porcentaje/100
-                    }
-                }
-
-
-
-
             }
         }
         //----------datos de la orden de compra-----
         def compCompra = new Comprobante(clienteOrigen: clienteDInstance ,clienteDestino: clienteOInstance,
                 exposicion: Exposicion.load(cJson.exposicion),anioExposicion: AnioExposicion.load(cJson.anioExposicion)
+                ,situacionIVA: clienteDInstance.situacionIVA,ganaciasIns: clienteDInstance.gananciasIns
                 ,tipoComprobante: TipoComprobante.ORDENCOMPRA
                 ,letra: clienteDInstance.situacionIVA.letraComprobante
                 ,especie: Especie.load(cJson.especie)
