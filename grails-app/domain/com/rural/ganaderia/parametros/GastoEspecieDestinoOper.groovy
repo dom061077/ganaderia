@@ -9,11 +9,16 @@ class GastoEspecieDestinoOper {
     SituacionIVA situacionIVA
     TipoComprobante tipoComprobante
     TipoComprobante tipoComprobanteOrigen
+    Especie especie
+    Destino destino
     String codigoIvaEspecie
     String codigoIvaDestino
     BigDecimal alicuota
 
     static constraints = {
         tipoComprobanteOrigen(nullable: true,blank:true)
+        especie(nullable: true, blank:true)
+        destino(nullable:  true, blank:true)
+
     }
 }

@@ -10,7 +10,7 @@ Ext.application({
 
     ],
 
-    launch: function () {
+    launch: function() {
         Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             renderTo:'formpanelId',

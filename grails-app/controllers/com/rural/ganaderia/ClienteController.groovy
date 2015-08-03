@@ -216,22 +216,27 @@ class ClienteController {
     
     def listjsongrid(){
         log.debug('PARAMETROS: '+params)
+        def pagingConfig = [
+                max: params.limit as Integer ?: 10,
+                offset: params.start as Integer ?: 0
+        ]
         def hashJson = [:]
         def data = []
-        def clientes = Cliente.createCriteria().list(){
-            if(params.razonSocial)
-               ilike("razonSocial","%"+params.razonSocial+"%")
+        def clientes = Cliente.createCriteria().list(pagingConfig){
+            ne("razonSocial","")
             order("razonSocial","asc")
         }
         clientes.each {
             data<<[id: it.id,razonSocial:it.razonSocial,cuit:it.cuit
                     ,ingresosBrutos: it.ingresosBrutos,telefono1: it.telefono1,telefono2:it.telefono2
-                    ,email:it.email,provincia:(it.localidad!=null?it.localidad.provincia.id:null)
+                    ,email:it.email,provincia:(it.localidad!=null?it.localidad.partido.provincia.id:null)
+                    ,partido:(it.localidad!=null?it.localidad.partido.id:null)
                     ,localidad : (it.localidad!=null?it.localidad.id:null),direccion:it.direccion
-                    ,situacionIVA:it.situacionIVA.name]
+                    ,situacionIVA:it.situacionIVA?.descripcion]
         }
 
         def total = Cliente.createCriteria().get(){
+            ne("razonSocial","")
             projections{
                 count("id")
             }
@@ -242,6 +247,7 @@ class ClienteController {
         render hashJson as JSON
 
     }
-    
+
+
     
 }
