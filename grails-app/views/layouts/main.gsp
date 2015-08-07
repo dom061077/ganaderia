@@ -18,6 +18,7 @@
         <script type="text/javascript" src="${resource(dir:'js/extjs',file: 'ext-all-rtl-debug-w-comments.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/extjs',file:'ext-lang-es.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js/ConstraintsDefinitions.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js/extjs',file:'SearchField.js')}"></script>
 
 
 		<g:layoutHead/>
@@ -72,6 +73,14 @@
                                             window.location = '<%out << createLink(controller:'anioExposicion',action:'create')%>'
                                         }
                                     }
+                                },{
+                                    text:'Clientes',
+                                    listeners:{
+                                        click:function(menu, item, e, eOpts){
+                                            window.location = '<%out << createLink(controller:'cliente',action:'list')%>'
+                                        }
+                                    }
+
                                 },{
                                     text:'Destino',
                                     listeners:{
@@ -178,6 +187,6 @@
             var loginurl = '${createLink(uri:'/login')}';
         </script>    
 		<g:javascript library="application"/>
-		<r:layoutResources />
+1		<r:layoutResources />
 	</body>
 </html>

@@ -15,7 +15,6 @@ Ext.define('Ganaderia.model.ClienteModelo', {
         {name:'localidad',type:'int'}
 
     ],
-    validations:[],
     proxy:{
         type:'ajax',
         reader:{
@@ -24,7 +23,10 @@ Ext.define('Ganaderia.model.ClienteModelo', {
         },
         api:
         {
-            read:listjson
+            read:listjson,
+            save:''
         }
-    }
+    },
+
+    validations:[]
 });

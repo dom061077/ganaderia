@@ -216,6 +216,9 @@ class ClienteController {
     
     def listjsongrid(){
         log.debug('PARAMETROS: '+params)
+        def sortJson
+        if(params.sort)
+            sortJson = JSON.parse(params.sort)
         def pagingConfig = [
                 max: params.limit as Integer ?: 10,
                 offset: params.start as Integer ?: 0
@@ -224,7 +227,15 @@ class ClienteController {
         def data = []
         def clientes = Cliente.createCriteria().list(pagingConfig){
             ne("razonSocial","")
-            order("razonSocial","asc")
+            if(params.query){
+                or{
+                    ilike("cuit","%"+params.query+"%")
+                    ilike("razonSocial","%"+params.query+"%")
+                }
+            }
+            if(sortJson){
+                order(sortJson[0].property,sortJson[0].direction.toString().toLowerCase())
+            }
         }
         clientes.each {
             data<<[id: it.id,razonSocial:it.razonSocial,cuit:it.cuit
@@ -237,6 +248,13 @@ class ClienteController {
 
         def total = Cliente.createCriteria().get(){
             ne("razonSocial","")
+            if(params.query){
+                or{
+                    ilike("cuit","%"+params.query+"%")
+                    ilike("razonSocial","%"+params.query+"%")
+                }
+            }
+
             projections{
                 count("id")
             }

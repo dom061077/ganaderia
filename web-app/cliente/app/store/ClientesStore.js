@@ -5,5 +5,8 @@ Ext.define('Ganaderia.store.ClientesStore',
         autoLoad: true,
         autoSync: false,
         storeId: 'ClientesId',
+        remoteSort: true,
+
         pageSize: 10
+
     });

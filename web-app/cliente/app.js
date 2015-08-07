@@ -2,8 +2,8 @@ Ext.application({
     requires: ['Ext.panel.Panel','Ext.grid.Panel'],
     name:'Ganaderia',
     appFolder:'../cliente/app',
-    views:['Ganaderia.view.ClientesList'],
-    //controllers:['ClienteControlador'],
+    views:['Ganaderia.view.ClientesList','Ganaderia.view.ClienteFormVista'],
+    controllers:['ClienteControlador'],
     stores:['Ganaderia.store.ClientesStore'],
     launch: function () {
         Ext.create('Ext.panel.Panel', {
@@ -13,7 +13,7 @@ Ext.application({
             //width:950,
             items: [
                 {
-                    xtype: 'ClientesList'
+                    xtype: 'clienteslist'
 
                 }
                 //,{xtype:'DetalleGridVista'}

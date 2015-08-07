@@ -4,15 +4,18 @@ Ext.define('Ganaderia.view.ClientesList',
     {
 
         extend: 'Ext.grid.Panel',
-        alias: 'widget.ClientesList',
+        alias: 'widget.clienteslist',
+        requires: ['Ext.ux.form.SearchField'],
         config: {},
         constructor: function (config) {
             this.initConfig(config);
             return this.callParent(arguments);
         },
         width: '100%',
-        height: 300,
+        height: 400,
         selType: 'rowmodel',
+        loadMask: true,
+
         selModel:
         {
             mode: 'SINGLE'
@@ -22,8 +25,26 @@ Ext.define('Ganaderia.view.ClientesList',
             stripeRows: true
         },
         initComponent: function () {
+            var storeGrid = Ext.StoreManager.lookup('Ganaderia.store.ClientesStore');
             Ext.apply(this,
                 {
+                    dockedItems: [{
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [{
+                            width: 500,
+                            fieldLabel: 'Filtrar por C.U.I.T o Razón Social',
+                            labelWidth: 250,
+                            xtype: 'searchfield',
+                            store: storeGrid
+                        }, '->', {
+                            xtype: 'component',
+                            itemId: 'status',
+                            tpl: 'Matching threads: {count}',
+                            style: 'margin-right:5px'
+                        }]
+                    }],
+
                     tbar  : [
                         {text : 'Nuevo Cliente',
                          action : 'add',
@@ -36,16 +57,21 @@ Ext.define('Ganaderia.view.ClientesList',
                             text: "Id",
                             dataIndex: 'id',
                             hidden:true,
-                            width: 80
+                            width: 80,
+                            filter: true
                         },{
                             text:'C.U.I.T',
                             dataIndex:'cuit',
-                            width: 110
+                            width: 110,
+                            filter: true
                         },{
 
                             text:'Razón Social',
                             dataIndex:'razonSocial',
-                            width:250
+                            width:250,
+                            filter:{
+                                type: 'string'
+                            }
                         },{
 
                             text:'Ingresos Brutos',
