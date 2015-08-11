@@ -55,8 +55,8 @@ Ext.define('Ganaderia.view.ClientesList',
                     columns: [
                         {
                             text: "Id",
-                            dataIndex: 'id',
-                            hidden:true,
+                            dataIndex: 'idCliente',
+                            hidden:false,
                             width: 80,
                             filter: true
                         },{
@@ -86,6 +86,24 @@ Ext.define('Ganaderia.view.ClientesList',
 
                             text:'Condición I.V.A',
                             dataIndex:'situacionIVA',
+                            width:170
+                        },{
+
+                            text:'Provincia',
+                            dataIndex:'provinciaNombre',
+                            sortable:false,
+                            width:170
+                        },{
+
+                            text:'Partido',
+                            dataIndex:'partidoNombre',
+                            sortable:false,
+                            width:170
+                        },{
+
+                            text:'Localidad',
+                            dataIndex:'localidadNombre',
+                            sortable:false,
                             width:170
 
                         }

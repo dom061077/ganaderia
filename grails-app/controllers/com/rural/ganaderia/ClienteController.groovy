@@ -5,11 +5,12 @@ import grails.converters.deep.JSON
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.MessageSource
 import grails.converters.JSON
+import com.rural.ganaderia.localizacion.Localidad
 
 class ClienteController {
     MessageSource  messageSource
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+  //  static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
         redirect(action: "list", params: params)
@@ -150,16 +151,39 @@ class ClienteController {
         }else{
             objJson.idCliente = null
             objJson.msgError = "Error de integridad"
-            errorList << [msg: "No se encontró el cliente con Identificador: "+id]
+            errorList << [msg: "No se encontró el cliente con Identificador: "+idCliente]
         }
         render objJson as grails.converters.JSON
     }
     
     def savejson(){
-        log.info("Parametros: "+params)
+        log.info("Parametros: "+request.JSON)
+        def clienteParam = request.JSON
         def objJson = [:]
         def errorList = []
-        def clienteInstance = new Cliente(params)
+        def clienteInstance
+        
+        if(clienteParam.idCliente)
+            clienteInstance = Cliente.get(clienteParam.idCliente)
+        else
+            clienteInstance = new Cliente()
+        clienteInstance.cuit = clienteParam.cuit
+        clienteInstance.direccion = clienteParam.direccion
+        clienteInstance.email = clienteParam.email
+        clienteInstance.telefono1 = clienteParam.telefono1
+        clienteInstance.telefono2 = clienteParam.telefono2
+        clienteInstance.gananciasIns = clienteParam.ganananciasIns
+        clienteInstance.direccion = clienteParam.direccion
+        clienteInstance.ingresosBrutos = clienteParam.ingeresosBrutos
+
+        def localidadInstance = Localidad.get(clienteParam.localidad)
+        clienteInstance.localidad = localidadInstance
+
+
+
+        clienteInstance.situacionIVA = SituacionIVA.load(clienteParam.situacionIVA)
+        clienteInstance.razonSocial = clienteParam.razonSocial
+
         if (clienteInstance.save()){
            objJson.idCliente = clienteInstance.id
            objJson.nombre = clienteInstance.razonSocial
@@ -169,6 +193,7 @@ class ClienteController {
            objJson.idCliente = null
            objJson.msgError = "Error de validación:"
            clienteInstance.errors.allErrors.each{
+               //log.debug "ERROR: "+it
                errorList << [msg:messageSource.getMessage(it,LocaleContextHolder.locale)]
            }
            objJson.errors=errorList
@@ -238,11 +263,17 @@ class ClienteController {
             }
         }
         clientes.each {
-            data<<[id: it.id,razonSocial:it.razonSocial,cuit:it.cuit
+            data<<[idCliente: it.id,razonSocial:it.razonSocial,cuit:it.cuit
                     ,ingresosBrutos: it.ingresosBrutos,telefono1: it.telefono1,telefono2:it.telefono2
                     ,email:it.email,provincia:(it.localidad!=null?it.localidad.partido.provincia.id:null)
                     ,partido:(it.localidad!=null?it.localidad.partido.id:null)
-                    ,localidad : (it.localidad!=null?it.localidad.id:null),direccion:it.direccion
+                    ,localidad : (it.localidad!=null?it.localidad.id:null)
+                    ,localidadNombre: (it.localidad!=null?it.localidad.nombre:null)
+                    ,partido: (it.localidad!=null?it.localidad.partido.id:null)
+                    ,partidoNombre: (it.localidad!=null?it.localidad.partido.nombre:null)
+                    ,provincia: (it.localidad!=null?it.localidad.partido.provincia.id:null)
+                    ,provinciaNombre: (it.localidad!=null?it.localidad.partido.provincia.nombre:null)
+                    ,direccion:it.direccion
                     ,situacionIVA:it.situacionIVA?.descripcion]
         }
 
@@ -267,5 +298,4 @@ class ClienteController {
     }
 
 
-    
 }

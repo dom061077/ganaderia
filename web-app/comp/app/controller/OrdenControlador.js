@@ -71,6 +71,7 @@ Ext.define('Ganaderia.controller.OrdenControlador',
             var storeLocalidad = this.getCmbLocalidadProc().getStore();
             storeLocalidad.proxy.extraParams={partidoId:records[0].data.id};
             storeLocalidad.load();
+            this.getCmbLocalidadProc().clearValue();
             //Ext.getCmp('localidadEditClient
             // eId').clearValue();
         },

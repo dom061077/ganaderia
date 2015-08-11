@@ -23,7 +23,12 @@ Ext.define('Ganaderia.view.ClienteFormVista', {
             xtype : 'textfield',
             anchor: '100%'
         },
-        items : [{
+        items : [
+        {
+         /*   name: 'idCliente',
+            //type:'hidden',
+            fieldLabel: 'id'
+        },{*/
             name  : 'cuit',
             fieldLabel: 'C.U.I.T'
         },{
@@ -33,33 +38,82 @@ Ext.define('Ganaderia.view.ClienteFormVista', {
             name: 'direccion',
             fieldLabel: 'Dirección'
         },{
-            name: 'direccion',
-            fieldLabel: 'Dirección'
-        },{
             name: 'telefono1',
             fieldLabel: 'Teléfono 1'
         },{
             name: 'telefono2',
             fieldLabel: 'Teléfono 2'
-
+        },{
+            fieldLabel: '¿Tiene ganancias?',
+            name: 'gananciasIns',
+            xtype: 'checkbox'
         },{
             xtype:'combo',
             name: 'situacionIVA',
-            fieldLabel: 'Codición I.V.A'
-        },{
-            xtype:'combo',
-            name: 'Provincia',
-            fieldLabel: 'provincia'
-        },{
-            xtype:'combo',
-            name: 'partido',
-            fieldLabel: 'Partido'
-        },{
-            name: 'localidad',
-            fieldLabel: 'Localidad'
+            fieldLabel: 'Codición I.V.A',
+            allowBlank : false,
+            forceSelection : true,
+            editable:false,
+            width: 400,
+            queryMode: 'remote',
+            emptyText:'',
+            typeAhead :true,
+            triggerAction: 'all',
+            valueField:'id',
+            displayField: 'descripcion',
+            selectOnTab:true,
+            store:'Ganaderia.store.SituacionIVAStore'
 
+        },{
+                xtype:'combo',
+                margin:'0 20 5 0',
+                itemId:'cmbProvinciaProc',
+                fieldLabel:'Provincia',
+                name:'provincia',
+                allowBlank:false,
+                width:400,
+                queryMode:'remote',
+                emptyText:'',
+                typeAhead: true,
+                triggerAction:'all',
+                valueField:'id',
+                displayField:'nombre',
+                selectOnTab:true,
+                store:'Ganaderia.store.ProvinciaStore'
+        },{
+                xtype:'combo',
+                margin:'0 20 5 0',
+                itemId:'cmbPartidoProc',
+                fieldLabel:'Partido',
+                name:'partido',
+                allowBlank:false,
+                width:400,
+                queryMode:'remote',
+                emptyText:'',
+                typeAhead: true,
+                triggerAction:'all',
+                valueField:'id',
+                displayField:'nombre',
+                selectOnTab:true,
+                store:'Ganaderia.store.PartidoStore'
+            },{
+                xtype:'combo',
+                itemId:'cmbLocalidadProc',
+                fieldLabel:'Localidad',
+                name:'localidad',
+                allowBlank:false,
+                width:400,
+                queryMode:'remote',
+                emptyText:'',
+                typeAhead: true,
+                triggerAction:'all',
+                valueField:'id',
+                displayField:'nombre',
+                selectOnTab:true,
+                store:'Ganaderia.store.LocalidadStore'
 
-        }
+            }
+
 
         ]
     }],

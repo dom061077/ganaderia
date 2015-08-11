@@ -187,6 +187,6 @@
             var loginurl = '${createLink(uri:'/login')}';
         </script>    
 		<g:javascript library="application"/>
-1		<r:layoutResources />
+		<r:layoutResources />
 	</body>
 </html>

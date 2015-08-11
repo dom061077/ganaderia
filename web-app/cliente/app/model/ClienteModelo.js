@@ -2,7 +2,7 @@ Ext.define('Ganaderia.model.ClienteModelo', {
     extend: 'Ext.data.Model',
     idProperty: 'id',
     fields: [
-        {name: 'id',type:'int'},
+        {name: 'idCliente',type:'int'},
         {name: 'direccion', type: 'string'},
         {name: 'email',  type: 'string'},
         {name: 'telefono1', type: 'string'},
@@ -10,9 +10,16 @@ Ext.define('Ganaderia.model.ClienteModelo', {
         {name: 'cuit',  type: 'string'},
         {name: 'razonSocial',  type: 'string'},
         {name: 'ingresosBrutos',  type: 'string'},
-        {name:'situacionIVA', type:'string'},
+        {name: 'ganananciasIns', type: 'boolean'},
+        {name:'situacionIVA', type:'int'},
         {name:'codigoPostal',type:'String'},
-        {name:'localidad',type:'int'}
+        {name:'localidad',type:'int'},
+        {name:'localidadNombre',type:'string'},
+        {name:'partido',type:'int'},
+        {name:'partidoNombre',type:'string'},
+        {name:'provincia',type:'int'},
+        {name:'provinciaNombre',type:'string'}
+
 
     ],
     proxy:{
@@ -21,10 +28,15 @@ Ext.define('Ganaderia.model.ClienteModelo', {
             root:'data',
             type:'json'
         },
+        writer:{
+            //root:'data',
+            type:'json'
+        },
+
         api:
         {
             read:listjson,
-            save:''
+            create:savejson
         }
     },
 
