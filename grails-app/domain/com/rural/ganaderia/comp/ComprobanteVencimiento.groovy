@@ -2,6 +2,7 @@ package com.rural.ganaderia.comp
 
 import com.rural.ganaderia.enums.TipoComprobante
 import com.rural.ganaderia.parametros.GananciasValores
+import java.text.SimpleDateFormat
 
 class ComprobanteVencimiento {
     Comprobante comprobante
@@ -91,7 +92,9 @@ class ComprobanteVencimiento {
     
     String getMembreteVencimiento(){
         def retorno=""
-        retorno="Al "+vencimiento+" ($cantidadDias días)"
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy")
+        String vencimientoStr = format.format(vencimiento)
+        retorno="Al "+vencimientoStr+" ($cantidadDias días)"
         return retorno
     }
     

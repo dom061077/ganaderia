@@ -12,6 +12,7 @@ Ext.define('Ganaderia.model.ClienteModelo', {
         {name: 'ingresosBrutos',  type: 'string'},
         {name: 'ganananciasIns', type: 'boolean'},
         {name:'situacionIVA', type:'int'},
+        {name:'situacionIVAName', type:'string'},
         {name:'codigoPostal',type:'String'},
         {name:'localidad',type:'int'},
         {name:'localidadNombre',type:'string'},

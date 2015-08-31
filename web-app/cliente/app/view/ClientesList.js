@@ -62,6 +62,7 @@ Ext.define('Ganaderia.view.ClientesList',
                         },{
                             text:'C.U.I.T',
                             dataIndex:'cuit',
+                            sortable:false,
                             width: 110,
                             filter: true
                         },{
@@ -76,17 +77,27 @@ Ext.define('Ganaderia.view.ClientesList',
 
                             text:'Ingresos Brutos',
                             dataIndex:'ingresosBrutos',
+                            sortable:false,
                             width:80
                         },{
 
                             text:'Teléfono',
                             dataIndex:'telefono1',
+                            sortable:false,
                             width:120
                         },{
 
                             text:'Condición I.V.A',
-                            dataIndex:'situacionIVA',
+                            dataIndex:'situacionIVAName',
+                            sortable:false,
                             width:170
+                        },{
+                            text:'Ganancias Ins.',
+                            dataIndex:'gananciasIns',
+                            xtype:'checkcolumn',
+                            editable:false,
+                            sortable:false,
+                            width:80
                         },{
 
                             text:'Provincia',

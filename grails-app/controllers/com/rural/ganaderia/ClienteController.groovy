@@ -269,12 +269,15 @@ class ClienteController {
                     ,partido:(it.localidad!=null?it.localidad.partido.id:null)
                     ,localidad : (it.localidad!=null?it.localidad.id:null)
                     ,localidadNombre: (it.localidad!=null?it.localidad.nombre:null)
+                    ,gananciasIns: it.gananciasIns
                     ,partido: (it.localidad!=null?it.localidad.partido.id:null)
                     ,partidoNombre: (it.localidad!=null?it.localidad.partido.nombre:null)
                     ,provincia: (it.localidad!=null?it.localidad.partido.provincia.id:null)
                     ,provinciaNombre: (it.localidad!=null?it.localidad.partido.provincia.nombre:null)
                     ,direccion:it.direccion
-                    ,situacionIVA:it.situacionIVA?.descripcion]
+                    ,situacionIVA:it.situacionIVA?.id
+                    ,situacionIVAName: it.situacionIVA?.descripcion
+                   ]
         }
 
         def total = Cliente.createCriteria().get(){
