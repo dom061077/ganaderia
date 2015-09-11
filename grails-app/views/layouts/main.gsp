@@ -163,6 +163,27 @@
 
                                 }
                             ]
+                        },{
+                            xtype:'button',
+                            text:'Usuario',
+                            menu:[
+                                {
+                                    text:'Cerrar Sesión',
+                                    listeners:{
+                                        click:function(meu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'logout',action:'index')%>';
+                                        }
+                                    }
+                                },{
+                                    text:'Cambiar Contraseña',
+                                    listeners:{
+                                        click:function(meu,item,e,eOpts){
+                                            window.location = '<%out << createLink(controller:'user',action:'changepassword')%>';
+                                        }
+                                    }
+
+                                }
+                            ]
                         }
 
 

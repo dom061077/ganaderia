@@ -4,6 +4,8 @@ import org.springframework.dao.DataIntegrityViolationException
 
 class UserController {
 
+    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -52,6 +54,30 @@ class UserController {
         [userInstance: userInstance]
     }
 
+    def changepassword(Long id){
+        def userInstance =  springSecurityService.principal
+        if (!userInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
+            redirect(action: "list")
+            return
+        }
+        [userInstance: userInstance]
+    }
+
+    def updatepassword(Long id, String oldpassword,String newpassword){
+        def userInstance = User.get(id)
+        if (!userInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), id])
+            redirect(action: "list")
+            return
+        }
+        log.debug("Password old: "+userInstance.password)
+    }
+
+    def cancelar(){
+        redirect(uri: '/')
+    }
+    
     def update(Long id, Long version) {
         def userInstance = User.get(id)
         if (!userInstance) {
