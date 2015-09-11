@@ -95,6 +95,7 @@ Ext.define('Ganaderia.view.ClientesList',
                             text:'Ganancias Ins.',
                             dataIndex:'gananciasIns',
                             xtype:'checkcolumn',
+                            disabled:true,
                             editable:false,
                             sortable:false,
                             width:80

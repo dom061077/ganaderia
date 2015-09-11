@@ -16,7 +16,7 @@ Ext.application({
         Ext.create('Ext.panel.Panel', {
             layout: 'fit',
             renderTo:'formpanelId',
-            title:'titulo',
+            title:'Listado de Clientes',
             //width:950,
             items: [
                 {
