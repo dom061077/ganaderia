@@ -39,7 +39,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                            ,width:950
                            ,border:false
                             ,width : '100%'
-                           ,height:400
+                           ,height:450
                            ,items:[
                               {title:'Comprador/Vendedor'
                                    ,items:[
@@ -381,6 +381,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                   ]
                               }
                             ,{  title:'Vencimientos de la Boleta'
+                                ,itemId:'tabVencimientosItemId'
                                 ,height:400
                                 ,width:850
                                 ,items:[

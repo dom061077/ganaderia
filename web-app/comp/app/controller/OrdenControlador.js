@@ -52,8 +52,9 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 'OrdenVista button[itemId=btnGenerar]': {
                     click: this.onConfirm
                 },
-                'panel > OrdenVista > tabpanelItem checkbox[itemId=pagoContadoItemId]':{
-                     check: this.onPagoContadoCheck
+                'OrdenVista checkbox[itemId=pagoContadoItemId]':{
+                     change: this.onPagoContadoCheck,
+                     afterrender: this.onPagoContadoAfterRender
                 }
 
 
@@ -339,14 +340,25 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 }
             });
         },
-        onPagoContadoCheck:function(checkBox,checked){
-              alert('EVENTO CHECK');
-              if(checked)
-                  ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(true);
-              else
-                  ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(false);
-
+        onPagoContadoCheck:function(checkbox, newValue, oldValue, eOpts){
+              var ordenVista = this.getOrdenVista();
+              ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(checkbox.getRawValue());
+              if(checkbox.getRawValue()){
+                ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').show();
+                this.deshabilitarVencimientos(ordenVista.down('#tabpanelItem').down('#tabVencimientosItemId'),false);
+              }else{
+                ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').hide();
+                this.deshabilitarVencimientos(ordenVista.down('#tabpanelItem').down('#tabVencimientosItemId'),true);
+              }
+        },
+        onPagoContadoAfterRender:function(checkbox,eOptions){
+            var ordenVista = this.getOrdenVista();
+            ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(false);
+        },
+        deshabilitarVencimientos:function(tabItem,habilitar){
+            if(habilitar)
+                tabItem.items.each(function(c){c.enable()});
+            else
+                tabItem.items.each(function(c){c.disable()});
         }
-
-
 });

@@ -54,13 +54,21 @@ class Comprobante {
     
     Comprobante comprobanteDestino
     //------- Trasients fields---
-     BigDecimal getImporteBruto(){
+    BigDecimal getImporteBruto(){
         def retorno=0
         detalle.each{det->
             retorno += det.subTotal
         }
         return retorno
      }
+    
+    BigDecimal getDescuentoImporteBruto(){
+        def retorno=0
+        returno = porcentajeDesc * importeBruto / 100
+        return retorno
+    }
+
+    
     BigDecimal getTotalGastos(){
         def retorno=0
         detallegastos.each{det ->
@@ -103,9 +111,45 @@ class Comprobante {
 
     BigDecimal getTotalGanancias(){
         def retorno = 0
-        detallevencimientos.each{
-            retorno += it.subTotalGanancias
+        if(pagoContado) {
+            /*def subTotalBruto = comprobante.importeBruto * porcentajeBruto / 100
+            def subTotalGastos = comprobante.totalGastos * porcentajeGastos / 100
+            def subTotalIva = comprobante.iva * porcentajeIva / 100
+            def baseG=0
+            if (comprobante.ganaciasIns){
+                baseG = subTotalBruto - subTotalGastos + subTotalIva //el gasto resta si acumula base ganancias
+
+            }
+
+
+            if(comprobante.situacionIVA.codigo=='IRI'){
+                minimoRetencion = valoresGananciasInstance.minRetencionIns
+                minimoRetener = valoresGananciasInstance.minRetenerIns
+                porcentaje = valoresGananciasInstance.porcentajeIns
+
+                if((baseG-minimoRetencion)>minimoRetener){
+                    retorno = baseG-minimoRetencion
+                    retorno = retorno * porcentaje / 100
+                    if(retorno<20)
+                        retorno = 0
+                } else
+                    retorno = 0
+            }else{
+                minimoRetencion = valoresGananciasInstance.minRetencionNoIns
+                minimoRetener = valoresGananciasInstance.minRetenerNoIns
+                porcentaje = valoresGananciasInstance.porcentajeNoIns
+                retorno = baseG-minimoRetencion
+                retorno = retorno * porcentaje/100
+                if(retorno<10)
+                    retorno
+            } */
+
+        }else{
+            detallevencimientos.each{
+                retorno += it.subTotalGanancias
+            }
         }
+
 
         return retorno
     }
@@ -136,7 +180,7 @@ class Comprobante {
     static hasMany = [detalle:ComprobanteDetalle, detallegastos:ComprobanteGasto
                         , detallevencimientos:ComprobanteVencimiento]
 
-    static transients = ['importeBruto','baseIva','iva','totalGastos'
+    static transients = ['importeBruto','descuentoImporteBruto','baseIva','iva','totalGastos'
                         ,'total','totalGanancias','totalGastosFinal','membreteIva']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {
