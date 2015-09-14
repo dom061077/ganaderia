@@ -222,146 +222,67 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               margin: '0 100 5 0',
                                                               xtype:'datefield',
                                                               fieldLabel:'Fecha de Operación'
+                                                          },{
+                                                              xtype:'combo',
+                                                              margin:'0 20 5 0',
+                                                              itemId:'cmbProvinciaProc',
+                                                              fieldLabel:'Provincia Proc.',
+                                                              name:'procedenciaProvincia',
+                                                              allowBlank:false,
+                                                              width:400,
+                                                              queryMode:'remote',
+                                                              emptyText:'',
+                                                              typeAhead: true,
+                                                              triggerAction:'all',
+                                                              valueField:'id',
+                                                              displayField:'nombre',
+                                                              selectOnTab:true,
+                                                              store:'Ganaderia.store.ProvinciaStore'
+                                                          },{
+                                                              xtype:'combo',
+                                                              margin:'0 20 5 0',
+                                                              itemId:'cmbPartidoProc',
+                                                              fieldLabel:'Partido Proc',
+                                                              name:'procedenciaPartido',
+                                                              allowBlank:false,
+                                                              width:400,
+                                                              queryMode:'remote',
+                                                              emptyText:'',
+                                                              typeAhead: true,
+                                                              triggerAction:'all',
+                                                              valueField:'id',
+                                                              displayField:'nombre',
+                                                              selectOnTab:true,
+                                                              store:'Ganaderia.store.PartidoStore'
+                                                          },{
+                                                              xtype:'combo',
+                                                              itemId:'cmbLocalidadProc',
+                                                              fieldLabel:'Localidad Proc',
+                                                              name:'procedenciaLocalidad',
+                                                              allowBlank:false,
+                                                              width:400,
+                                                              queryMode:'remote',
+                                                              emptyText:'',
+                                                              typeAhead: true,
+                                                              triggerAction:'all',
+                                                              valueField:'id',
+                                                              displayField:'nombre',
+                                                              selectOnTab:true,
+                                                              store:'Ganaderia.store.LocalidadStore'
+
                                                           }
+
                                                       ]
-                                                  },{
+                                                  }/*,{
                                                       xtype:'panel',
                                                       layout:'column',
                                                       border:false,
                                                       items:[
-                                                          {
-                                                              name:'pagoContado',
-                                                              itemId:'pagoContadoItemId',
-                                                              fieldLabel:'Pago de Contado',
-                                                              xtype:'checkbox',
-                                                              margin: '0 100 5 0'
-                                                          },{
-                                                              name:'porcentajeDesc',
-                                                              itemId:'porcentajeDescItemId',
-                                                              fieldLabel:'Porcentaje',
-                                                              xtype: 'textfield',
-                                                              margin: '0 100 5 0'
-                                                          }
+
                                                       ]
-                                                  }
+
+                                                  }*/
                                               ]
-                                      },{
-                                            xtype:'panel',
-                                            layout:'column',
-                                            border: false,
-                                            items:[
-                                                {
-                                                    xtype:'fieldset',
-                                                    title:'Procedencia Vendedor',
-                                                    items:[
-                                                        {
-                                                            xtype:'combo',
-                                                            margin:'0 20 5 0',
-                                                            itemId:'cmbProvinciaProc',
-                                                            fieldLabel:'Provincia Proc.',
-                                                            name:'procedenciaProvincia',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.ProvinciaStore'
-                                                        },{
-                                                            xtype:'combo',
-                                                            margin:'0 20 5 0',
-                                                            itemId:'cmbPartidoProc',
-                                                            fieldLabel:'Partido Proc',
-                                                            name:'procedenciaPartido',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.PartidoStore'
-                                                        },{
-                                                            xtype:'combo',
-                                                            itemId:'cmbLocalidadProc',
-                                                            fieldLabel:'Localidad Proc',
-                                                            name:'procedenciaLocalidad',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.LocalidadStore'
-
-                                                        }
-
-                                                    ]
-                                                },{
-                                                    xtype:'fieldset',
-                                                    title:'Procedencia Comprador',
-                                                    items:[
-                                                        {
-                                                            xtype:'combo',
-                                                            margin:'0 20 5 0',
-                                                            itemId:'cmbProvinciaProcComprador',
-                                                            fieldLabel:'Provincia Proc.',
-                                                            name:'procedenciaProvinciaComprador',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.ProvinciaStore'
-                                                        },{
-                                                            xtype:'combo',
-                                                            margin:'0 20 5 0',
-                                                            itemId:'cmbPartidoProcComprador',
-                                                            fieldLabel:'Partido Proc',
-                                                            name:'procedenciaPartidoComprador',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.PartidoStore'
-                                                        },{
-                                                            xtype:'combo',
-                                                            itemId:'cmbLocalidadProcComprador',
-                                                            fieldLabel:'Localidad Proc',
-                                                            name:'procedenciaLocalidadComprador',
-                                                            allowBlank:false,
-                                                            width:400,
-                                                            queryMode:'remote',
-                                                            emptyText:'',
-                                                            typeAhead: true,
-                                                            triggerAction:'all',
-                                                            valueField:'id',
-                                                            displayField:'nombre',
-                                                            selectOnTab:true,
-                                                            store:'Ganaderia.store.LocalidadStore'
-
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-
                                       }
 
                                     ]

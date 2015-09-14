@@ -51,9 +51,6 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 },
                 'OrdenVista button[itemId=btnGenerar]': {
                     click: this.onConfirm
-                },
-                'panel > OrdenVista > tabpanelItem checkbox[itemId=pagoContadoItemId]':{
-                     check: this.onPagoContadoCheck
                 }
 
 
@@ -214,9 +211,6 @@ Ext.define('Ganaderia.controller.OrdenControlador',
 
         },
        onConfirm:function(){
-           this.getOrdenVista().down('#tabpanelItem').down('#pagoContadoItemId').setVisible(false);
-          // ordenVista.down('#').setVisible(false);
-           return;
            var lotesjson,gastosjson,vencimientosjson;
            var lotesStore = this.getGridDetalleOrden().getStore();
            var ordenVista = this.getOrdenVista();
@@ -338,14 +332,6 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                     Ext.Msg.alert('Estado','Fallo en petición');
                 }
             });
-        },
-        onPagoContadoCheck:function(checkBox,checked){
-              alert('EVENTO CHECK');
-              if(checked)
-                  ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(true);
-              else
-                  ordenVista.down('#tabpanelItem').down('#porcentajeDescItemId').setVisible(false);
-
         }
 
 

@@ -20,8 +20,12 @@ class Comprobante {
     Cliente clienteOrigen
     Cliente clienteDestino
     TipoComprobante tipoComprobante
+    boolean anulado
+    boolean pagoContado
+    BigDecimal porcentajeDesc
 
-    
+
+
     Especie especie
 
 
@@ -44,6 +48,7 @@ class Comprobante {
     String guias
     Destino destino
     Localidad procedencia
+    Localidad procedenciaDestino
     java.sql.Date fechaOperacion
     BigDecimal alicuota
     

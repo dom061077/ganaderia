@@ -1,41 +1,41 @@
-<%@ page import="com.rural.ganaderia.comp.Comprobante" %>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'comprobante.label', default: 'Comprobante')}" />
-		<title><g:message code="default.edit.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#edit-comprobante" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="edit-comprobante" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<g:hasErrors bean="${comprobanteInstance}">
-			<ul class="errors" role="alert">
-				<g:eachError bean="${comprobanteInstance}" var="error">
-				<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-				</g:eachError>
-			</ul>
-			</g:hasErrors>
-			<g:form url="[resource:comprobanteInstance, action:'update']" method="PUT" >
-				<g:hiddenField name="version" value="${comprobanteInstance?.version}" />
-				<fieldset class="form">
-					<g:render template="form"/>
-				</fieldset>
-				<fieldset class="buttons">
-					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-				</fieldset>
-			</g:form>
-		</div>
-	</body>
+<head>
+    <meta name="layout" content="main">
+    <g:set var="entityName" value="${message(code: 'comp.label', default: 'comp')}" />
+    <title><g:message code="default.create.label" args="[entityName]" /></title>
+    <script type="text/javascript" src="${resource(dir:'compedit',file:'app.js')}"></script>
+    <script type="text/javascript">
+        var especiesUrl = '<%out << createLink(controller:'especie',action:'listjson')%>';
+        var razaUrl = '<%out << createLink(controller:'raza',action:'listjson')%>';
+        var provinciaUrl = '<%out << createLink(controller:'provincia',action:'listjson')%>';
+        var partidoUrl = '<%out << createLink(controller:'partido',action:'listjson')%>';
+        var localidadUrl = '<%out << createLink(controller:'localidad',action:'listjson')%>';
+        var exposicionUrl = '${createLink(controller:'exposicion',action:'listjson')}';
+        var anioExposicionUrl = '${createLink(controller:'anioExposicion',action:'listjson')}';
+        var savecompUrl = '${createLink(controller:'comprobante',action:'savejson')}';
+        // var situacionIVAUrl = '${createLink(controller:'comp',action:'situacionIVAjson')}';
+        var getDatosClientesUrl = '${createLink(controller:'cliente',action:'getdatosjson')}';
+        var getDatosClientesByIdUrl = '${createLink(controller:'cliente',action:'getdatosjsonbyid')}';
+        var deleteImg = '<% out << resource(dir:'images',file:'delete.gif') %>';
+        var selectImg = '<% out << resource(dir:'images',file:'select.jpg')%>';
+        var condicionOperacionUrl = '<% out << createLink(controller:'comp',action:'condicionOperacionjson')%>';
+        var operacionUrl = '<% out << createLink(controller: 'comp',action:'operacionjson')%>';
+        var altaClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'savejson')%>';
+        var editClienteDetalleUrl = '<% out << createLink(controller:'cliente',action:'updatejson')%>';
+        var clienteListUrl = '<% out << createLink(controller:'cliente',action:'listjson')%>';
+        var destinoUrl = '<% out << createLink(controller:'destino',action:'listjson')%>';
+        var categoriasUrl = '<% out << createLink(controller:'categoria',action:'listjson')%>';
+        var gastosUrl = '<% out << createLink(controller:'gasto',action:'listjson')%>';
+        var formasdePagoUrl = '<% out << createLink(controller:'formasdePago',action:'listjson')%>';
+        var comprobanteUrl = '<% out << createLink(controller:'orden',action:'imprimircomprobante')%>';
+        var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
+        var clientestoreUrl = '<% out << createLink(controller:'cliente',action:'')%>';
+        var operacionUrl = '<% out << createLink(controller:'operacion',action:'listjson')%>';
+    </script>
+
+</head>
+<body>
+<div id="formpanelId"></div>
+</body>
 </html>

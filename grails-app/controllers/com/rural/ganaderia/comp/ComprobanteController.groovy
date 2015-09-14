@@ -66,8 +66,10 @@ class ComprobanteController {
         }
     }
 
-    def edit(Comprobante comprobanteInstance) {
-        respond comprobanteInstance
+    def edit(Long id){//(Comprobante comprobanteInstance) {
+        def comprobanteInstance = Comprobante.get(id)
+        //respond comprobanteInstance
+        [comprobanteInstance:comprobanteInstance]
     }
 
     @Transactional
@@ -309,8 +311,31 @@ class ComprobanteController {
     
     def listjson(){
         def objJson = []
+        long nroOrden=0
+        def cuit
+        def razonSocial
+        if(params.query){
+            try{
+                nroOrden = Long.parseLong(params.query)
+            }catch(Exception e){
+                
+            }
+        }
         def comprobantes = Comprobante.createCriteria().list(){
                 isNotNull("comprobanteDestino")
+                if(params.query && params.query.toString().trim()!=""){
+                    or{
+                        eq("numero",nroOrden)
+                        clienteOrigen{
+                            ilike("razonSocial",params.query)
+                        }
+                        clienteOrigen{
+                            like("cuit",params.query)
+                        }
+
+                    }
+                }
+                order('numero','desc')
         }
         comprobantes.each{
                 objJson << [idVenta:it.id,idCompra:it.comprobanteDestino.id,letraVenta:it.letra,letraCompra:it.comprobanteDestino.letra

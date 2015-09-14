@@ -3,6 +3,7 @@ Ext.define('Ganaderia.view.ComprobantesVista',
 
         extend: 'Ext.grid.Panel',
         alias: 'widget.ComprobantesVista',
+        requires: ['Ext.ux.form.SearchField'],
         config: {},
         constructor: function (config) {
             this.initConfig(config);
@@ -20,8 +21,25 @@ Ext.define('Ganaderia.view.ComprobantesVista',
             stripeRows: true
         },
         initComponent: function () {
+            var storeGrid = Ext.StoreManager.lookup('Ganaderia.store.ComprobantesStore');
             Ext.apply(this,
                 {
+                    dockedItems: [{
+                        dock: 'top',
+                        xtype: 'toolbar',
+                        items: [{
+                            width: 500,
+                            fieldLabel: 'Filtrar por N° de Orden, C.U.I.T o Razón Social',
+                            labelWidth: 250,
+                            xtype: 'searchfield',
+                            store: storeGrid
+                        }, '->', {
+                            xtype: 'component',
+                            itemId: 'status',
+                            tpl: 'Matching threads: {count}',
+                            style: 'margin-right:5px'
+                        }]
+                    }],
                     store: 'Ganaderia.store.ComprobantesStore',
 
                     columns: [
