@@ -13,6 +13,7 @@ import com.rural.ganaderia.SituacionIVA
 import com.rural.ganaderia.parametros.GastoEspecieDestinoOper
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import com.rural.ganaderia.parametros.GananciasValores
 
 class Comprobante {
     long numero
@@ -64,7 +65,8 @@ class Comprobante {
     
     BigDecimal getDescuentoImporteBruto(){
         def retorno=0
-        returno = porcentajeDesc * importeBruto / 100
+        retorno = porcentajeDesc * importeBruto / 100
+
         return retorno
     }
 
@@ -78,7 +80,7 @@ class Comprobante {
     }
 
     BigDecimal getBaseIva(){
-        def retorno = importeBruto
+        def retorno = importeBruto - descuentoImporteBruto
 
         if (tipoComprobante==TipoComprobante.ORDENCOMPRA)
             retorno += totalGastos
@@ -112,16 +114,16 @@ class Comprobante {
     BigDecimal getTotalGanancias(){
         def retorno = 0
         if(pagoContado) {
-            /*def subTotalBruto = comprobante.importeBruto * porcentajeBruto / 100
-            def subTotalGastos = comprobante.totalGastos * porcentajeGastos / 100
-            def subTotalIva = comprobante.iva * porcentajeIva / 100
+            def valoresGananciasInstance = GananciasValores.findAll().get(0)
+            def subTotalBruto = 0
             def baseG=0
+            def minimoRetencion
+            def minimoRetener
+            def porcentaje
+
             if (comprobante.ganaciasIns){
-                baseG = subTotalBruto - subTotalGastos + subTotalIva //el gasto resta si acumula base ganancias
-
+                baseG = importeBruto - totalGastos + iva + descuentoImporteBruto //el gasto resta si acumula base ganancias
             }
-
-
             if(comprobante.situacionIVA.codigo=='IRI'){
                 minimoRetencion = valoresGananciasInstance.minRetencionIns
                 minimoRetener = valoresGananciasInstance.minRetenerIns
@@ -142,7 +144,7 @@ class Comprobante {
                 retorno = retorno * porcentaje/100
                 if(retorno<10)
                     retorno
-            } */
+            }
 
         }else{
             detallevencimientos.each{
@@ -155,8 +157,8 @@ class Comprobante {
     }
 
     BigDecimal getTotal(){
-        def retorno = importeBruto + iva
-        return importeBruto + iva + totalGanancias + totalGastosFinal
+        //def retorno = importeBruto + iva - descuentoImporteBruto
+        return importeBruto - descuentoImporteBruto + iva + totalGanancias + totalGastosFinal
     }
 
     BigDecimal getTotalGastosFinal(){

@@ -63,16 +63,22 @@ Ext.define('Ganaderia.controller.OrdenControlador',
 
         },
         onSelectProvCmb:function(combo,records,options){
-            var storePartido = this.getCmbPartidoProc().getStore();
+            var comboPartido;
+            if(combo.up('#procedenciaVendedorFieldsetItemId')){
+                comboPartido = combo.up('#procedenciaVendedorFieldsetItemId').down('#cmbPartidoProc');
+            }else{
+                comboPartido = combo.up('#procedenciaCompradorFieldsetItemId').down('#cmbPartidoProcComprador');
+            }
+            var storePartido = comboPartido.getStore(); //this.getCmbPartidoProc().getStore();
 
             storePartido.proxy.extraParams={provinciaId:records[0].data.id};
             storePartido.load();
             //Ext.getCmp('localidadEditClienteId').clearValue();
-            this.getCmbPartidoProc().clearValue();
-            this.getCmbLocalidadProc().clearValue();
+            comboPartido.clearValue();
+            comboPartido.clearValue();
         },
         onSelectPartCmb:function(combo,records,options){
-            var storeLocalidad = this.getCmbLocalidadProc().getStore();
+            var storeLocalidad = combo.getStore(); //this.getCmbLocalidadProc().getStore();
             storeLocalidad.proxy.extraParams={partidoId:records[0].data.id};
             storeLocalidad.load();
             this.getCmbLocalidadProc().clearValue();

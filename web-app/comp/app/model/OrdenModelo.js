@@ -11,6 +11,8 @@ Ext.define('Ganaderia.model.OrdenModelo', {
         { name: 'destino', type: 'int' },
         { name: 'guias', type: 'string' },
         { name: 'operacion', type: 'int'},
+        { name: 'pagoContado', type: 'boolean'},
+        { name: 'porcentajeDesc', type: 'float'},
         { name: 'fechaOperacion', type: 'date' },
         { name: 'procedenciaProvincia', type: 'int'},
         { name: 'procedenciaPartido', type:'int'},

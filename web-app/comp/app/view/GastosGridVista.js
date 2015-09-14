@@ -106,7 +106,7 @@ Ext.define('Ganaderia.view.GastosGridVista',
                             allowDecimals: false,
                             editor:{
                                 xtype:'numberfield',
-                                allowDecimals:false
+                                allowDecimals:true
                             }
                         },
                         {

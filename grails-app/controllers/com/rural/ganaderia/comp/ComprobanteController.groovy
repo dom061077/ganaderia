@@ -140,6 +140,8 @@ class ComprobanteController {
                                         ,especie: Especie.load(cJson.especie)
                                         ,guias: cJson.guias,destino: Destino.load(cJson.destino)
                                         ,procedencia: Localidad.load(cJson.procedenciaLocalidad)
+                                        ,pagoContado: cJson.pagoContado
+                                        ,porcentajeDesc: cJson.porcentajeDesc
                                         ,fechaOperacion: new java.sql.Date(fecha.getTime())
                                         ,operacion: Operacion.load(cJson.operacion) )
         //---------fijar alicuota para la orden de venta------

@@ -239,7 +239,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               name:'porcentajeDesc',
                                                               itemId:'porcentajeDescItemId',
                                                               fieldLabel:'Porcentaje',
-                                                              xtype: 'textfield',
+                                                              xtype: 'numberfield',
                                                               margin: '0 100 5 0'
                                                           }
                                                       ]
@@ -247,11 +247,13 @@ Ext.define('Ganaderia.view.OrdenVista',
                                               ]
                                       },{
                                             xtype:'panel',
+
                                             layout:'column',
                                             border: false,
                                             items:[
                                                 {
                                                     xtype:'fieldset',
+                                                    itemId:'procedenciaVendedorFieldsetItemId',
                                                     title:'Procedencia Vendedor',
                                                     items:[
                                                         {
@@ -308,6 +310,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                 },{
                                                     xtype:'fieldset',
                                                     title:'Procedencia Comprador',
+                                                    itemId:'procedenciaCompradorFieldsetItemId',
                                                     items:[
                                                         {
                                                             xtype:'combo',
