@@ -22,8 +22,8 @@ class Comprobante {
     Cliente clienteDestino
     TipoComprobante tipoComprobante
     boolean anulado
-    boolean pagoContado
-    BigDecimal porcentajeDesc
+    boolean pagoContado = false
+    BigDecimal porcentajeDesc = new BigDecimal(0)
 
 
 
@@ -49,7 +49,6 @@ class Comprobante {
     String guias
     Destino destino
     Localidad procedencia
-    Localidad procedenciaDestino
     java.sql.Date fechaOperacion
     BigDecimal alicuota
     
@@ -188,6 +187,7 @@ class Comprobante {
     static constraints = {
         direccion(nullable: true, blank: true)
         ingresosBrutos(nullable: true, blank: true)
+        porcentajeDesc(nullable:  true, blank: true)
 
 
     }

@@ -116,11 +116,14 @@ class ComprobanteController {
 
     //@Transactional
     def savejson(){
+
         def objJson = [:]
         def errorList= []
-        log.info "PARAMETROS: "+params
+        log.debug "PARAMETROSSSSSSSS: "+params
         def cJson = JSON.parse(params.comprobante)
-        log.debug("PARAMETROS jsonencode: "+cJson)
+        log.debug "cJson.procedenciaLocalidadComprador: "+cJson.procedenciaLocalidadComprador//log.debug("PARAMETROS jsonencode: "+cJson)
+        def localidadProcedenciaComprador = Localidad.load(cJson.procedenciaLocalidadComprador)
+        log.debug "Localidad Procedencia Comprador: "+localidadProcedenciaComprador?.nombre
         def clienteOInstance = Cliente.load(cJson.vendedor)
         def clienteDInstance = Cliente.load(cJson.comprador)
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd")
@@ -203,7 +206,9 @@ class ComprobanteController {
                 ,letra: clienteDInstance.situacionIVA.letraComprobante
                 ,especie: Especie.load(cJson.especie)
                 ,guias: cJson.guias,destino: Destino.load(cJson.destino)
-                ,procedencia: Localidad.load(cJson.procedenciaLocalidad)
+                ,pagoContado: cJson.pagoContado
+                ,porcentajeDesc: cJson.porcentajeDesc
+                ,procedencia: Localidad.load(cJson.procedenciaLocalidadComprador)
                 ,fechaOperacion: comprobanteInstance.fechaOperacion
                 ,operacion: comprobanteInstance.operacion)
          comprobanteInstance.detalle.each{

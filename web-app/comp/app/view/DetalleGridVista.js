@@ -73,7 +73,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                                 if(rec)
                                     return rec.get(combo.displayField);
                                 else
-                                    return "no encuentra categoria";
+                                    return "<Seleccione Una Categoría>";
                             }
 
 
@@ -114,6 +114,7 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                             text : "Total",
                             width:50,
                             flex : 1,
+                            renderer: Ext.util.Format.usMoney,
                             dataIndex : 'subtotal'
                         },
                         {
@@ -148,7 +149,11 @@ Ext.define('Ganaderia.view.DetalleGridVista',
                         {
                             text : 'Leyenda',
                             width:80,
-                            dataIndex : 'corral'
+                            dataIndex : 'corral' ,
+                            editor:{
+                                xtype:'textfield'
+                            }
+
                         }
                     ],
                     dockedItems : [{

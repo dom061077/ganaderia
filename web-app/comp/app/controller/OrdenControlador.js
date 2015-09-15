@@ -154,6 +154,7 @@ Ext.define('Ganaderia.controller.OrdenControlador',
             detalleOrdenModelo.set("peso", 0);
             detalleOrdenModelo.set("preciounitario", 0);
             detalleOrdenModelo.set("subtotal",0);
+            Ext.getCmp('cmbCategoria').clearValue();
 
 
             detalleOrdenStore.add(detalleOrdenModelo);

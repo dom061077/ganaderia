@@ -327,7 +327,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                             valueField:'id',
                                                             displayField:'nombre',
                                                             selectOnTab:true,
-                                                            store:'Ganaderia.store.ProvinciaStore'
+                                                            store:'Ganaderia.store.ProvinciaStoreComprador'
                                                         },{
                                                             xtype:'combo',
                                                             margin:'0 20 5 0',
@@ -343,7 +343,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                             valueField:'id',
                                                             displayField:'nombre',
                                                             selectOnTab:true,
-                                                            store:'Ganaderia.store.PartidoStore'
+                                                            store:'Ganaderia.store.PartidoStoreComprador'
                                                         },{
                                                             xtype:'combo',
                                                             itemId:'cmbLocalidadProcComprador',
@@ -358,7 +358,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                             valueField:'id',
                                                             displayField:'nombre',
                                                             selectOnTab:true,
-                                                            store:'Ganaderia.store.LocalidadStore'
+                                                            store:'Ganaderia.store.LocalidadStoreComprador'
 
                                                         }
                                                     ]
