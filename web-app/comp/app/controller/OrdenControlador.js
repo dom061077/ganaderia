@@ -23,6 +23,12 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 'panel > OrdenVista combo[itemId=cmbPartidoProc]':{
                     select :  this.onSelectPartCmb
                 },
+                'panel > OrdenVista combo[itemId=cmbProvinciaProcComprador]':{
+                    select :  this.onSelectProvCmb
+                },
+                'panel > OrdenVista combo[itemId=cmbPartidoProcComprador]':{
+                    select :  this.onSelectPartCmb
+                },
                 'DetalleGridVista button[itemId=btnCreate]':{
                     click : this.onCreateClick
                 },
@@ -64,10 +70,13 @@ Ext.define('Ganaderia.controller.OrdenControlador',
         },
         onSelectProvCmb:function(combo,records,options){
             var comboPartido;
+            var comboLocalidad;
             if(combo.up('#procedenciaVendedorFieldsetItemId')){
                 comboPartido = combo.up('#procedenciaVendedorFieldsetItemId').down('#cmbPartidoProc');
+                comboLocalidad = combo.up('#procedenciaVendedorFieldsetItemId').down('#cmbLocalidadProc');
             }else{
                 comboPartido = combo.up('#procedenciaCompradorFieldsetItemId').down('#cmbPartidoProcComprador');
+                comboLocalidad = combo.up('#procedenciaCompradorFieldsetItemId').down('#cmbLocalidadProcComprador');
             }
             var storePartido = comboPartido.getStore(); //this.getCmbPartidoProc().getStore();
 
@@ -75,13 +84,19 @@ Ext.define('Ganaderia.controller.OrdenControlador',
             storePartido.load();
             //Ext.getCmp('localidadEditClienteId').clearValue();
             comboPartido.clearValue();
-            comboPartido.clearValue();
+            comboLocalidad.clearValue();
         },
         onSelectPartCmb:function(combo,records,options){
-            var storeLocalidad = combo.getStore(); //this.getCmbLocalidadProc().getStore();
+            var comboLocalidad;
+            if(combo.up('#procedenciaVendedorFieldsetItemId')){
+                comboLocalidad = combo.up('#procedenciaVendedorFieldsetItemId').down('#cmbLocalidadProc');
+            }else{
+                comboLocalidad = combo.up('#procedenciaCompradorFieldsetItemId').down('#cmbLocalidadProcComprador');
+            }
+            var storeLocalidad = comboLocalidad.getStore(); //this.getCmbLocalidadProc().getStore();
             storeLocalidad.proxy.extraParams={partidoId:records[0].data.id};
             storeLocalidad.load();
-            this.getCmbLocalidadProc().clearValue();
+            comboLocalidad.clearValue();
             //Ext.getCmp('localidadEditClient
             // eId').clearValue();
         },
@@ -221,9 +236,6 @@ Ext.define('Ganaderia.controller.OrdenControlador',
 
         },
        onConfirm:function(){
-           this.getOrdenVista().down('#tabpanelItem').down('#pagoContadoItemId').setVisible(false);
-          // ordenVista.down('#').setVisible(false);
-           return;
            var lotesjson,gastosjson,vencimientosjson;
            var lotesStore = this.getGridDetalleOrden().getStore();
            var ordenVista = this.getOrdenVista();
