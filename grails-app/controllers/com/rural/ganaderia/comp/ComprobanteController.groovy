@@ -196,6 +196,7 @@ class ComprobanteController {
                 compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
                                 ,porcentajeBruto: it.porcentajebruto, porcentajeGastos: it.porcentajegastos
                                 ,porcentajeIva: it.porcentajeiva)
+                comprobanteInstance.addToDetallevencimientos(compVencInstance)
             }
         }
         //----------datos de la orden de compra-----
