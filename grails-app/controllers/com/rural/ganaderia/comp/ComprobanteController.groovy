@@ -40,7 +40,10 @@ class ComprobanteController {
     }
 
     def create() {
-        respond new Comprobante(params)
+
+        //respond new Comprobante(params)
+        log.debug "Metodo create con parametros: "+params.idComprobante
+        [idComprobante: params.idComprobante]
     }
 
     //@Transactional
@@ -351,6 +354,65 @@ class ComprobanteController {
                             ,clienteCompra : it.clienteDestino.razonSocial,totalVenta:it.total,totalCompra:it.comprobanteDestino.total
                             ]
         }
+        render objJson as JSON
+    }
+
+    def getjson(Long id){
+        def objJson = [:]
+        def gastosJson = []
+        def lotesJson = []
+        def vencimientosJson = []
+        def comprobanteInstance = Comprobante.get(id)
+        if(comprobanteInstance){
+            comprobanteInstance.detalle.each{
+                lotesJson << [categoria: it.categoria,raza: it.raza,corral:it.leyenda,cantidad: it.cantidad,
+                        peso: it.peso,preciounitario: it.precio, subtotal: it.subTotal]
+            }
+            comprobanteInstance.detallegastos.each{
+                gastosJson << [compradorvendedor:'V',gasto:it.gasto.id,porcentaje: it.porcentaje
+                            ,monto: it.importe,acbaseiva:it.acumulaBaseIva,tieneiva: it.tieneIva,acganancia:it.acumulaGanancia ]
+            }
+            comprobanteInstance.comprobanteDestino.detallegastos.each{
+                gastosJson << [compradorvendedor:'C',gasto:it.gasto.id,porcentaje: it.porcentaje
+                        ,monto: it.importe,acbaseiva:it.acumulaBaseIva,tieneiva: it.tieneIva,acganancia:it.acumulaGanancia ]
+            }
+
+            comprobanteInstance.detallevencimientos.each{
+                vencimientosJson << [compradorvendedor: 'V',cantidaddias: it.cantidadDias, porcentajebruto: it.porcentajeBruto
+                ,porcentajegastos: it.porcentajeGastos, porcentajeiva: it.porcentajeIva]
+            }
+            comprobanteInstance.comprobanteDestino.detallevencimientos.each{
+                vencimientosJson << [compradorvendedor: 'C',cantidaddias: it.cantidadDias, porcentajebruto: it.porcentajeBruto
+                        ,porcentajegastos: it.porcentajeGastos, porcentajeiva: it.porcentajeIva]
+            }
+
+
+            objJson.success = true
+            objJson.vendedor = comprobanteInstance.clienteOrigen.id
+            objJson.comprador = comprobanteInstance.clienteDestino.id
+            objJson.exposicion = comprobanteInstance.exposicion.id
+            objJson.anioExposicion = comprobanteInstance.anioExposicion.id
+            objJson.especie = comprobanteInstance.especie.id
+            objJson.destino = comprobanteInstance.destino.id
+            objJson.guias = comprobanteInstance.guias
+            objJson.operacion = comprobanteInstance.operacion.id
+            objJson.fechaOperacion = comprobanteInstance.fechaOperacion
+            objJson.procedenciaProvincia = comprobanteInstance.procedencia.partido.provincia.id
+            objJson.procedenciaPartido = comprobanteInstance.procedencia.partido.id
+            objJson.procedenciaLocalidad = comprobanteInstance.procedencia.id
+            objJson.procedenciaProvinciaComprador = comprobanteInstance.comprobanteDestino.procedencia.partido.provincia.id
+            objJson.procedenciaPartidoComprador = comprobanteInstance.comprobanteDestino.procedencia.partido.id
+            objJson.procedenciaLocalidadComprador = comprobanteInstance.comprobanteDestino.procedencia.id
+            objJson.lotesjson = lotesJson
+            objJson.gastosjson = gastosJson
+            objJson.vencimientosjson = vencimientosJson
+
+
+        }else{
+            objJson.success = false
+            objJson.msgError = "No existe el comprobante con id "+id
+        }
+
         render objJson as JSON
     }
 

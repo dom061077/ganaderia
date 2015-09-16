@@ -102,7 +102,22 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                                 window.open(imprimirUrl+'/'+rec.data.idCompra,'_blank');
                             },
                             width:80
-
+                        },{
+                            text:'Anular',
+                            xtype:'actioncolumn',
+                            icon: selectImg,
+                            handler: function(grid,rowIndex,colIndex){
+                                var rec = grid.getStore().getAt(rowIndex);
+                                window.location = '';
+                            }
+                        },{
+                            text:'Copiar',
+                            xtype:'actioncolumn',
+                            icon: selectImg,
+                            handler: function(grid,rowIndex,colIndex){
+                                var rec = grid.getStore().getAt(rowIndex);
+                                window.open(compiarUrl+'/'+rec.data.idVenta);
+                            }
                         }
                     ],
                     bbar: {

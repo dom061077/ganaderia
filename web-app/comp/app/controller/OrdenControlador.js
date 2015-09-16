@@ -17,6 +17,9 @@ Ext.define('Ganaderia.controller.OrdenControlador',
         ],
         init : function(){
             this.control({
+                'OrdenVista':{
+                    render: this.onRender
+                },
                 'panel > OrdenVista combo[itemId=cmbProvinciaProc]':{
                     select :  this.onSelectProvCmb
                 },
@@ -379,5 +382,21 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 tabItem.items.each(function(c){c.enable()});
             else
                 tabItem.items.each(function(c){c.disable()});
+        },
+        onRender: function(component, options){
+            var obj
+            if(comprobanteId){
+                Ext.Ajax.request({
+                    url:getCompUrl,
+                    success: function(response){
+                       obj = Ext.create('Ganaderia.model.OrdenVista');
+                       obj.vendedor = response.vendedor;
+                       obj.comprador = response.comprador;
+                       obj.exposicion = response.exposicion;
+
+                    }
+                });
+            }
         }
+
 });

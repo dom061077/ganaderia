@@ -14,6 +14,7 @@
             var listjson='<% out << createLink(controller:'comprobante',action:'listjson') %>';
             var selectImg = '<%out << resource(dir:'images',file:'select.jpg')%>';
             var imprimirUrl = '<%out << createLink(controller:'comprobante',action:'imprimircomprobante')%>'
+            var compiarUrl = '<%out << createLink(controller:'comprobante',action:'create')%>';
         </script>
 	</head>
 	<body>

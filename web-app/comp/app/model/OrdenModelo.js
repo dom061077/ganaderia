@@ -17,6 +17,8 @@ Ext.define('Ganaderia.model.OrdenModelo', {
         { name: 'procedenciaProvincia', type: 'int'},
         { name: 'procedenciaPartido', type:'int'},
         { name: 'procedenciaLocalidad', type:'int'},
+        { name: 'procedenciaProvinciaComprador', type: 'int'},
+        { name: 'procedenciaPartidoComprador', type:'int'},
         { name: 'procedenciaLocalidadComprador', type:'int'},
         { name: 'lotesjson', type:'auto'},
         { name: 'gastosjson', type:'auto'},
