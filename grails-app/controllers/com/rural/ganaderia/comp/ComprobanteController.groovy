@@ -365,7 +365,7 @@ class ComprobanteController {
         def comprobanteInstance = Comprobante.get(id)
         if(comprobanteInstance){
             comprobanteInstance.detalle.each{
-                lotesJson << [categoria: it.categoria,raza: it.raza,corral:it.leyenda,cantidad: it.cantidad,
+                lotesJson << [categoria: it.categoria.id,raza: it.raza.id,corral:it.leyenda,cantidad: it.cantidad,
                         peso: it.peso,preciounitario: it.precio, subtotal: it.subTotal]
             }
             comprobanteInstance.detallegastos.each{

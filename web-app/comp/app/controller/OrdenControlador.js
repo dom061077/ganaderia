@@ -18,7 +18,7 @@ Ext.define('Ganaderia.controller.OrdenControlador',
         init : function(){
             this.control({
                 'OrdenVista':{
-                    render: this.onRender
+                    afterrender: this.onAfterRender
                 },
                 'panel > OrdenVista combo[itemId=cmbProvinciaProc]':{
                     select :  this.onSelectProvCmb
@@ -60,6 +60,10 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 },
                 'OrdenVista button[itemId=btnGenerar]': {
                     click: this.onConfirm
+                },
+                'OrdenVista button[itemId=btnCancelar]': {
+                    //click: this.onAfterRender
+
                 },
                 'OrdenVista checkbox[itemId=pagoContadoItemId]':{
                      change: this.onPagoContadoCheck,
@@ -383,17 +387,71 @@ Ext.define('Ganaderia.controller.OrdenControlador',
             else
                 tabItem.items.each(function(c){c.disable()});
         },
-        onRender: function(component, options){
-            var obj
+        onAfterRender: function(component, options){
+            var obj;
+            var ordenVista = this.getOrdenVista();
+            Ext.StoreManager.lookup('Ganaderia.store.ClienteStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.EspecieStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.ExposicionStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.DestinoStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.OperacionStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.ClienteStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.AnioExposicionStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.ProvinciaStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.ProvinciaStoreComprador').load();
+
             if(comprobanteId){
                 Ext.Ajax.request({
                     url:getCompUrl,
                     success: function(response){
-                       obj = Ext.create('Ganaderia.model.OrdenVista');
-                       obj.vendedor = response.vendedor;
-                       obj.comprador = response.comprador;
-                       obj.exposicion = response.exposicion;
+                        obj = Ext.create('Ganaderia.model.OrdenModelo');
+                       var detalleOrdenModelo;
+                       var detalleLotesArr = [];
+                       var json = Ext.JSON.decode(response.responseText);
+                       var i;
+                       alert();
+                        for(i = 0; i < json.lotesjson.length; i++) {
+                           detalleOrdenModelo = Ext.create('Ganaderia.model.OrdenModelo');
+                           detalleOrdenModelo.categoria = json.lotesjson[i].categoria;
+                           detalleOrdenModelo.raza = json.lotesjson[i].raza;
+                           detalleOrdenModelo.corral = json.lotesjson[i].corral;
+                           detalleOrdenModelo.cantidad = json.lotesjson[i].cantidad;
+                           detalleOrdenModelo.peso = json.lotesjson[i].peso;
+                           detalleOrdenModelo.preciounitario = json.lotesjson[i].preciounitario;
+                           detalleOrdenModelo.subtotal = json.lotesjson[i].subtotal;
+                           detalleLotesArr.push(detalleOrdenModelo);
+                       };
+                    Ext.StoreManager.lookup('Ganaderia.store.DetalleOrdenStore').loadRawData(json.lotesjson);
+                    Ext.StoreManager.lookup('Ganaderia.store.CategoriaStore').load();
+                    Ext.StoreManager.lookup('Ganaderia.store.RazaStore').load();
 
+                        Ext.StoreManager.lookup('Ganaderia.store.PartidoStore').proxy.extraParams={provinciaId:json.procedenciaProvincia};
+                        Ext.StoreManager.lookup('Ganaderia.store.PartidoStore').load();
+                        Ext.StoreManager.lookup('Ganaderia.store.LocalidadStore').proxy.extraParams={partidoId:json.procedenciaPartido};
+                        Ext.StoreManager.lookup('Ganaderia.store.LocalidadStore').load();
+                        Ext.StoreManager.lookup('Ganaderia.store.PartidoStoreComprador').proxy.extraParams={provinciaId:json.procedenciaProvinciaComprador};
+                        Ext.StoreManager.lookup('Ganaderia.store.PartidoStoreComprador').load();
+                        Ext.StoreManager.lookup('Ganaderia.store.LocalidadStoreComprador').proxy.extraParams={partidoId:json.procedenciaPartidoComprador};
+                        Ext.StoreManager.lookup('Ganaderia.store.LocalidadStoreComprador').load();
+
+
+                       obj.set("vendedor", json.vendedor);
+                       obj.set("comprador",json.comprador);
+                       obj.set("exposicion",json.exposicion);
+                       obj.set("guias",json.guias);
+                       obj.set("operacion",json.operacion);
+                       obj.set("fechaOperacion",json.fechaOperacion);
+                        obj.set("anioExposicion",json.anioExposicion);
+                        obj.set("especie",json.especie);
+                        obj.set("destino",json.destino);
+                        obj.set("procedenciaProvincia",json.procedenciaProvincia);
+                        obj.set("procedenciaPartido",json.procedenciaPartido);
+                        obj.set("procedenciaLocalidad",json.procedenciaLocalidad);
+                        obj.set("procedenciaProvinciaComprador",json.procedenciaProvinciaComprador);
+                        obj.set("procedenciaPartidoComprador",json.procedenciaPartidoComprador);
+                        obj.set("procedenciaLocalidadComprador",json.procedenciaLocalidadComprador);
+
+                       ordenVista.loadRecord(obj);
                     }
                 });
             }

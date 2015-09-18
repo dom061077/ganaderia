@@ -116,7 +116,7 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             icon: selectImg,
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
-                                window.open(compiarUrl+'/'+rec.data.idVenta);
+                                window.open(compiarUrl+'?idComprobante='+rec.data.idVenta);
                             }
                         }
                     ],
