@@ -62,6 +62,16 @@ class Comprobante {
         return retorno
      }
     
+    String getDescStr(){
+        if(pagoContado){
+            DecimalFormat df = new DecimalFormat("#,##0.00")
+            return "Desc. pago contado "+df.format(porcentajeDesc)+"%"
+        }else{
+            return null
+        }
+    }
+
+    
     BigDecimal getDescuentoImporteBruto(){
         def retorno=0
         retorno = porcentajeDesc * importeBruto / 100
@@ -182,7 +192,7 @@ class Comprobante {
                         , detallevencimientos:ComprobanteVencimiento]
 
     static transients = ['importeBruto','descuentoImporteBruto','baseIva','iva','totalGastos'
-                        ,'total','totalGanancias','totalGastosFinal','membreteIva']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
+                        ,'total','totalGanancias','totalGastosFinal','membreteIva','descStr']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {
         direccion(nullable: true, blank: true)

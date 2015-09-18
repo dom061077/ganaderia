@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d555633-b473-41b6-af4b-6f8eb92b31b3">
 	<property name="ireport.zoom" value="1.0980750000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="175"/>
+	<property name="ireport.y" value="196"/>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
 	<field name="cuit" class="java.lang.String"/>
 	<field name="razonSocial" class="java.lang.String"/>
@@ -25,6 +25,8 @@
 	<field name="total" class="java.math.BigDecimal"/>
 	<field name="pagoContado" class="java.lang.Boolean"/>
 	<field name="porcentajeDesc" class="java.math.BigDecimal"/>
+	<field name="descStr" class="java.lang.String"/>
+	<field name="descuentoImporteBruto" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -137,13 +139,27 @@
 		</band>
 		<band height="19">
 			<subreport isUsingCache="true">
-				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="11" y="0" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="7b13d6a7-89b7-4c33-9651-7a774322c686"/>
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="11" y="4" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="7b13d6a7-89b7-4c33-9651-7a774322c686"/>
 				<subreportParameter name="reportsDirPath">
 					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{detallegastos})]]></dataSourceExpression>
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
 			</subreport>
+		</band>
+		<band height="20">
+			<textField>
+				<reportElement x="140" y="0" width="100" height="20" uuid="7582963b-f18b-4c19-a63a-5436f4113a1c"/>
+				<textFieldExpression><![CDATA[$F{descStr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="245" y="0" width="100" height="20" uuid="5303c103-384c-46c4-abe1-7702764ab3e8"/>
+				<text><![CDATA[descuentoImporteBruto]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="345" y="0" width="100" height="20" uuid="c3601168-2487-46b2-80c3-7776ace916d7"/>
+				<textFieldExpression><![CDATA[$F{descuentoImporteBruto}]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="20">
 			<subreport isUsingCache="true">
@@ -155,9 +171,9 @@
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Impuestos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="18">
+		<band height="25">
 			<subreport isUsingCache="true">
-				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="12" y="0" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="0c5a4bd7-39cf-4561-b05a-5ff52a6dadc3"/>
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="11" y="5" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="0c5a4bd7-39cf-4561-b05a-5ff52a6dadc3"/>
 				<subreportParameter name="reportsDirPath">
 					<subreportParameterExpression><![CDATA[$P{reportsDirPath}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -165,7 +181,7 @@
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Vencimientos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="2">
+		<band height="18">
 			<break>
 				<reportElement x="0" y="1" width="100" height="1" uuid="1eac81c5-618e-446a-9292-8aa2d3384193">
 					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}<=2]]></printWhenExpression>
