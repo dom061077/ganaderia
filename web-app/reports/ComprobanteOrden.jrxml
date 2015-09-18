@@ -23,6 +23,8 @@
 	<field name="detallevencimientos" class="java.util.Collection"/>
 	<field name="iva" class="java.math.BigDecimal"/>
 	<field name="total" class="java.math.BigDecimal"/>
+	<field name="pagoContado" class="java.lang.Boolean"/>
+	<field name="porcentajeDesc" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

@@ -404,26 +404,19 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 Ext.Ajax.request({
                     url:getCompUrl,
                     success: function(response){
-                        obj = Ext.create('Ganaderia.model.OrdenModelo');
-                       var detalleOrdenModelo;
-                       var detalleLotesArr = [];
-                       var json = Ext.JSON.decode(response.responseText);
-                       var i;
-                       alert();
-                        for(i = 0; i < json.lotesjson.length; i++) {
-                           detalleOrdenModelo = Ext.create('Ganaderia.model.OrdenModelo');
-                           detalleOrdenModelo.categoria = json.lotesjson[i].categoria;
-                           detalleOrdenModelo.raza = json.lotesjson[i].raza;
-                           detalleOrdenModelo.corral = json.lotesjson[i].corral;
-                           detalleOrdenModelo.cantidad = json.lotesjson[i].cantidad;
-                           detalleOrdenModelo.peso = json.lotesjson[i].peso;
-                           detalleOrdenModelo.preciounitario = json.lotesjson[i].preciounitario;
-                           detalleOrdenModelo.subtotal = json.lotesjson[i].subtotal;
-                           detalleLotesArr.push(detalleOrdenModelo);
-                       };
+                    obj = Ext.create('Ganaderia.model.OrdenModelo');
+                   var detalleOrdenModelo;
+                   var detalleLotesArr = [];
+                   var gastoOrden;
+                   var gastoOrdeArr = [];
+                   var json = Ext.JSON.decode(response.responseText);
+                    Ext.StoreManager.lookup('Ganaderia.store.GastosOrdenStore').loadRawData(json.gastosjson);
+                    Ext.StoreManager.lookup('Ganaderia.store.VencimientosOrdenStore').loadRawData(json.vencimientosjson);
                     Ext.StoreManager.lookup('Ganaderia.store.DetalleOrdenStore').loadRawData(json.lotesjson);
+                    Ext.StoreManager.lookup('Ganaderia.store.CategoriaStore').proxy.extraParams={especieId:json.especie};
                     Ext.StoreManager.lookup('Ganaderia.store.CategoriaStore').load();
                     Ext.StoreManager.lookup('Ganaderia.store.RazaStore').load();
+                    Ext.StoreManager.lookup('Ganaderia.store.GastoStore').load();
 
                         Ext.StoreManager.lookup('Ganaderia.store.PartidoStore').proxy.extraParams={provinciaId:json.procedenciaProvincia};
                         Ext.StoreManager.lookup('Ganaderia.store.PartidoStore').load();
