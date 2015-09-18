@@ -108,7 +108,30 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             icon: selectImg,
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
-                                window.location = '';
+                                //window.location = '';
+                                /*var msg = Ext.create('Ext.window.MessageBox',
+                                    {
+                                        width:400,
+                                        height: 200,
+                                        buttons: [
+                                            {
+                                                text:'Imprimir Ord. Venta',
+                                                handler: function(){
+                                                    //alert(compiarUrl+'?idComprobante='+rec.data.idVenta);
+                                                    window.location = window.open(imprimirUrl+'/'+rec.data.idVenta,'_blank');
+                                                }
+
+                                            },{
+                                                text: 'Imprimir Ord. Compra'
+                                            }
+                                        ]
+                                    }
+                                );
+                                msg.show({
+                                    title:'Mensaje',
+                                    msg:'El registro se guardó correctamente'
+                                });*/
+
                             }
                         },{
                             text:'Copiar',
@@ -116,7 +139,7 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             icon: selectImg,
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
-                                window.open(compiarUrl+'?idComprobante='+rec.data.idVenta);
+                                window.location = compiarUrl+'?idComprobante='+rec.data.idVenta;
                             }
                         }
                     ],

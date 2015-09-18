@@ -233,7 +233,9 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                               name:'pagoContado',
                                                               itemId:'pagoContadoItemId',
                                                               fieldLabel:'Pago de Contado',
-                                                              xtype:'checkbox',
+                                                              inputValue:'true',
+                                                              uncheckedValue: 'false',
+                                                                  xtype:'checkbox',
                                                               margin: '0 100 5 0'
                                                           },{
                                                               name:'porcentajeDesc',

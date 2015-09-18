@@ -32,6 +32,7 @@
         var clientegridUrl = '<% out << createLink(controller:'cliente',action:'listjsongrid')%>';
         var clientestoreUrl = '<% out << createLink(controller:'cliente',action:'')%>';
         var operacionUrl = '<% out << createLink(controller:'operacion',action:'listjson')%>';
+        var imprimirUrl = '<%out << createLink(controller:'comprobante',action:'imprimircomprobante')%>'
         <%
             if(idComprobante)
                out << 'var comprobanteId = ' + idComprobante+';'

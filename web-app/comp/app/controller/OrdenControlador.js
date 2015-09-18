@@ -224,10 +224,10 @@ Ext.define('Ganaderia.controller.OrdenControlador',
 
         },
         onDeleteVencimientoClick:function(){
-            var detalleStore = this.getGridDetalleOrden().getStore();
+            var detalleStore = this.getGridVencimientos().getStore();
 
             //delete selected rows if selModel is checkboxmodel
-            var selectedRows = this.getGridDetalleOrden().getSelectionModel().getSelection();
+            var selectedRows = this.getGridVencimientos().getSelectionModel().getSelection();
 
             if (selectedRows.length)
                 detalleStore.remove(selectedRows);
@@ -316,19 +316,29 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                     porcentajeIvaC+=row.data.porcentajeiva;
                 vencimientosArray.push(row.data);
             });
-            if(porcentajeBrutoV!=100 || porcentajeGastosV!=100 || porcentajeIvaV!=100){
-                Ext.Msg.show({
-                    title:'Error',
-                    msg:'Verifique los porcentajes vencimientos para el vendedor, deben sumar 100%',
-                    icon:Ext.MessageBox.ERROR,
-                    buttons:Ext.MessageBox.OK,
-                    fn:function(btn){
-                        ordenVista.down('#tabpanelItem').setActiveTab(3);
-                    }
-                });
-                return;
-            }
-           if(porcentajeBrutoC!=100 || porcentajeGastosC!=100 || porcentajeIvaC!=100){
+           lotesjson = Ext.encode(lotesArray);
+           gastosjson = Ext.encode(gastosArray);
+           vencimientosjson = Ext.encode(vencimientosArray);
+
+           var ordenForm = this.getOrdenVista();
+           var ordenModelo = Ext.create('Ganaderia.model.OrdenModelo');
+           ordenModelo.set(ordenForm.getValues());
+           ordenModelo.set('lotesjson',lotesjson);
+           ordenModelo.set('gastosjson',gastosjson);
+           ordenModelo.set('vencimientosjson',vencimientosjson)
+           if (ordenModelo.data.pagoContado!=true && (porcentajeBrutoV!=100 || porcentajeGastosV!=100 || porcentajeIvaV!=100)){
+               Ext.Msg.show({
+                   title:'Error',
+                   msg:'Verifique los porcentajes vencimientos para el vendedor, deben sumar 100%',
+                   icon:Ext.MessageBox.ERROR,
+                   buttons:Ext.MessageBox.OK,
+                   fn:function(btn){
+                       ordenVista.down('#tabpanelItem').setActiveTab(3);
+                   }
+               });
+               return;
+           }
+           if(ordenModelo.data.pagoContado!=true && (porcentajeBrutoC!=100 || porcentajeGastosC!=100 || porcentajeIvaC!=100)){
                Ext.Msg.show({
                    title:'Error',
                    msg:'Verifique los porcentajes vencimientos para el comprador, deben sumar 100%',
@@ -341,24 +351,33 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                return;
            }
 
-            lotesjson = Ext.encode(lotesArray);
-            gastosjson = Ext.encode(gastosArray);
-            vencimientosjson = Ext.encode(vencimientosArray);
 
-            var ordenForm = this.getOrdenVista();
-            var ordenModelo = Ext.create('Ganaderia.model.OrdenModelo');
-
-            ordenModelo.set(ordenForm.getValues());
-            ordenModelo.set('lotesjson',lotesjson);
-            ordenModelo.set('gastosjson',gastosjson);
-            ordenModelo.set('vencimientosjson',vencimientosjson)
             var mask = new Ext.LoadMask(ordenForm,{msg:'Guardando...'});
             mask.show();
             ordenModelo.save({
                 scope: this,
                 success: function(record, operation){
-                    Ext.Msg.alert('Estado','Registro salvado');
                     mask.hide();
+                    var jsonResponse = Ext.JSON.decode(operation.response.responseText);
+                    var msg = Ext.create('Ext.window.MessageBox',{
+                             width:400,
+                             height: 200,
+                             buttons: [
+                                 {
+                                     text:'Imprimir Ord. Venta',
+                                     handler: function(){
+                                         window.location = window.open(imprimirUrl+'/'+jsonResponse.id,'_blank');
+                                     }
+
+                                 },{
+                                     text: 'Imprimir Ord. Compra'
+                                 }
+                             ]
+                         });
+                    msg.show({
+                         title:'Mensaje',
+                         msg:'El registro se guardó correctamente'
+                        });
                 },
                 failure: function(record, operation){
                     mask.hide();

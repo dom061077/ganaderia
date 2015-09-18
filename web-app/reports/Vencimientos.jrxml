@@ -26,7 +26,7 @@
 				<textFieldExpression><![CDATA[$F{membreteVencimiento}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="241" y="0" width="100" height="13" uuid="ba1ce978-f386-42a4-ad06-dfd1c3cada94"/>
+				<reportElement x="438" y="0" width="100" height="13" uuid="ba1ce978-f386-42a4-ad06-dfd1c3cada94"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{subTotal}]]></textFieldExpression>
 			</textField>
