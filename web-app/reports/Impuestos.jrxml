@@ -16,6 +16,7 @@
 	<field name="subTotalGanancias" class="java.math.BigDecimal"/>
 	<columnHeader>
 		<band height="28" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{comprobante.iva}>0]]></printWhenExpression>
 			<staticText>
 				<reportElement x="18" y="1" width="57" height="13" uuid="d645aa38-08bf-42b7-97b2-498896337a4b"/>
 				<textElement>

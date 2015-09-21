@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ComprobanteOrden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d555633-b473-41b6-af4b-6f8eb92b31b3">
 	<property name="ireport.zoom" value="1.0980750000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="196"/>
+	<property name="ireport.y" value="72"/>
 	<parameter name="reportsDirPath" class="java.lang.String"/>
 	<field name="cuit" class="java.lang.String"/>
 	<field name="razonSocial" class="java.lang.String"/>
@@ -107,7 +107,7 @@
 				<text><![CDATA[Especie:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="408" y="204" width="100" height="15" uuid="d9a05bfd-177b-4de9-8bc4-72c1e5936c3c"/>
+				<reportElement x="408" y="204" width="143" height="15" uuid="d9a05bfd-177b-4de9-8bc4-72c1e5936c3c"/>
 				<textFieldExpression><![CDATA[$F{especie.nombre}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -148,16 +148,14 @@
 			</subreport>
 		</band>
 		<band height="20">
+			<printWhenExpression><![CDATA[$F{pagoContado}==true]]></printWhenExpression>
 			<textField>
 				<reportElement x="140" y="0" width="100" height="20" uuid="7582963b-f18b-4c19-a63a-5436f4113a1c"/>
 				<textFieldExpression><![CDATA[$F{descStr}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="245" y="0" width="100" height="20" uuid="5303c103-384c-46c4-abe1-7702764ab3e8"/>
-				<text><![CDATA[descuentoImporteBruto]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="345" y="0" width="100" height="20" uuid="c3601168-2487-46b2-80c3-7776ace916d7"/>
+			<textField pattern="#,##0.00">
+				<reportElement x="345" y="0" width="100" height="15" uuid="c3601168-2487-46b2-80c3-7776ace916d7"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{descuentoImporteBruto}]]></textFieldExpression>
 			</textField>
 		</band>

@@ -22,5 +22,6 @@ class ComprobanteDetalle {
 
     static constraints = {
         leyenda(nullable: true, blank: true)
+        raza(nullable: true, blank:true)
     }
 }
