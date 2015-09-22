@@ -36,7 +36,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="14" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{subTotalGanancias}>0]]></printWhenExpression>
 			<textField>
 				<reportElement x="2" y="0" width="367" height="14" uuid="fe52d4f2-95cc-4d2e-8246-e3a28c52426e"/>

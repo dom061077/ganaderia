@@ -88,13 +88,23 @@ class Comprobante {
         return retorno
     }
 
+    BigDecimal getTotalGastosAcBaseIva(){
+        def retorno = 0
+        detallegastos.each{det ->
+            if(det.acumulaBaseIva){
+                retorno += det.subTotal
+            }
+        }
+        return retorno
+    }
+
     BigDecimal getBaseIva(){
         def retorno = importeBruto - descuentoImporteBruto
 
         if (tipoComprobante==TipoComprobante.ORDENCOMPRA)
             retorno += totalGastos
         if (tipoComprobante==TipoComprobante.ORDENVENTA)
-            retorno -= totalGastos
+            retorno -= totalGastosAcBaseIva
         return retorno
     }
 
@@ -191,7 +201,7 @@ class Comprobante {
     static hasMany = [detalle:ComprobanteDetalle, detallegastos:ComprobanteGasto
                         , detallevencimientos:ComprobanteVencimiento]
 
-    static transients = ['importeBruto','descuentoImporteBruto','baseIva','iva','totalGastos'
+    static transients = ['importeBruto','descuentoImporteBruto','baseIva','iva','totalGastos','totalGastosAcBaseIva'
                         ,'total','totalGanancias','totalGastosFinal','membreteIva','descStr']//la alicuota se obtiene de la transaccion GastoEspecieDestinoOper
 
     static constraints = {

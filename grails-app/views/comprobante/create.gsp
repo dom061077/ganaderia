@@ -33,6 +33,7 @@
         var clientestoreUrl = '<% out << createLink(controller:'cliente',action:'')%>';
         var operacionUrl = '<% out << createLink(controller:'operacion',action:'listjson')%>';
         var imprimirUrl = '<%out << createLink(controller:'comprobante',action:'imprimircomprobante')%>'
+        var listadoUrl = '<%out << createLink(controller:'comprobante',action:'index')%>';
         <%
             if(idComprobante)
                out << 'var comprobanteId = ' + idComprobante+';'

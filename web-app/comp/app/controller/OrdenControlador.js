@@ -364,13 +364,11 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                              height: 200,
                              buttons: [
                                  {
-                                     text:'Imprimir Ord. Venta',
+                                     text:'Ir al Listado de Ordenes',
                                      handler: function(){
-                                         window.location = window.open(imprimirUrl+'/'+jsonResponse.id,'_blank');
+                                         window.location = listadoUrl;
                                      }
 
-                                 },{
-                                     text: 'Imprimir Ord. Compra'
                                  }
                              ]
                          });
@@ -414,6 +412,7 @@ Ext.define('Ganaderia.controller.OrdenControlador',
             Ext.StoreManager.lookup('Ganaderia.store.ExposicionStore').load();
             Ext.StoreManager.lookup('Ganaderia.store.DestinoStore').load();
             Ext.StoreManager.lookup('Ganaderia.store.OperacionStore').load();
+            Ext.StoreManager.lookup('Ganaderia.store.ClienteStoreComprador').load();
             Ext.StoreManager.lookup('Ganaderia.store.ClienteStore').load();
             Ext.StoreManager.lookup('Ganaderia.store.AnioExposicionStore').load();
             Ext.StoreManager.lookup('Ganaderia.store.ProvinciaStore').load();

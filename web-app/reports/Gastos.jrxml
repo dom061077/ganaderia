@@ -28,7 +28,7 @@
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField pattern="#,##0.00">
-				<reportElement x="158" y="0" width="70" height="16" uuid="a3dd79fc-53a8-4130-8e26-1dba1795cabd"/>
+				<reportElement x="466" y="0" width="71" height="16" uuid="a3dd79fc-53a8-4130-8e26-1dba1795cabd"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
@@ -46,8 +46,20 @@
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{porcentaje} > 0 ? $F{porcentaje} : $F{importe} )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{porcentaje} > 0 ? $F{porcentaje}+"%" : $F{importe} )]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="17">
+			<textField pattern="#,##0.00">
+				<reportElement x="466" y="1" width="71" height="16" uuid="99bd9d1c-f929-4b91-974b-3ef9fa7115a3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{comprobante.totalGastos}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="466" y="0" width="71" height="1" uuid="e54572ca-7677-48c2-962f-34d260bd7159"/>
+			</line>
+		</band>
+	</summary>
 </jasperReport>

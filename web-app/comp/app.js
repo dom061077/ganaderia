@@ -4,7 +4,9 @@ Ext.application({
     appFolder: '../comp/app',
     views:['Ganaderia.view.OrdenVista'],
     controllers:['OrdenControlador'],
-    stores: ['Ganaderia.store.ClienteStore','Ganaderia.store.ExposicionStore','Ganaderia.store.AnioExposicionStore'
+    stores: ['Ganaderia.store.ClienteStore'
+            ,'Ganaderia.store.ClienteStoreComprador'
+            ,'Ganaderia.store.ExposicionStore','Ganaderia.store.AnioExposicionStore'
             ,'Ganaderia.store.EspecieStore','Ganaderia.store.DestinoStore'
             ,'Ganaderia.store.ProvinciaStore'
             ,'Ganaderia.store.PartidoStore'

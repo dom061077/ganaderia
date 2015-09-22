@@ -90,7 +90,7 @@ Ext.define('Ganaderia.view.OrdenVista',
                                                       valueField:'id',
                                                       displayField:'nombre',
                                                       selectOnTab:true,
-                                                      store:'Ganaderia.store.ClienteStore',
+                                                      store:'Ganaderia.store.ClienteStoreComprador',
                                                       listeners:{
                                                       }
 

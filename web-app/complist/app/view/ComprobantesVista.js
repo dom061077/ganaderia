@@ -66,12 +66,12 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                         },
                         {
                             text:'Cliente Venta',
-                            width:300,
+                            width:240,
                             dataIndex:'clienteVenta'
                         },
                         {
                             text:'Cliente Compra',
-                            width:300,
+                            width:240,
                             dataIndex:'clienteCompra'
                         },
                         {
@@ -106,6 +106,7 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                             text:'Anular',
                             xtype:'actioncolumn',
                             icon: selectImg,
+                            width: 70,
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
                                 //window.location = '';
@@ -136,6 +137,7 @@ Ext.define('Ganaderia.view.ComprobantesVista',
                         },{
                             text:'Copiar',
                             xtype:'actioncolumn',
+                            width: 70,
                             icon: selectImg,
                             handler: function(grid,rowIndex,colIndex){
                                 var rec = grid.getStore().getAt(rowIndex);
