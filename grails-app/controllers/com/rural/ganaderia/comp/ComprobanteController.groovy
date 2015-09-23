@@ -185,22 +185,24 @@ class ComprobanteController {
         }
         def cal = Calendar.getInstance()
         def vencimiento
-        vencimientosJson.each{
-            if(it.compradorvendedor.equals('V')){
-                try{
-                    fecha = df.parse(cJson.fechaOperacion)
-                }catch(Exception e){
-                    log.debug "ERROR PARSEANDO LA FECHA DE OPERACION"
+        if(!comprobanteInstance.pagoContado){
+                vencimientosJson.each{
+                    if(it.compradorvendedor.equals('V')){
+                        try{
+                            fecha = df.parse(cJson.fechaOperacion)
+                        }catch(Exception e){
+                            log.debug "ERROR PARSEANDO LA FECHA DE OPERACION"
 
+                        }
+                        cal.setTime(fecha)
+                        cal.add(Calendar.DATE,it.cantidaddias)
+                        vencimiento = new java.sql.Date(cal.getTime().getTime())
+                        compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
+                                        ,porcentajeBruto: it.porcentajebruto, porcentajeGastos: it.porcentajegastos
+                                        ,porcentajeIva: it.porcentajeiva)
+                        comprobanteInstance.addToDetallevencimientos(compVencInstance)
+                    }
                 }
-                cal.setTime(fecha)
-                cal.add(Calendar.DATE,it.cantidaddias)
-                vencimiento = new java.sql.Date(cal.getTime().getTime())
-                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
-                                ,porcentajeBruto: it.porcentajebruto, porcentajeGastos: it.porcentajegastos
-                                ,porcentajeIva: it.porcentajeiva)
-                comprobanteInstance.addToDetallevencimientos(compVencInstance)
-            }
         }
         //----------datos de la orden de compra-----
         def compCompra = new Comprobante(clienteOrigen: clienteDInstance ,clienteDestino: clienteOInstance,
@@ -216,8 +218,10 @@ class ComprobanteController {
                 ,fechaOperacion: comprobanteInstance.fechaOperacion
                 ,operacion: comprobanteInstance.operacion)
          comprobanteInstance.detalle.each{
-             detalleInstance = new ComprobanteDetalle(categoria:it.categoria,raza:it.raza
+             detalleInstance = new ComprobanteDetalle(categoria:it.categoria
                      ,leyenda: it.leyenda,precio: it.precio,cantidad:it.cantidad,peso:it.peso)
+             if(detalleInstance.raza)
+                detalleInstance.raza = Raza.load(it.raza?.id)
              compCompra.addToDetalle(detalleInstance)
         }
 
@@ -229,16 +233,18 @@ class ComprobanteController {
                 compCompra.addToDetallegastos(compGastoInstance)
             }
         }
-        vencimientosJson.each{
-            if(it.compradorvendedor.equals('C')){
-                cal.setTime(fecha)
-                cal.add(Calendar.DATE,it.cantidaddias)
-                vencimiento = new java.sql.Date(cal.getTime().getTime())
-                compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
-                    ,porcentajeBruto: it.porcentajebruto,porcentajeGastos: it.porcentajegastos
-                    ,porcentajeIva: it.porcentajeiva)
-                compCompra.addToDetallevencimientos(compVencInstance)
+        if(!compCompra.pagoContado){
+            vencimientosJson.each{
+                if(it.compradorvendedor.equals('C')){
+                    cal.setTime(fecha)
+                    cal.add(Calendar.DATE,it.cantidaddias)
+                    vencimiento = new java.sql.Date(cal.getTime().getTime())
+                    compVencInstance = new ComprobanteVencimiento(vencimiento:vencimiento,cantidadDias: it.cantidaddias
+                        ,porcentajeBruto: it.porcentajebruto,porcentajeGastos: it.porcentajegastos
+                        ,porcentajeIva: it.porcentajeiva)
+                    compCompra.addToDetallevencimientos(compVencInstance)
 
+                }
             }
         }
         compCompra.razonSocial = comprobanteInstance.clienteDestino.razonSocial
@@ -431,9 +437,10 @@ class ComprobanteController {
         comprobanteInstance.procedencia.nombre
         comprobanteInstance.especie.nombre
 
+        log.debug "Procentaje de descuento "+comprobanteInstance.porcentajeDesc+ " "+comprobanteInstance.descStr
         comprobanteInstance.detalle.each{
-                log.debug it.categoria.codigo
-                log.debug it.raza.codigo
+                log.debug it.categoria?.codigo
+                log.debug it.raza?.codigo
 
 
         }

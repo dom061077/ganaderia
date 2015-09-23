@@ -281,7 +281,24 @@ Ext.define('Ganaderia.controller.OrdenControlador',
                 gastosArray.push(row.data);
             });
             var vencimientosStore = this.getGridVencimientos().getStore();
-           if(vencimientosStore.getCount()<=0) {
+           var ordenForm = this.getOrdenVista();
+           var ordenModelo = Ext.create('Ganaderia.model.OrdenModelo');
+           ordenModelo.set(ordenForm.getValues());
+           if(ordenModelo.data.pagoContado==true && ordenModelo.data.porcentajeDesc<=0){
+               Ext.Msg.show({
+                   title:'Error',
+                   msg:'Ingrese un porcentaje de descuento mayor a Cero',
+                   icon:Ext.MessageBox.ERROR,
+                   buttons:Ext.MessageBox.OK,
+                   fn:function(btn){
+                       ordenVista.down('#tabpanelItem').setActiveTab(0);
+                   }
+               });
+               return;
+
+           }
+
+           if(vencimientosStore.getCount()<=0 && ordenModelo.data.pagoContado!=true) {
 
                Ext.Msg.show({
                    title:'Error',
@@ -320,9 +337,6 @@ Ext.define('Ganaderia.controller.OrdenControlador',
            gastosjson = Ext.encode(gastosArray);
            vencimientosjson = Ext.encode(vencimientosArray);
 
-           var ordenForm = this.getOrdenVista();
-           var ordenModelo = Ext.create('Ganaderia.model.OrdenModelo');
-           ordenModelo.set(ordenForm.getValues());
            ordenModelo.set('lotesjson',lotesjson);
            ordenModelo.set('gastosjson',gastosjson);
            ordenModelo.set('vencimientosjson',vencimientosjson)

@@ -27,6 +27,7 @@
 	<field name="porcentajeDesc" class="java.math.BigDecimal"/>
 	<field name="descStr" class="java.lang.String"/>
 	<field name="descuentoImporteBruto" class="java.math.BigDecimal"/>
+	<field name="membreteIva" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -90,7 +91,7 @@
 				<reportElement x="318" y="221" width="59" height="15" uuid="13d52ed2-a69e-4bbd-afd4-356f1a2fe24e"/>
 				<text><![CDATA[Destino:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="408" y="167" width="100" height="15" uuid="6c24191f-4a59-4a07-bd18-b74426d3da1a"/>
 				<textFieldExpression><![CDATA[$F{guias}]]></textFieldExpression>
 			</textField>
@@ -147,19 +148,46 @@
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Gastos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="20">
+		<band height="15">
 			<printWhenExpression><![CDATA[$F{pagoContado}==true]]></printWhenExpression>
 			<textField>
-				<reportElement x="140" y="0" width="100" height="20" uuid="7582963b-f18b-4c19-a63a-5436f4113a1c"/>
+				<reportElement x="11" y="0" width="100" height="13" uuid="7582963b-f18b-4c19-a63a-5436f4113a1c"/>
 				<textFieldExpression><![CDATA[$F{descStr}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="345" y="0" width="100" height="15" uuid="c3601168-2487-46b2-80c3-7776ace916d7"/>
+				<reportElement x="449" y="0" width="100" height="15" uuid="c3601168-2487-46b2-80c3-7776ace916d7"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{descuentoImporteBruto}]]></textFieldExpression>
 			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="79" y="2" width="100" height="13" uuid="dde382c3-a1bf-4ce7-bff8-3b4bffc8bef1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{porcentajeDesc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="182" y="2" width="7" height="13" uuid="755907d7-9925-42a4-9d27-9153d480099b"/>
+				<text><![CDATA[%]]></text>
+			</staticText>
 		</band>
-		<band height="20">
+		<band height="34">
+			<staticText>
+				<reportElement x="24" y="0" width="57" height="13" uuid="50f06a62-8a64-48d5-9979-48eeb9d7cc40"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Impuestos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="16" width="367" height="14" uuid="bb6eb780-15f9-4d19-aa7b-a526e04a600a"/>
+				<textFieldExpression><![CDATA[$F{membreteIva}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="450" y="16" width="100" height="14" uuid="e688170c-9e4e-4ac3-ae68-2d5029e0c39b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="25">
 			<subreport isUsingCache="true">
 				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="11" y="0" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="1fa04b31-e0ef-41aa-a2fb-a901608d5e38"/>
 				<subreportParameter name="reportsDirPath">
@@ -169,7 +197,7 @@
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Impuestos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="25">
+		<band height="23">
 			<subreport isUsingCache="true">
 				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="11" y="5" width="540" height="15" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="0c5a4bd7-39cf-4561-b05a-5ff52a6dadc3"/>
 				<subreportParameter name="reportsDirPath">
@@ -179,7 +207,7 @@
 				<subreportExpression><![CDATA[new File($P{reportsDirPath},"Vencimientos.jasper")]]></subreportExpression>
 			</subreport>
 		</band>
-		<band height="18">
+		<band height="2">
 			<break>
 				<reportElement x="0" y="1" width="100" height="1" uuid="1eac81c5-618e-446a-9292-8aa2d3384193">
 					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}<=2]]></printWhenExpression>
@@ -197,7 +225,7 @@
 				<text><![CDATA[Importe Neto:]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="452" y="5" width="100" height="15" uuid="6610064c-ed53-4a1f-b443-6653e92f785a"/>
+				<reportElement x="437" y="5" width="100" height="15" uuid="6610064c-ed53-4a1f-b443-6653e92f785a"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>

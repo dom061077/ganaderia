@@ -141,7 +141,8 @@ class Comprobante {
             def porcentaje
 
             if (ganaciasIns){
-                baseG = importeBruto - totalGastos + iva + descuentoImporteBruto //el gasto resta si acumula base ganancias
+                //baseG = importeBruto - totalGastos + iva + descuentoImporteBruto //el gasto resta si acumula base ganancias
+                baseG = importeBruto - descuentoImporteBruto //el gasto resta si acumula base ganancias
             }
             if(situacionIVA.codigo=='IRI'){
                 minimoRetencion = valoresGananciasInstance.minRetencionIns
@@ -208,6 +209,7 @@ class Comprobante {
         direccion(nullable: true, blank: true)
         ingresosBrutos(nullable: true, blank: true)
         porcentajeDesc(nullable:  true, blank: true)
+        guias(nullable: true, blank: true)
 
 
     }
